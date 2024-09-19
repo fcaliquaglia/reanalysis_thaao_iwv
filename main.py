@@ -181,20 +181,20 @@ def read_alb():
     c[2] = c.values / 100.
     c[2].name = var
 
-    # # ERA5
-    # fn = 'thaao_era5_forecast_albedo_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e = pd.concat([e, e_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
-    # e.drop(columns=[0, 1], inplace=True)
-    # e[2].name = var
+    # ERA5
+    fn = 'thaao_era5_forecast_albedo_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e = pd.concat([e, e_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2].name = var
 
     # THAAO
     fn = 'ALBEDO_SW_'
@@ -281,7 +281,7 @@ def read_winds():
     t = pd.DataFrame()
 
     # CARRA
-    fn = 'thaao_carra_10m_wind_direction_'
+    fn = 'thaao_carra_10m_wind_speed_'
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
@@ -302,6 +302,21 @@ def read_windd():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+
+    # CARRA
+    fn = 'thaao_carra_10m_wind_direction_'
+    for yy, year in enumerate(years):
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c = pd.concat([c, c_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+    c.drop(columns=[0, 1], inplace=True)
+    c[2].name = var
 
     return [c, e, t]
 
@@ -334,20 +349,20 @@ def read_cbh():
     e = pd.DataFrame()
     t = pd.DataFrame()
 
-    # # CARRA
-    # fn = ' thaao_carra_cloud_base_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         c_tmp = pd.read_table(
-    #                 os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+',
-    #                 header=None, skiprows=1, engine='python')
-    #         c = pd.concat([c, c_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
-    # c.drop(columns=[0, 1], inplace=True)
-    # c[2].name = var
+    # CARRA
+    fn = 'thaao_carra_cloud_base_'
+    for yy, year in enumerate(years):
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c = pd.concat([c, c_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+    c.drop(columns=[0, 1], inplace=True)
+    c[2].name = var
 
     # ERA5
     fn = 'thaao_era5_cloud_base_height_'
@@ -371,6 +386,22 @@ def read_precip():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+
+    # ERA5
+    fn = 'thaao_era5_total_precipitation_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e = pd.concat([e, e_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2].name = var
+
     return [c, e, t]
 
 
@@ -393,6 +424,7 @@ def read_lwp():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
+    # TODO: check uom
     e[2] = e.values * 100
     e[2].name = var
 
@@ -410,6 +442,7 @@ def read_lwp():
                 tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
                 tmp[ii] = tmp[ii].replace(microsecond=0)
             t1_tmp.index = pd.DatetimeIndex(tmp)
+            # TODO: check uom
             t1_tmp['LWP_gm-2'] = t1_tmp['LWP_gm-2'].values / 100.
             t1_tmp.drop(
                     columns=['JD_rif', 'JD_ave', 'RF', 'N', 'STD_LWP', 'LWP_NO_RF', 'STD_NO_RF', 'LWP_OFFS'], axis=1,
@@ -467,8 +500,8 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'lightpurple'
 
-tres = '24h'
-var_list = ['lwp', 'surf_pres', 'temp', 'rh', 'windd', 'winds', 'cbh', 'tcc', 'alb', 'msl_pres', 'precip', 'iwv']
+tres = '12h'
+var_list = ['precip', 'alb', 'lwp', 'surf_pres', 'temp', 'rh', 'windd', 'winds', 'cbh', 'tcc', 'msl_pres', 'iwv']
 
 years = np.arange(2016, 2025, 1)
 
@@ -579,7 +612,7 @@ for var in var_list:
         if var in ['iwv']:
             ax[yy].set_ylim(0, 30)
         elif var in ['lwp']:
-            ax[yy].set_ylim(0, 100)
+            ax[yy].set_ylim(0, 50)
         elif var in ['temp']:
             ax[yy].set_ylim(-30, 20)
         elif var in ['surf_pres', 'msl_pres']:
