@@ -35,6 +35,8 @@ def read_temp():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+    t1 = pd.DataFrame()
+    t2 = pd.DataFrame()
 
     # CARRA
     fn = 'thaao_carra_2m_temperature_'
@@ -64,13 +66,32 @@ def read_temp():
     t.drop(columns=['DateTime________UTC', 'P (hPa)', 'U (%)'], inplace=True)
     t['T (K)'] = t.values - 273.15
 
-    return [c, e, t]
+    # AWS ECAPAC
+    fn = 'AWS_THAAO_'
+    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+        try:
+            file = os.path.join(
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            t2_tmp = pd.read_csv(
+                    file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+                    index_col='TIMESTAMP').iloc[1:, :]
+            t2 = pd.concat([t2, t2_tmp], axis=0)
+            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    t2.index = pd.DatetimeIndex(t2.index)
+    t2.index.name = 'datetime'
+    t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
+    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    return [c, e, t, t1, t2]
 
 
 def read_rh():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+    t1 = pd.DataFrame()
+    t2 = pd.DataFrame()
 
     # # CARRA
     # # TODO: calcolare umidità relativa
@@ -100,13 +121,32 @@ def read_rh():
     t.index = pd.to_datetime(t['DateTime________UTC'], format='%Y-%m-%d %H:%M:%S')
     t.drop(columns=['DateTime________UTC', 'P (hPa)', 'T (K)'], inplace=True)
 
-    return [c, e, t]
+    # AWS ECAPAC
+    fn = 'AWS_THAAO_'
+    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+        try:
+            file = os.path.join(
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            t2_tmp = pd.read_csv(
+                    file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+                    index_col='TIMESTAMP').iloc[1:, :]
+            t2 = pd.concat([t2, t2_tmp], axis=0)
+            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    t2.index = pd.DatetimeIndex(t2.index)
+    t2.index.name = 'datetime'
+    t2 = t2.iloc[:, :].filter(["RH"]).astype(float)
+    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    return [c, e, t, t1, t2]
 
 
 def read_msl_pres():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+    t1 = pd.DataFrame()
+    t2 = pd.DataFrame()
 
     # CARRA
     fn = 'thaao_carra_mean_sea_level_pressure_'
@@ -123,28 +163,49 @@ def read_msl_pres():
     c.drop(columns=[0, 1], inplace=True)
     c[2].name = var
 
-    return [c, e, t]
+    # # AWS ECAPAC
+    # fn = 'AWS_THAAO_'
+    # for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+    #     try:
+    #         file = os.path.join(
+    #                 basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #         t2_tmp = pd.read_csv(
+    #                 file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+    #                 index_col='TIMESTAMP').iloc[1:, :]
+    #         t2 = pd.concat([t2, t2_tmp], axis=0)
+    #         print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #     except FileNotFoundError:
+    #         print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    # t2.index = pd.DatetimeIndex(t2.index)
+    # t2.index.name = 'datetime'
+    # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
+    # # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    return [c, e, t, t1, t2]
+
 
 
 def read_surf_pres():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+    t1 = pd.DataFrame()
+    t2 = pd.DataFrame()
 
-    # # CARRA
-    # fn = 'thaao_carra_surface_pressure_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         c_tmp = pd.read_table(
-    #                 os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         c = pd.concat([c, c_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
-    # c.drop(columns=[0, 1], inplace=True)
-    # c[2].name = var
+    # CARRA
+    fn = 'thaao_carra_surface_pressure_'
+    for yy, year in enumerate(years):
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c = pd.concat([c, c_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+    c.drop(columns=[0, 1], inplace=True)
+    c[2] = c.values / 100.
+    c[2].name = var
 
     # THAAO
     fn = 'Meteo'
@@ -157,7 +218,24 @@ def read_surf_pres():
     t.index = pd.to_datetime(t['DateTime________UTC'], format='%Y-%m-%d %H:%M:%S')
     t.drop(columns=['DateTime________UTC', 'T (K)', 'U (%)'], inplace=True)
 
-    return [c, e, t]
+    # AWS ECAPAC
+    fn = 'AWS_THAAO_'
+    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+        try:
+            file = os.path.join(
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            t2_tmp = pd.read_csv(
+                    file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+                    index_col='TIMESTAMP').iloc[1:, :]
+            t2 = pd.concat([t2, t2_tmp], axis=0)
+            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    t2.index = pd.DatetimeIndex(t2.index)
+    t2.index.name = 'datetime'
+    t2 = t2.iloc[:, :].filter(["BP_mbar"]).astype(float)
+    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    return [c, e, t, t1, t2]
 
 
 def read_alb():
@@ -253,24 +331,27 @@ def read_iwv():
     t[2].name = var
 
     # THAAO (hatpro)
-    fn = 'QC_1min_IWV_'
+    fn = 'QC_IWV_15_min_'
     for yy, year in enumerate(years):
         try:
             t1_tmp = pd.read_table(
                     os.path.join(
-                            basefol_t, 'thule_phaao_hatpro', 'IWV_2019_20_21',
-                            fn + str(year) + '_STD_09_RF_BACK_20min.DAT'), sep='\s+', engine='python')
+                            basefol_t, 'thule_phaao_hatpro', 'definitivi_da_giando', fn + str(year),
+                                                                                     fn + str(year) + '.DAT'),
+                    sep='\s+', engine='python', header=None, skiprows=1)
+            t1_tmp.columns = ['JD_rif', 'IWV', 'STD_IWV', 'RF', 'N']
             tmp = np.empty(t1_tmp['JD_rif'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t1_tmp['JD_rif']):
-                new_jd_ass = el + julian.to_jd(dt.datetime(year, 12, 31, 0, 0), fmt='jd')
+                new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
                 tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
                 tmp[ii] = tmp[ii].replace(microsecond=0)
             t1_tmp.index = pd.DatetimeIndex(tmp)
-            t1_tmp.drop(columns=['JD_rif', 'STD_IWV', 'JD_2016', 'RF', 'N', 'RF_med', 'n_med'], axis=1, inplace=True)
+            t1_tmp.drop(columns=['JD_rif', 'STD_IWV', 'RF', 'N'], axis=1, inplace=True)
             t1 = pd.concat([t1, t1_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '_STD_09_RF_BACK_20min.DAT')
+            print('OK: ' + fn + str(year) + '.DAT')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '_STD_09_RF_BACK_20min.DAT')
+            print('NOT FOUND: ' + fn + str(year) + '.DAT')
+    t1['IWV'] = t1['IWV'].values
 
     return [c, e, t, t1]
 
@@ -279,6 +360,8 @@ def read_winds():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+    t1 = pd.DataFrame()
+    t2 = pd.DataFrame()
 
     # CARRA
     fn = 'thaao_carra_10m_wind_speed_'
@@ -295,13 +378,32 @@ def read_winds():
     c.drop(columns=[0, 1], inplace=True)
     c[2].name = var
 
-    return [c, e, t]
+    # AWS ECAPAC
+    fn = 'AWS_THAAO_'
+    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+        try:
+            file = os.path.join(
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            t2_tmp = pd.read_csv(
+                    file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+                    index_col='TIMESTAMP').iloc[1:, :]
+            t2 = pd.concat([t2, t2_tmp], axis=0)
+            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    t2.index = pd.DatetimeIndex(t2.index)
+    t2.index.name = 'datetime'
+    t2 = t2.iloc[:, :].filter(["WS_aws"]).astype(float)
+    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    return [c, e, t, t1, t2]
 
 
 def read_windd():
     c = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
+    t1 = pd.DataFrame()
+    t2 = pd.DataFrame()
 
     # CARRA
     fn = 'thaao_carra_10m_wind_direction_'
@@ -318,7 +420,24 @@ def read_windd():
     c.drop(columns=[0, 1], inplace=True)
     c[2].name = var
 
-    return [c, e, t]
+    # AWS ECAPAC
+    fn = 'AWS_THAAO_'
+    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+        try:
+            file = os.path.join(
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            t2_tmp = pd.read_csv(
+                    file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+                    index_col='TIMESTAMP').iloc[1:, :]
+            t2 = pd.concat([t2, t2_tmp], axis=0)
+            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    t2.index = pd.DatetimeIndex(t2.index)
+    t2.index.name = 'datetime'
+    t2 = t2.iloc[:, :].filter(["WD_aws"]).astype(float)
+    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    return [c, e, t, t1, t2]
 
 
 def read_tcc():
@@ -371,6 +490,7 @@ def read_cbh():
             e_tmp = pd.read_table(
                     os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
@@ -424,29 +544,26 @@ def read_lwp():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    # TODO: check uom
-    e[2] = e.values * 100
+    e[2] = e.values * 1000
     e[2].name = var
 
     # THAAO (hatpro)
-    fn = 'LWP_QUAD_Ka_allKa_OFFS_1_min_'
+    fn = 'LWP_15_min_'
     for yy, year in enumerate(years):
         try:
             t1_tmp = pd.read_table(
                     os.path.join(
-                            basefol_t, 'thule_phaao_hatpro', 'LWP_2019_20_21', fn + str(year) + '.dat'), sep='\s+',
-                    engine='python')
+                            basefol_t, 'thule_phaao_hatpro', 'definitivi_da_giando', fn + str(year) + '_SITO',
+                                                                                     fn + str(year) + '_SITO.dat'),
+                    sep='\s+', engine='python')
             tmp = np.empty(t1_tmp['JD_rif'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t1_tmp['JD_rif']):
-                new_jd_ass = el + julian.to_jd(dt.datetime(year, 12, 31, 0, 0), fmt='jd')
+                new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
                 tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
                 tmp[ii] = tmp[ii].replace(microsecond=0)
             t1_tmp.index = pd.DatetimeIndex(tmp)
-            # TODO: check uom
-            t1_tmp['LWP_gm-2'] = t1_tmp['LWP_gm-2'].values / 100.
-            t1_tmp.drop(
-                    columns=['JD_rif', 'JD_ave', 'RF', 'N', 'STD_LWP', 'LWP_NO_RF', 'STD_NO_RF', 'LWP_OFFS'], axis=1,
-                    inplace=True)
+            t1_tmp['LWP_gm-2'] = t1_tmp['LWP_gm-2'].values
+            t1_tmp.drop(columns=['JD_rif', 'RF', 'N', 'STD_LWP'], axis=1, inplace=True)
             t1 = pd.concat([t1, t1_tmp], axis=0)
 
             print('OK: ' + fn + str(year) + '.dat')
@@ -498,12 +615,14 @@ c_col_ori = 'orange'
 e_col_ori = 'cyan'
 t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
-t2_col_ori = 'lightpurple'
+t2_col_ori = 'violet'
 
-tres = '12h'
-var_list = ['precip', 'alb', 'lwp', 'surf_pres', 'temp', 'rh', 'windd', 'winds', 'cbh', 'tcc', 'msl_pres', 'iwv']
+tres = '12'
+var_list = ['temp', 'alb', 'iwv', 'lwp', 'winds', 'surf_pres', 'precip', 'rh', 'windd', 'winds', 'cbh', 'tcc',
+            'msl_pres']
 
 years = np.arange(2016, 2025, 1)
+# years = np.arange(2019, 2022, 1)  # zoom
 
 basefol_c = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'carra', 'thaao')
 basefol_e = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'era5', 'thaao')
@@ -520,10 +639,12 @@ for var in var_list:
     var_t = pd.DataFrame()
     var_t1 = pd.DataFrame()
     var_t2 = pd.DataFrame()
-    if var not in ['iwv', 'lwp']:
-        [var_c, var_e, var_t] = read(var)
-    else:
+    if var in ['iwv', 'lwp']:
         [var_c, var_e, var_t, var_t1] = read(var)
+    elif var in ['temp', 'msl_pres', 'surf_pres', 'rh', 'winds', 'windd']:
+        [var_c, var_e, var_t, va_t1, var_t2] = read(var)
+    else:
+        [var_c, var_e, var_t] = read(var)
 
     try:
         var_c_res = var_c.resample(tres).mean()
@@ -577,7 +698,7 @@ for var in var_list:
             pass
         try:
             ax[yy].plot(
-                    var_t2[var_t2.index.year == year], color=t2_col_ori, label='THAAO-2 ori', alpha=0.2, lw=0,
+                    var_t2[var_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC ori', alpha=0.2, lw=0,
                     marker='.', ms=1)
         except AttributeError:
             pass
@@ -605,7 +726,7 @@ for var in var_list:
             pass
         try:
             ax[yy].plot(
-                    var_t2_res[var_t2_res.index.year == year], color=t2_col, label='THAAO-2 ' + tres, lw=0, marker='.',
+                    var_t2_res[var_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC ' + tres, lw=0, marker='.',
                     ms=2)
         except AttributeError:
             pass
@@ -635,5 +756,5 @@ for var in var_list:
     plt.legend()
     fig.suptitle(var)
     plt.tight_layout()
-    plt.savefig(os.path.join(basefol_out, f'{var}.png'))
+    plt.savefig(os.path.join(basefol_out, tres + '_' + f'{var}.png'))
     plt.close('all')
