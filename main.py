@@ -68,7 +68,7 @@ def read_temp():
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 4, 20), end=dt.datetime(2024, 7, 30), freq='1D'):
+    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
                     basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
@@ -124,10 +124,10 @@ def read_rh():
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -166,10 +166,10 @@ def read_msl_pres():
 
     # # AWS ECAPAC
     # fn = 'AWS_THAAO_'
-    # for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+    # for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
     #     try:
     #         file = os.path.join(
-    #                 basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #                 basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
     #         t2_tmp = pd.read_csv(
     #                 file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
     #                 index_col='TIMESTAMP').iloc[1:, :]
@@ -220,10 +220,10 @@ def read_surf_pres():
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -380,10 +380,10 @@ def read_winds():
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -422,10 +422,10 @@ def read_windd():
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
