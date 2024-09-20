@@ -68,10 +68,11 @@ def read_temp():
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 5, 1), end=dt.datetime(2023, 5, 3), freq='1D'):
+    for i in pd.date_range(start=dt.datetime(2023, 4, 20), end=dt.datetime(2024, 7, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
+                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -181,7 +182,6 @@ def read_msl_pres():
     # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
     # # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
-
 
 
 def read_surf_pres():
@@ -617,9 +617,8 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-tres = '12'
-var_list = ['temp', 'alb', 'iwv', 'lwp', 'winds', 'surf_pres', 'precip', 'rh', 'windd', 'winds', 'cbh', 'tcc',
-            'msl_pres']
+tres = '24h'
+var_list = ['temp', 'windd', 'winds', 'surf_pres', 'alb', 'iwv', 'lwp', 'precip', 'rh', 'cbh', 'tcc', 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -698,7 +697,7 @@ for var in var_list:
             pass
         try:
             ax[yy].plot(
-                    var_t2[var_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC ori', alpha=0.2, lw=0,
+                    var_t2[var_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC ori', alpha=0.02, lw=0,
                     marker='.', ms=1)
         except AttributeError:
             pass
@@ -726,8 +725,8 @@ for var in var_list:
             pass
         try:
             ax[yy].plot(
-                    var_t2_res[var_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC ' + tres, lw=0, marker='.',
-                    ms=2)
+                    var_t2_res[var_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC ' + tres, lw=0,
+                    marker='.', ms=2)
         except AttributeError:
             pass
         if var in ['iwv']:
