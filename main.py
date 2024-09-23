@@ -54,6 +54,22 @@ def read_temp():
     c[2] = c.values - 273.15
     c[2].name = var
 
+    # ERA5
+    fn = 'thaao_era5_2m_temperature_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2].name = var
+
     # THAAO
     fn = 'Meteo'
     try:
@@ -127,7 +143,8 @@ def read_rh():
     for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
+                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -207,6 +224,23 @@ def read_surf_pres():
     c[2] = c.values / 100.
     c[2].name = var
 
+    # ERA5
+    fn = 'thaao_era5_surface_pressure_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2] = e.values / 100.
+    e[2].name = var
+
     # THAAO
     fn = 'Meteo'
     try:
@@ -223,7 +257,8 @@ def read_surf_pres():
     for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
+                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -266,6 +301,7 @@ def read_alb():
             e_tmp = pd.read_table(
                     os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
@@ -324,6 +360,7 @@ def read_iwv():
             e_tmp = pd.read_table(
                     os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
@@ -398,7 +435,8 @@ def read_winds():
     for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
+                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -440,7 +478,8 @@ def read_windd():
     for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
+                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
@@ -529,6 +568,7 @@ def read_precip():
             e_tmp = pd.read_table(
                     os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
@@ -553,6 +593,7 @@ def read_lwp():
             e_tmp = pd.read_table(
                     os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
@@ -632,8 +673,8 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-tres = '12h'
-var_list = ['temp', 'windd', 'winds', 'surf_pres', 'alb', 'iwv', 'lwp', 'precip', 'rh', 'cbh', 'tcc', 'msl_pres']
+tres = '24h'
+var_list = ['surf_pres', 'temp', 'alb', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'rh', 'cbh', 'tcc', 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
