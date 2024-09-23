@@ -23,6 +23,7 @@ __lastupdate__ = ""
 
 import datetime as dt
 import os
+from typing import Any, Tuple
 
 import julian
 import matplotlib.dates as mdates
@@ -63,11 +64,13 @@ def read_temp():
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
+
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
+    e[2] = e[2].values - 273.15
     e[2].name = var
 
     # THAAO
@@ -307,6 +310,22 @@ def read_alb():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2].name = var
+
+    # # ERA5
+    # fn = 'thaao_era5_snow_albedo_'
+    # for yy, year in enumerate(years):
+    #     try:
+    #         e_tmp = pd.read_table(
+    #                 os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+    #                 engine='python')
+    #         e_tmp[e_tmp == -32767.0] = np.nan
+    #         e = pd.concat([e, e_tmp], axis=0)
+    #         print('OK: ' + fn + str(year) + '.txt')
+    #     except FileNotFoundError:
+    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
+    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    # e.drop(columns=[0, 1], inplace=True)
+    # e[2].name = var
 
     # THAAO
     fn = 'ALBEDO_SW_'
@@ -692,7 +711,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '24h'
-var_list = ['surf_pres', 'temp', 'alb', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'rh', 'cbh', 'tcc']  #, 'msl_pres']
+var_list = ['alb', 'rh', 'temp', 'surf_pres', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'cbh', 'tcc']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -743,7 +762,7 @@ for var in var_list:
         var_t2_res = pd.DataFrame()
 
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
-    for yy, year in enumerate(years):
+    for [yy, year] in enumerate(years):
         print('plotting ' + str(year))
         try:
             ax[yy].plot(
@@ -808,7 +827,7 @@ for var in var_list:
         elif var in ['lwp']:
             ax[yy].set_ylim(0, 50)
         elif var in ['temp']:
-            ax[yy].set_ylim(-30, 20)
+            ax[yy].set_ylim(-40, 20)
         elif var in ['surf_pres', 'msl_pres']:
             ax[yy].set_ylim(925, 1013)
         elif var in ['winds']:
@@ -819,6 +838,10 @@ for var in var_list:
             ax[yy].set_ylim(0, 100)
         elif var in ['alb']:
             ax[yy].set_ylim(0, 1)
+            range1 = pd.date_range(dt.datetime(year, 1, 1), dt.datetime(year, 2, 15), freq=tres)
+            range2 = pd.date_range(dt.datetime(year, 11, 1), dt.datetime(year, 12, 31), freq=tres)
+            ax[yy].vlines(range1.values, 0, 1, color='grey', alpha=0.3)
+            ax[yy].vlines(range2.values, 0, 1, color='grey', alpha=0.3)
         else:
             ax[yy].set_ylim(0)
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
