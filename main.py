@@ -110,22 +110,20 @@ def read_rh():
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
 
-    # # CARRA
-    # # TODO: calcolare umidità relativa
-    # # TODO: aggiungere radiosondaggi
-    # fn = 'thaao_carra_2m_specific_humidity_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         c_tmp = pd.read_table(
-    #                 os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         c = pd.concat([c, c_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
-    # c.drop(columns=[0, 1], inplace=True)
-    # c[2].name = var
+    # CARRA
+    fn = 'thaao_carra_2m_relative_humidity_'
+    for yy, year in enumerate(years):
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c = pd.concat([c, c_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+    c.drop(columns=[0, 1], inplace=True)
+    c[2].name = var
 
     # THAAO
     fn = 'Meteo'
@@ -694,7 +692,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '24h'
-var_list = ['surf_pres', 'temp', 'alb', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'rh', 'cbh', 'tcc', 'msl_pres']
+var_list = ['surf_pres', 'temp', 'alb', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'rh', 'cbh', 'tcc']  #, 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
