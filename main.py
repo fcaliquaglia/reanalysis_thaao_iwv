@@ -577,6 +577,26 @@ def read_precip():
     e.drop(columns=[0, 1], inplace=True)
     e[2].name = var
 
+    # # AWS ECAPAC
+    # fn = 'DISDRO_THAAO_'
+    # for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    #     try:
+    #         file = os.path.join(
+    #                 basefol_t, 'thule_phaao_ecapac_disdro_precip',
+    #                 fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #         t2_tmp = pd.read_csv(
+    #                 file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+    #                 index_col='TIMESTAMP').iloc[1:, :]
+    #         t2 = pd.concat([t2, t2_tmp], axis=0)
+    #         print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #     except FileNotFoundError:
+    #         print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    # t2.index = pd.DatetimeIndex(t2.index)
+    # t2.index.name = 'datetime'
+    # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
+    # # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    # return [c, e, t, t1, t2]
+
     return [c, e, t]
 
 
