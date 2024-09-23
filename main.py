@@ -317,6 +317,21 @@ def read_iwv():
     c.drop(columns=[0, 1], inplace=True)
     c[2].name = var
 
+    # ERA5
+    fn = 'thaao_era5_total_column_water_vapour_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e = pd.concat([e, e_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2].name = var
+
     # THAAO (vespa)
     fn = 'Vapor_20160712_20221130'
     try:
@@ -617,7 +632,7 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-tres = '24h'
+tres = '12h'
 var_list = ['temp', 'windd', 'winds', 'surf_pres', 'alb', 'iwv', 'lwp', 'precip', 'rh', 'cbh', 'tcc', 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
