@@ -23,7 +23,6 @@ __lastupdate__ = ""
 
 import datetime as dt
 import os
-from typing import Any, Tuple
 
 import julian
 import matplotlib.dates as mdates
@@ -74,16 +73,15 @@ def read_temp():
     e[2].name = var
 
     # THAAO
-    fn = 'Meteo'
+    import xarray as xr
+    fn = 'Meteo_weekly_all'
     try:
-        t = pd.read_table(
-                os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.txt'), skiprows=3, header=[2], engine='python')
-        print('OK: ' + fn + '.txt')
+        t = xr.open_dataset(os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.nc'), engine='netcdf4').to_dataframe()
+        print('OK: ' + fn + '.nc')
     except FileNotFoundError:
-        print('NOT FOUND: ' + fn + '.txt')
-    t.index = pd.to_datetime(t['DateTime________UTC'], format='%Y-%m-%d %H:%M:%S')
-    t.drop(columns=['DateTime________UTC', 'P (hPa)', 'U (%)'], inplace=True)
-    t['T (K)'] = t.values - 273.15
+        print('NOT FOUND: ' + fn + '.nc')
+    t.drop(columns=['BP_hPa', 'RH_%'], inplace=True)
+    t['Air_K'] = t.values - 273.15
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -129,15 +127,15 @@ def read_rh():
     c[2].name = var
 
     # THAAO
-    fn = 'Meteo'
+    import xarray as xr
+    fn = 'Meteo_weekly_all'
     try:
-        t = pd.read_table(
-                os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.txt'), skiprows=3, header=[2], engine='python')
-        print('OK: ' + fn + '.txt')
+        t = xr.open_dataset(os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.nc'), engine='netcdf4').to_dataframe()
+        print('OK: ' + fn + '.nc')
     except FileNotFoundError:
-        print('NOT FOUND: ' + fn + '.txt')
-    t.index = pd.to_datetime(t['DateTime________UTC'], format='%Y-%m-%d %H:%M:%S')
-    t.drop(columns=['DateTime________UTC', 'P (hPa)', 'T (K)'], inplace=True)
+        print('NOT FOUND: ' + fn + '.nc')
+    t.drop(columns=['BP_hPa', 'Air_K'], inplace=True)
+    #    t.drop(columns=['BP_hPa','Air_K', 'RH_%'], inplace=True)
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -243,15 +241,14 @@ def read_surf_pres():
     e[2].name = var
 
     # THAAO
-    fn = 'Meteo'
+    import xarray as xr
+    fn = 'Meteo_weekly_all'
     try:
-        t = pd.read_table(
-                os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.txt'), skiprows=3, header=[2], engine='python')
-        print('OK: ' + fn + '.txt')
+        t = xr.open_dataset(os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.nc'), engine='netcdf4').to_dataframe()
+        print('OK: ' + fn + '.nc')
     except FileNotFoundError:
-        print('NOT FOUND: ' + fn + '.txt')
-    t.index = pd.to_datetime(t['DateTime________UTC'], format='%Y-%m-%d %H:%M:%S')
-    t.drop(columns=['DateTime________UTC', 'T (K)', 'U (%)'], inplace=True)
+        print('NOT FOUND: ' + fn + '.nc')
+    t.drop(columns=['Air_K', 'RH_%'], inplace=True)
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -710,8 +707,8 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-tres = '12h'
-var_list = ['surf_pres', 'temp', 'alb', 'rh', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'cbh', 'tcc']  # , 'msl_pres']
+tres = '24h'
+var_list = ['surf_pres', 'temp', 'rh', 'alb', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'cbh', 'tcc']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -722,7 +719,7 @@ basefol_t = os.path.join('H:\\Shared drives', 'Dati')
 
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
-myFmt = mdates.DateFormatter('%b')
+myFmt = mdates.DateFormatter('%d-%b')
 
 for var in var_list:
     print(var)
@@ -845,12 +842,20 @@ for var in var_list:
         else:
             ax[yy].set_ylim(0)
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
-        ax[yy].xaxis.set_major_formatter(myFmt)
+        # ax[yy].xaxis.set_major_formatter(myFmt)
+        # ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 3, 31))
+        # ax[yy].set_xlim(dt.datetime(year, 4, 1), dt.datetime(year, 6, 30))
+        # ax[yy].set_xlim(dt.datetime(year, 7, 1), dt.datetime(year, 9, 30))
+        # ax[yy].set_xlim(dt.datetime(year, 10, 1), dt.datetime(year, 12, 31))
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
 
     plt.xlabel('Time')
     plt.legend()
     fig.suptitle(var)
     plt.tight_layout()
-    plt.savefig(os.path.join(basefol_out, tres + '_' + f'{var}.png'))
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JFM' + '_' + f'{var}.png'))
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'AMJ' + '_' + f'{var}.png'))
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JAS' + '_' + f'{var}.png'))
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'OND' + '_' + f'{var}.png'))
+    plt.savefig(os.path.join(basefol_out, tres + '_' + 'all' + '_' + f'{var}.png'))
     plt.close('all')
