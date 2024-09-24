@@ -710,8 +710,8 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-tres = '24h'
-var_list = ['surf_pres', 'alb', 'rh', 'temp', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'cbh', 'tcc']  # , 'msl_pres']
+tres = '12h'
+var_list = ['surf_pres', 'temp', 'alb', 'rh', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'cbh', 'tcc']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
