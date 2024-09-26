@@ -29,6 +29,8 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from metpy.calc import wind_direction, wind_speed
+from metpy.units import units
 
 
 def read_temp():
@@ -444,6 +446,40 @@ def read_winds():
     c.drop(columns=[0, 1], inplace=True)
     c[2].name = var
 
+    # ERA5
+    fn_u = 'thaao_era5_10m_u_component_of_wind_'
+    fn_v = 'thaao_era5_10m_v_component_of_wind_'
+    e_u = pd.DataFrame()
+    e_v = pd.DataFrame()
+    for yy, year in enumerate(years):
+        try:
+            e_u_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn_u + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
+                    skiprows=1, engine='python')
+            e_u = pd.concat([e_u, e_u_tmp], axis=0)
+            print('OK: ' + fn_u + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn_u + str(year) + '.txt')
+    e_u.drop(columns=[0, 1], inplace=True)
+
+    for yy, year in enumerate(years):
+        try:
+            e_v_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn_v + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
+                    skiprows=1, engine='python')
+            e_v = pd.concat([e_v, e_v_tmp], axis=0)
+            print('OK: ' + fn_v + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn_v + str(year) + '.txt')
+    e_v.index = pd.to_datetime(e_v[0] + ' ' + e_v[1], format='%Y-%m-%d %H:%M:%S')
+    e_v.drop(columns=[0, 1], inplace=True)
+
+    e_ws = wind_speed(e_u.values * units('m/s'), e_v.values * units('m/s'))
+
+    e.index = e_v.index
+    e[var] = e_ws.magnitude
+    e[var].name = var
+
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
     for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
@@ -486,6 +522,39 @@ def read_windd():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2].name = var
+
+    # ERA5
+    fn_u = 'thaao_era5_10m_u_component_of_wind_'
+    fn_v = 'thaao_era5_10m_v_component_of_wind_'
+    e_u = pd.DataFrame()
+    e_v = pd.DataFrame()
+    for yy, year in enumerate(years):
+        try:
+            e_u_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn_u + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
+                    skiprows=1, engine='python')
+            e_u = pd.concat([e_u, e_u_tmp], axis=0)
+            print('OK: ' + fn_u + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn_u + str(year) + '.txt')
+    e_u.drop(columns=[0, 1], inplace=True)
+
+    for yy, year in enumerate(years):
+        try:
+            e_v_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn_v + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
+                    skiprows=1, engine='python')
+            e_v = pd.concat([e_v, e_v_tmp], axis=0)
+            print('OK: ' + fn_v + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn_v + str(year) + '.txt')
+    e_v.index = pd.to_datetime(e_v[0] + ' ' + e_v[1], format='%Y-%m-%d %H:%M:%S')
+    e_v.drop(columns=[0, 1], inplace=True)
+
+    e_wd = wind_direction(e_u.values * units('m/s'), e_v.values * units('m/s'))
+    e.index = e_v.index
+    e[var] = e_wd.magnitude
+    e[var].name = var
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -588,6 +657,7 @@ def read_precip():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
+    c[2] = c.values / 1000.
     c[2].name = var
 
     # ERA5
@@ -723,7 +793,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '12h'
-var_list = ['surf_pres', 'temp', 'rh', 'alb', 'windd', 'winds', 'iwv', 'lwp', 'precip', 'cbh', 'tcc']  # , 'msl_pres']
+var_list = ['winds', 'windd', 'precip', 'surf_pres', 'temp', 'rh', 'alb', 'iwv', 'lwp', 'cbh', 'tcc']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -750,28 +820,38 @@ for var in var_list:
     else:
         [var_c, var_e, var_t] = read(var)
 
-    try:
-        var_c_res = var_c.resample(tres).mean()
-    except TypeError:
-        var_c_res = pd.DataFrame()
-    try:
-        var_e_res = var_e.resample(tres).mean()
-    except TypeError:
-        var_e_res = pd.DataFrame()
-    try:
-        var_t_res = var_t.resample(tres).mean()
-    except TypeError:
-        var_t_res = pd.DataFrame()
-    try:
-        var_t1_res = var_t1.resample(tres).mean()
-    except (TypeError, NameError):
-        var_t1 = pd.DataFrame()
-        var_t1_res = pd.DataFrame()
-    try:
-        var_t2_res = var_t2.resample(tres).mean()
-    except (TypeError, NameError):
-        var_t2 = pd.DataFrame()
-        var_t2_res = pd.DataFrame()
+    if var == 'windd':
+        [var_c_ws, var_e_ws, var_t_ws, va_t1_ws, var_t2_ws] = read('winds')
+        var_c_res = windd_res(var_c)
+        var_e_res =
+        var_t_res =
+        var_t1_res =
+        var_t2_res =
+        pass
+
+    else:
+        try:
+            var_c_res = var_c.resample(tres).mean()
+        except TypeError:
+            var_c_res = pd.DataFrame()
+        try:
+            var_e_res = var_e.resample(tres).mean()
+        except TypeError:
+            var_e_res = pd.DataFrame()
+        try:
+            var_t_res = var_t.resample(tres).mean()
+        except TypeError:
+            var_t_res = pd.DataFrame()
+        try:
+            var_t1_res = var_t1.resample(tres).mean()
+        except (TypeError, NameError):
+            var_t1 = pd.DataFrame()
+            var_t1_res = pd.DataFrame()
+        try:
+            var_t2_res = var_t2.resample(tres).mean()
+        except (TypeError, NameError):
+            var_t2 = pd.DataFrame()
+            var_t2_res = pd.DataFrame()
 
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
     for [yy, year] in enumerate(years):
