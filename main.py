@@ -29,7 +29,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from metpy.calc import wind_direction, wind_speed
+from metpy.calc import wind_components, wind_direction, wind_speed
 from metpy.units import units
 
 
@@ -780,6 +780,28 @@ def read(var):
         return read_lwp()
 
 
+def windd_res(wd, ws, timeres):
+    u_df = pd.DataFrame()
+    v_df = pd.DataFrame()
+    wd_res = pd.DataFrame()
+
+    wind = pd.concat([ws, wd], axis=1)
+    wind.columns = ['ws', 'wd']
+    u, v = wind_components(wind['ws'].values * units('m/s'), wind['wd'].values * units.deg)
+    u_df.index = wind.index
+    u_df['u'] = u.magnitude
+    v_df.index = wind.index
+    v_df['v'] = v.magnitude
+
+    u_df_res = u_df.resample(timeres).mean()
+    v_df_res = v_df.resample(timeres).mean()
+
+    wd_res.index = v_df_res.index
+    wd_res['wd'] = wind_direction(u_df_res.values * units('m/s'), v_df_res.values * units('m/s')).magnitude
+
+    return wd_res
+
+
 c_col = 'red'
 e_col = 'blue'
 t_col = 'black'
@@ -793,7 +815,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '12h'
-var_list = ['winds', 'windd', 'precip', 'surf_pres', 'temp', 'rh', 'alb', 'iwv', 'lwp', 'cbh', 'tcc']  # , 'msl_pres']
+var_list = ['windd', 'winds', 'precip', 'surf_pres', 'temp', 'rh', 'alb', 'iwv', 'lwp', 'cbh', 'tcc']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -816,18 +838,19 @@ for var in var_list:
     if var in ['iwv', 'lwp']:
         [var_c, var_e, var_t, var_t1] = read(var)
     elif var in ['temp', 'msl_pres', 'surf_pres', 'rh', 'winds', 'windd']:
-        [var_c, var_e, var_t, va_t1, var_t2] = read(var)
+        [var_c, var_e, var_t, var_t1, var_t2] = read(var)
     else:
         [var_c, var_e, var_t] = read(var)
 
+    # calculating averaged wind directions using components
     if var == 'windd':
-        [var_c_ws, var_e_ws, var_t_ws, va_t1_ws, var_t2_ws] = read('winds')
-        var_c_res = windd_res(var_c)
-        var_e_res =
-        var_t_res =
-        var_t1_res =
-        var_t2_res =
-        pass
+        [var_c_ws, var_e_ws, var_t_ws, var_t1_ws, var_t2_ws] = read('winds')
+        var_c_res = windd_res(var_c, var_c_ws, tres)
+        var_e_res = windd_res(var_e, var_e_ws, tres)
+        var_t_res = windd_res(var_t, var_t_ws, tres)
+        var_t1_res = windd_res(var_t1, var_t1_ws, tres)
+        var_t2_res = windd_res(var_t2, var_t2_ws, tres)
+
 
     else:
         try:
