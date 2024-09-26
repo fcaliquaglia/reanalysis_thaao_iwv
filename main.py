@@ -29,7 +29,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from metpy.calc import wind_components, wind_direction, wind_speed
+from metpy.calc import wind_components, wind_direction, wind_speed, relative_humidity_from_dewpoint
 from metpy.units import units
 
 
@@ -108,6 +108,9 @@ def read_temp():
 
 def read_rh():
     c = pd.DataFrame()
+    e_p = pd.DataFrame()
+    e_t = pd.DataFrame()
+    e_td = pd.DataFrame()
     e = pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
@@ -128,6 +131,44 @@ def read_rh():
     c.drop(columns=[0, 1], inplace=True)
     c[2].name = var
 
+    # ERA5
+    fn1 = 'thaao_era5_2m_dewpoint_temperature_'
+    fn2 = 'thaao_era5_surface_pressure_'
+    fn3 = 'thaao_era5_2m_temperature_'
+    for yy, year in enumerate(years):
+        try:
+            e_t_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn3 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_t_tmp[e_t_tmp == -32767.0] = np.nan
+            e_t = pd.concat([e_t, e_t_tmp], axis=0)
+
+            print('OK: ' + fn3 + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn3 + str(year) + '.txt')
+    e_t.index = pd.to_datetime(e_t[0] + ' ' + e_t[1], format='%Y-%m-%d %H:%M:%S')
+    e_t.drop(columns=[0, 1], inplace=True)
+    e_t[2].name = var
+
+    for yy, year in enumerate(years):
+        try:
+            e_td_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn1 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_td[e_td_tmp == -32767.0] = np.nan
+            e_td = pd.concat([e_td, e_td_tmp], axis=0)
+
+            print('OK: ' + fn1 + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn1 + str(year) + '.txt')
+    e_td.index = pd.to_datetime(e_td[0] + ' ' + e_td[1], format='%Y-%m-%d %H:%M:%S')
+    e_td.drop(columns=[0, 1], inplace=True)
+    e_td[2].name = var
+
+    e = pd.concat([e_td, e_t], axis=1)
+
+    e['rh'] = relative_humidity_from_dewpoint(e['e_t'].values * units.degC, e['e_td'].values * units.degC).to('percent')
+    e.drop(columns=['e_t', 'et_d'], inplace=True)
     # THAAO
     import xarray as xr
     fn = 'Meteo_weekly_all'
@@ -832,7 +873,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '12h'
-var_list = ['windd', 'winds', 'precip', 'tcc', 'surf_pres', 'temp', 'rh', 'alb', 'iwv', 'lwp', 'cbh']  # , 'msl_pres']
+var_list = ['rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'temp', 'alb', 'iwv', 'lwp', 'cbh']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
