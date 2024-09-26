@@ -480,24 +480,24 @@ def read_winds():
     e[var] = e_ws.magnitude
     e[var].name = var
 
-    # # AWS ECAPAC
-    # fn = 'AWS_THAAO_'
-    # for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
-    #     try:
-    #         file = os.path.join(
-    #                 basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-    #                 fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-    #         t2_tmp = pd.read_csv(
-    #                 file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
-    #                 index_col='TIMESTAMP').iloc[1:, :]
-    #         t2 = pd.concat([t2, t2_tmp], axis=0)
-    #         print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-    # t2.index = pd.DatetimeIndex(t2.index)
-    # t2.index.name = 'datetime'
-    # t2 = t2.iloc[:, :].filter(["WS_aws"]).astype(float)
-    # # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    # AWS ECAPAC
+    fn = 'AWS_THAAO_'
+    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+        try:
+            file = os.path.join(
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
+                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            t2_tmp = pd.read_csv(
+                    file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+                    index_col='TIMESTAMP').iloc[1:, :]
+            t2 = pd.concat([t2, t2_tmp], axis=0)
+            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    t2.index = pd.DatetimeIndex(t2.index)
+    t2.index.name = 'datetime'
+    t2 = t2.iloc[:, :].filter(["WS_aws"]).astype(float)
+    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
 
@@ -556,24 +556,24 @@ def read_windd():
     e[var] = e_wd.magnitude
     e[var].name = var
 
-    # # AWS ECAPAC
-    # fn = 'AWS_THAAO_'
-    # for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
-    #     try:
-    #         file = os.path.join(
-    #                 basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-    #                 fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-    #         t2_tmp = pd.read_csv(
-    #                 file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
-    #                 index_col='TIMESTAMP').iloc[1:, :]
-    #         t2 = pd.concat([t2, t2_tmp], axis=0)
-    #         print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-    # t2.index = pd.DatetimeIndex(t2.index)
-    # t2.index.name = 'datetime'
-    # t2 = t2.iloc[:, :].filter(["WD_aws"]).astype(float)
-    # # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
+    # AWS ECAPAC
+    fn = 'AWS_THAAO_'
+    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+        try:
+            file = os.path.join(
+                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
+                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            t2_tmp = pd.read_csv(
+                    file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
+                    index_col='TIMESTAMP').iloc[1:, :]
+            t2 = pd.concat([t2, t2_tmp], axis=0)
+            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    t2.index = pd.DatetimeIndex(t2.index)
+    t2.index.name = 'datetime'
+    t2 = t2.iloc[:, :].filter(["WD_aws"]).astype(float)
+    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
 
@@ -611,6 +611,7 @@ def read_tcc():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
+    e[2] = e.values * 100.
     e[2].name = var
 
     return [c, e, t]
@@ -831,7 +832,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '12h'
-var_list = ['windd', 'winds', 'precip', 'surf_pres', 'temp', 'rh', 'alb', 'iwv', 'lwp', 'cbh', 'tcc']  # , 'msl_pres']
+var_list = ['windd', 'winds', 'precip', 'tcc', 'surf_pres', 'temp', 'rh', 'alb', 'iwv', 'lwp', 'cbh']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -982,6 +983,8 @@ for var in var_list:
             ax[yy].set_ylim(0, 360)
         elif var in ['tcc', 'rh']:
             ax[yy].set_ylim(0, 100)
+        elif var in ['precip']:
+            ax[yy].set_ylim(0, 0.001)
         elif var in ['alb']:
             ax[yy].set_ylim(0, 1)
             range1 = pd.date_range(dt.datetime(year, 1, 1), dt.datetime(year, 2, 15), freq=tres)
