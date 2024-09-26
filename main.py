@@ -29,7 +29,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from metpy.calc import wind_components, wind_direction, wind_speed, relative_humidity_from_dewpoint
+from metpy.calc import relative_humidity_from_dewpoint, wind_components, wind_direction, wind_speed
 from metpy.units import units
 
 
@@ -149,6 +149,7 @@ def read_rh():
     e_t.index = pd.to_datetime(e_t[0] + ' ' + e_t[1], format='%Y-%m-%d %H:%M:%S')
     e_t.drop(columns=[0, 1], inplace=True)
     e_t[2].name = var
+    e_t.columns=['e_t']
 
     for yy, year in enumerate(years):
         try:
@@ -164,11 +165,14 @@ def read_rh():
     e_td.index = pd.to_datetime(e_td[0] + ' ' + e_td[1], format='%Y-%m-%d %H:%M:%S')
     e_td.drop(columns=[0, 1], inplace=True)
     e_td[2].name = var
+    e_td.columns=['e_td']
 
     e = pd.concat([e_td, e_t], axis=1)
 
-    e['rh'] = relative_humidity_from_dewpoint(e['e_t'].values * units.degC, e['e_td'].values * units.degC).to('percent')
-    e.drop(columns=['e_t', 'et_d'], inplace=True)
+    e['rh'] = relative_humidity_from_dewpoint(e['e_t'].values * units.K, e['e_td'].values * units.K).to('percent')
+    e.drop(columns=['e_t', 'e_td'], inplace=True)
+
+
     # THAAO
     import xarray as xr
     fn = 'Meteo_weekly_all'
@@ -763,6 +767,22 @@ def read_lwp():
     t = pd.DataFrame()
     t1 = pd.DataFrame()
 
+    # CARRA
+    fn = 'thaao_carra_total_column_cloud_liquid_water_'
+    for yy, year in enumerate(years):
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c = pd.concat([c, c_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+    c.drop(columns=[0, 1], inplace=True)
+    c[2] = c.values
+    c[2].name = var
+
     # ERA5
     fn = 'thaao_era5_total_column_cloud_liquid_water_'
     for yy, year in enumerate(years):
@@ -873,7 +893,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '12h'
-var_list = ['rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'temp', 'alb', 'iwv', 'lwp', 'cbh']  # , 'msl_pres']
+var_list = ['lwp', 'rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'temp', 'alb', 'iwv', 'cbh']  # , 'msl_pres']
 
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -907,7 +927,6 @@ for var in var_list:
             var_c_res = windd_res(var_c, var_c_ws, tres)
         except (TypeError, NameError, ValueError):
             var_c_res = pd.DataFrame()
-
         try:
             var_e_res = windd_res(var_e, var_e_ws, tres)
         except (TypeError, NameError, ValueError):
