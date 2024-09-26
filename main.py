@@ -149,7 +149,7 @@ def read_rh():
     e_t.index = pd.to_datetime(e_t[0] + ' ' + e_t[1], format='%Y-%m-%d %H:%M:%S')
     e_t.drop(columns=[0, 1], inplace=True)
     e_t[2].name = var
-    e_t.columns=['e_t']
+    e_t.columns = ['e_t']
 
     for yy, year in enumerate(years):
         try:
@@ -165,13 +165,12 @@ def read_rh():
     e_td.index = pd.to_datetime(e_td[0] + ' ' + e_td[1], format='%Y-%m-%d %H:%M:%S')
     e_td.drop(columns=[0, 1], inplace=True)
     e_td[2].name = var
-    e_td.columns=['e_td']
+    e_td.columns = ['e_td']
 
     e = pd.concat([e_td, e_t], axis=1)
 
     e['rh'] = relative_humidity_from_dewpoint(e['e_t'].values * units.K, e['e_td'].values * units.K).to('percent')
     e.drop(columns=['e_t', 'e_td'], inplace=True)
-
 
     # THAAO
     import xarray as xr
@@ -780,7 +779,7 @@ def read_lwp():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2] = c.values
+    c[2] = c.values * 1000
     c[2].name = var
 
     # ERA5
