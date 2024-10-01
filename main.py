@@ -54,7 +54,7 @@ def read_temp():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values - 273.15
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_2m_temperature_'
@@ -72,7 +72,7 @@ def read_temp():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e[2].values - 273.15
-    e[2].name = var
+    e.columns = [var]
 
     # THAAO
     import xarray as xr
@@ -84,6 +84,7 @@ def read_temp():
         print('NOT FOUND: ' + fn + '.nc')
     t.drop(columns=['BP_hPa', 'RH_%'], inplace=True)
     t['Air_K'] = t.values - 273.15
+    t.columns = [var]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -102,6 +103,7 @@ def read_temp():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
+    t2.columns = [var]
     # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
@@ -129,7 +131,7 @@ def read_rh():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn1 = 'thaao_era5_2m_dewpoint_temperature_'
@@ -171,6 +173,7 @@ def read_rh():
 
     e['rh'] = relative_humidity_from_dewpoint(e['e_t'].values * units.K, e['e_td'].values * units.K).to('percent')
     e.drop(columns=['e_t', 'e_td'], inplace=True)
+    e.columns = [var]
 
     # THAAO
     import xarray as xr
@@ -181,6 +184,7 @@ def read_rh():
     except FileNotFoundError:
         print('NOT FOUND: ' + fn + '.nc')
     t.drop(columns=['BP_hPa', 'Air_K'], inplace=True)
+    t.columns = [var]
     #    t.drop(columns=['BP_hPa','Air_K', 'RH_%'], inplace=True)
 
     # AWS ECAPAC
@@ -200,6 +204,7 @@ def read_rh():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["RH"]).astype(float)
+    t2.columns = [var]
     # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
@@ -224,7 +229,7 @@ def read_msl_pres():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2].name = var
+    c.columns = [var]
 
     # # AWS ECAPAC
     # fn = 'AWS_THAAO_'
@@ -242,6 +247,7 @@ def read_msl_pres():
     # t2.index = pd.DatetimeIndex(t2.index)
     # t2.index.name = 'datetime'
     # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
+    # t2.columns = [var]
     # # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
@@ -267,7 +273,7 @@ def read_surf_pres():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 100.
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_surface_pressure_'
@@ -284,7 +290,7 @@ def read_surf_pres():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 100.
-    e[2].name = var
+    e.columns = [var]
 
     # THAAO
     import xarray as xr
@@ -295,6 +301,7 @@ def read_surf_pres():
     except FileNotFoundError:
         print('NOT FOUND: ' + fn + '.nc')
     t.drop(columns=['Air_K', 'RH_%'], inplace=True)
+    t.columns = [var]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -313,6 +320,7 @@ def read_surf_pres():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["BP_mbar"]).astype(float)
+    t2.columns = [var]
     # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
@@ -336,7 +344,7 @@ def read_alb():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 100.
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_forecast_albedo_'
@@ -352,7 +360,7 @@ def read_alb():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e[2].name = var
+    e.columns = [var]
 
     # # ERA5
     # fn = 'thaao_era5_snow_albedo_'
@@ -368,7 +376,7 @@ def read_alb():
     #         print('NOT FOUND: ' + fn + str(year) + '.txt')
     # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     # e.drop(columns=[0, 1], inplace=True)
-    # e[2].name = var
+    # e.columns = [var]
 
     # THAAO
     fn = 'ALBEDO_SW_'
@@ -388,7 +396,7 @@ def read_alb():
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.txt')
-
+    t.columns = [var]
     return [c, e, t]
 
 
@@ -411,7 +419,7 @@ def read_iwv():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_total_column_water_vapour_'
@@ -427,7 +435,7 @@ def read_iwv():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e[2].name = var
+    e.columns = [var]
 
     # THAAO (vespa)
     fn = 'Vapor_20160712_20221130'
@@ -440,7 +448,7 @@ def read_iwv():
         print('NOT FOUND: ' + fn + str(year) + '.txt')
     t.index = pd.to_datetime(t[0] + ' ' + t[1], format='%Y-%m-%d %H:%M:%S')
     t.drop(columns=[0, 1], inplace=True)
-    t[2].name = var
+    t.columns = [var]
 
     # THAAO (hatpro)
     fn = 'QC_IWV_15_min_'
@@ -464,6 +472,7 @@ def read_iwv():
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.DAT')
     t1['IWV'] = t1['IWV'].values
+    t1.columns = [var]
 
     return [c, e, t, t1]
 
@@ -488,7 +497,7 @@ def read_winds():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn_u = 'thaao_era5_10m_u_component_of_wind_'
@@ -522,7 +531,7 @@ def read_winds():
 
     e.index = e_v.index
     e[var] = e_ws.magnitude
-    e[var].name = var
+    e.columns = [var]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -541,6 +550,7 @@ def read_winds():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WS_aws"]).astype(float)
+    t2.columns = [var]
     # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
@@ -565,7 +575,7 @@ def read_windd():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn_u = 'thaao_era5_10m_u_component_of_wind_'
@@ -598,7 +608,7 @@ def read_windd():
     e_wd = wind_direction(e_u.values * units('m/s'), e_v.values * units('m/s'))
     e.index = e_v.index
     e[var] = e_wd.magnitude
-    e[var].name = var
+    e.columns = [var]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -617,6 +627,7 @@ def read_windd():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WD_aws"]).astype(float)
+    t2.columns = [var]
     # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, t, t1, t2]
 
@@ -639,7 +650,7 @@ def read_tcc():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_total_cloud_cover_'
@@ -656,7 +667,7 @@ def read_tcc():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 100.
-    e[2].name = var
+    e.columns = [var]
 
     return [c, e, t]
 
@@ -679,7 +690,7 @@ def read_cbh():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_cloud_base_height_'
@@ -695,7 +706,7 @@ def read_cbh():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e[2].name = var
+    e.columns = [var]
 
     return [c, e, t]
 
@@ -719,7 +730,7 @@ def read_precip():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 1000.
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_total_precipitation_'
@@ -735,7 +746,7 @@ def read_precip():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e[2].name = var
+    e.columns = [var]
 
     # # AWS ECAPAC
     # fn = 'DISDRO_THAAO_'
@@ -754,6 +765,7 @@ def read_precip():
     # t2.index = pd.DatetimeIndex(t2.index)
     # t2.index.name = 'datetime'
     # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
+    # t2.columns = [var]
     # # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     # return [c, e, t, t1, t2]
 
@@ -780,7 +792,7 @@ def read_lwp():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values * 1000
-    c[2].name = var
+    c.columns = [var]
 
     # ERA5
     fn = 'thaao_era5_total_column_cloud_liquid_water_'
@@ -797,7 +809,7 @@ def read_lwp():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 1000
-    e[2].name = var
+    e.columns = [var]
 
     # THAAO (hatpro)
     fn = 'LWP_15_min_'
@@ -821,6 +833,7 @@ def read_lwp():
             print('OK: ' + fn + str(year) + '.dat')
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.dat')
+    t1.columns = [var]
 
     return [c, e, t, t1]
 
@@ -891,9 +904,9 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-tres = '12h'
-var_list = ['lwp', 'rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'temp', 'alb', 'iwv', 'cbh']  # , 'msl_pres']
-
+tres = '12h '
+var_list = ['temp', 'lwp', 'rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'alb', 'iwv']  # , 'msl_pres']
+# 'cbh'
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
 
@@ -1053,7 +1066,7 @@ for var in var_list:
         else:
             ax[yy].set_ylim(0)
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
-        # ax[yy].xaxis.set_major_formatter(myFmt)
+        ax[yy].xaxis.set_major_formatter(myFmt)
         # ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 3, 31))
         # ax[yy].set_xlim(dt.datetime(year, 4, 1), dt.datetime(year, 6, 30))
         # ax[yy].set_xlim(dt.datetime(year, 7, 1), dt.datetime(year, 9, 30))
@@ -1069,4 +1082,36 @@ for var in var_list:
     # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JAS' + '_' + f'{var}.png'))
     # plt.savefig(os.path.join(basefol_out, tres + '_' + 'OND' + '_' + f'{var}.png'))
     plt.savefig(os.path.join(basefol_out, tres + '_' + 'all' + '_' + f'{var}.png'))
+    plt.close('all')
+
+    # scatteerplots
+    import numpy.ma as ma
+
+    fig, ax = plt.subplots(1, 1, figsize=(12, 12), dpi=300)
+    fig.suptitle(var)
+    x = var_t_res[var]
+    y = var_c_res[var]
+    time_list = pd.date_range(start=dt.datetime(2016, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
+    x = x.reindex(time_list)
+    y = y.reindex(time_list)
+    idx = np.isfinite(x) & np.isfinite(y)
+
+    ax.scatter(x[idx], y[idx])
+
+    b, a = np.polyfit(x[idx], y[idx], deg=1)
+    xseq = np.linspace(-40, 20, num=1000)
+    plt.plot(xseq, a + b * xseq, color='green', lw=1.5, ls='--')
+    corcoef = ma.corrcoef(x[idx], y[idx])
+    # print(corcoef_wh)
+    bias = np.nanmean((x[idx] - y[idx]) / y[idx]) * 100
+    N = x[idx].shape[0]
+    plt.xlabel('THAAO')
+    plt.ylabel('CARRA')
+
+    plt.tight_layout()
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JFM' + '_' + f'{var}.png'))
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'AMJ' + '_' + f'{var}.png'))
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JAS' + '_' + f'{var}.png'))
+    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'OND' + '_' + f'{var}.png'))
+    plt.savefig(os.path.join(basefol_out, tres + '_' + 'scatter' + '_' + f'{var}.png'))
     plt.close('all')
