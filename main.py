@@ -28,6 +28,7 @@ import julian
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.ma as ma
 import pandas as pd
 from metpy.calc import relative_humidity_from_dewpoint, wind_components, wind_direction, wind_speed
 from metpy.units import units
@@ -892,6 +893,7 @@ def windd_res(wd, ws, timeres):
     return wd_res
 
 
+SMALL_SIZE = 12
 c_col = 'red'
 e_col = 'blue'
 t_col = 'black'
@@ -917,6 +919,11 @@ basefol_t = os.path.join('H:\\Shared drives', 'Dati')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 myFmt = mdates.DateFormatter('%d-%b')
+
+extr = {'temp'  : {'min': -40, 'max': 20}, 'lwp': {'min': 0, 'max': 50}, 'rh': {'min': 0, 'max': 100},
+        'tcc'   : {'min': 0, 'max': 100}, 'windd': {'min': 0, 'max': 360}, 'winds': {'min': 0, 'max': 30},
+        'precip': {'min': 0, 'max': 0.001}, 'surf_pres': {'min': 925, 'max': 1013}, 'alb': {'min': 0, 'max': 1},
+        'iwv'   : {'min': 0, 'max': 30}}
 
 for var in var_list:
     print(var)
@@ -1041,24 +1048,10 @@ for var in var_list:
                     marker='.', ms=2)
         except AttributeError:
             pass
-        if var in ['iwv']:
-            ax[yy].set_ylim(0, 30)
-        elif var in ['lwp']:
-            ax[yy].set_ylim(0, 50)
-        elif var in ['temp']:
-            ax[yy].set_ylim(-40, 20)
-        elif var in ['surf_pres', 'msl_pres']:
-            ax[yy].set_ylim(925, 1013)
-        elif var in ['winds']:
-            ax[yy].set_ylim(0, 30)
-        elif var in ['windd']:
-            ax[yy].set_ylim(0, 360)
-        elif var in ['tcc', 'rh']:
-            ax[yy].set_ylim(0, 100)
-        elif var in ['precip']:
-            ax[yy].set_ylim(0, 0.001)
-        elif var in ['alb']:
-            ax[yy].set_ylim(0, 1)
+
+        ax[yy].set_ylim(extr[var]['min'], extr[var]['max'])
+
+        if var == 'alb':
             range1 = pd.date_range(dt.datetime(year, 1, 1), dt.datetime(year, 2, 15), freq=tres)
             range2 = pd.date_range(dt.datetime(year, 11, 1), dt.datetime(year, 12, 31), freq=tres)
             ax[yy].vlines(range1.values, 0, 1, color='grey', alpha=0.3)
@@ -1084,8 +1077,7 @@ for var in var_list:
     plt.savefig(os.path.join(basefol_out, tres + '_' + 'all' + '_' + f'{var}.png'))
     plt.close('all')
 
-    # scatteerplots
-    import numpy.ma as ma
+    # scatterplots
 
     fig, ax = plt.subplots(1, 1, figsize=(12, 12), dpi=300)
     fig.suptitle(var)
@@ -1096,17 +1088,25 @@ for var in var_list:
     y = y.reindex(time_list)
     idx = np.isfinite(x) & np.isfinite(y)
 
-    ax.scatter(x[idx], y[idx])
+    ax.hist2d(x[idx], y[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
+    # ax.scatter(x[idx], y[idx])
 
     b, a = np.polyfit(x[idx], y[idx], deg=1)
-    xseq = np.linspace(-40, 20, num=1000)
-    plt.plot(xseq, a + b * xseq, color='green', lw=1.5, ls='--')
+    xseq = np.linspace(extr[var]['min'], extr[var]['max'], num=1000)
+    plt.plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')
+    plt.plot([extr[var]['min'], extr[var]['max']], [extr[var]['min'], extr[var]['max']], color='black', lw=1.5, ls='-')
     corcoef = ma.corrcoef(x[idx], y[idx])
     # print(corcoef_wh)
-    bias = np.nanmean((x[idx] - y[idx]) / y[idx]) * 100
     N = x[idx].shape[0]
+    bias = np.nanmean((x[idx] - y[idx]) / y[idx]) * 100
+    plt.text(
+            0.75, 0.15, 'R=' + f"{corcoef[0, 1]:1.3}" + '\nbias=' + f"{bias:1.3}%" + '\nN=' + str(N), fontsize=20,
+            transform=ax.transAxes)
     plt.xlabel('THAAO')
     plt.ylabel('CARRA')
+
+    ax.set_xlim(extr[var]['min'], extr[var]['max'])
+    ax.set_ylim(extr[var]['min'], extr[var]['max'])
 
     plt.tight_layout()
     # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JFM' + '_' + f'{var}.png'))
