@@ -906,8 +906,8 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-tres = '12h '
-var_list = ['alb', 'iwv', 'temp', 'rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'lwp']  # , 'msl_pres']
+tres = '24h '
+var_list = ['windd', 'alb', 'iwv', 'temp', 'rh', 'tcc', 'winds', 'precip', 'surf_pres', 'lwp']  # , 'msl_pres']
 # 'cbh'
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -920,10 +920,10 @@ basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_compari
 
 myFmt = mdates.DateFormatter('%d-%b')
 
-extr = {'temp'  : {'min': -40, 'max': 20}, 'lwp': {'min': 0, 'max': 50}, 'rh': {'min': 0, 'max': 100},
-        'tcc'   : {'min': 0, 'max': 100}, 'windd': {'min': 0, 'max': 360}, 'winds': {'min': 0, 'max': 30},
+extr = {'temp': {'min': -40, 'max': 20}, 'lwp': {'min': 0, 'max': 50}, 'rh': {'min': 0, 'max': 100},
+        'tcc': {'min': 0, 'max': 100}, 'windd': {'min': 0, 'max': 360}, 'winds': {'min': 0, 'max': 30},
         'precip': {'min': 0, 'max': 0.001}, 'surf_pres': {'min': 925, 'max': 1013}, 'alb': {'min': 0, 'max': 1},
-        'iwv'   : {'min': 0, 'max': 30}}
+        'iwv': {'min': 0, 'max': 20}}
 
 for var in var_list:
     print(var)
@@ -988,6 +988,7 @@ for var in var_list:
             var_t2_res = pd.DataFrame()
 
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
+    fig.suptitle(var.upper() + ' all ' + tres, fontweight='bold')
     for [yy, year] in enumerate(years):
         print('plotting ' + str(year))
         try:
@@ -1066,7 +1067,6 @@ for var in var_list:
 
     plt.xlabel('Time')
     plt.legend()
-    fig.suptitle(var)
     plt.tight_layout()
     # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JFM' + '_' + f'{var}.png'))
     # plt.savefig(os.path.join(basefol_out, tres + '_' + 'AMJ' + '_' + f'{var}.png'))
@@ -1123,7 +1123,7 @@ for var in var_list:
             try:
                 print('plotting scatter THAAO-' + label)
 
-                fig.suptitle(var.upper() + ' ' + seass[seas]['name'], fontweight='bold')
+                fig.suptitle(var.upper() + ' ' + seass[seas]['name'] + ' ' + tres, fontweight='bold')
                 axs[i].set_title(label)
                 x = var_t_res[var]
 
@@ -1150,9 +1150,10 @@ for var in var_list:
 
                 N = x[idx].shape[0]
                 rmse = np.sqrt(np.sum((x[idx] - y[idx]) ** 2) / N)
+                bias = np.nanmean(x[idx] - y[idx])
                 axs[i].text(
-                        0.60, 0.15, 'R=' + f"{corcoef[0, 1]:1.3}" + '\nrmse=' + f"{rmse:1.3}" + '\nN=' + str(N),
-                        fontsize=14, transform=axs[i].transAxes)
+                        0.60, 0.15, 'R=' + f"{corcoef[0, 1]:1.3}" + '\nrmse=' + f"{rmse:1.3}" + '\nN=' + str(
+                            N) + '\nbias=' + f"{bias:1.3}", fontsize=14, transform=axs[i].transAxes)
                 axs[i].set_xlabel('THAAO (or VESPA)')
                 axs[i].set_xlim(extr[var]['min'], extr[var]['max'])
                 axs[i].set_ylim(extr[var]['min'], extr[var]['max'])
