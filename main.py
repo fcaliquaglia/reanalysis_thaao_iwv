@@ -907,7 +907,7 @@ t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
 tres = '12h '
-var_list = ['temp', 'lwp', 'rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'alb', 'iwv']  # , 'msl_pres']
+var_list = ['alb', 'iwv', 'temp', 'rh', 'tcc', 'windd', 'winds', 'precip', 'surf_pres', 'lwp']  # , 'msl_pres']
 # 'cbh'
 years = np.arange(2016, 2025, 1)
 # years = np.arange(2019, 2022, 1)  # zoom
@@ -1049,15 +1049,13 @@ for var in var_list:
         except AttributeError:
             pass
 
-        ax[yy].set_ylim(extr[var]['min'], extr[var]['max'])
-
         if var == 'alb':
             range1 = pd.date_range(dt.datetime(year, 1, 1), dt.datetime(year, 2, 15), freq=tres)
             range2 = pd.date_range(dt.datetime(year, 11, 1), dt.datetime(year, 12, 31), freq=tres)
             ax[yy].vlines(range1.values, 0, 1, color='grey', alpha=0.3)
             ax[yy].vlines(range2.values, 0, 1, color='grey', alpha=0.3)
         else:
-            ax[yy].set_ylim(0)
+            ax[yy].set_ylim(extr[var]['min'], extr[var]['max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
         ax[yy].xaxis.set_major_formatter(myFmt)
         # ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 3, 31))
@@ -1079,39 +1077,86 @@ for var in var_list:
 
     # scatterplots
 
-    fig, ax = plt.subplots(1, 1, figsize=(12, 12), dpi=300)
-    fig.suptitle(var)
-    x = var_t_res[var]
-    y = var_c_res[var]
-    time_list = pd.date_range(start=dt.datetime(2016, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
-    x = x.reindex(time_list)
-    y = y.reindex(time_list)
-    idx = np.isfinite(x) & np.isfinite(y)
+    seass = {'all': {'name': 'all', 'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},
+             'DJF': {'name': 'DJF', 'months': [12, 1, 2], 'col': 'blue'},
+             'MAM': {'name': 'MAM', 'months': [3, 4, 5], 'col': 'green'},
+             'JJA': {'name': 'JJA', 'months': [6, 7, 8], 'col': 'orange'},
+             'SON': {'name': 'SON', 'months': [9, 10, 11], 'col': 'brown'}}
 
-    ax.hist2d(x[idx], y[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
-    # ax.scatter(x[idx], y[idx])
+    for seas in seass:
+        comps = ['c', 'e', 't1', 't2']
+        fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
+        axs = ax.ravel()
+        for i, comp in enumerate(comps):
+            if comp == 'c':
+                label = 'CARRA'
+                axs[i].set_ylabel(label)
+                try:
+                    y = var_c_res[var]
+                except KeyError:
+                    print('error with ' + label)
+                    continue
+            if comp == 'e':
+                label = 'ERA5'
+                axs[i].set_ylabel(label)
+                try:
+                    y = var_e_res[var]
+                except KeyError:
+                    print('error with ' + label)
+                    continue
+            if comp == 't1':
+                label = 'HATPRO'
+                axs[i].set_ylabel(label)
+                try:
+                    y = var_t1_res[var]
+                except KeyError:
+                    print('error with ' + label)
+                    continue
+            if comp == 't2':
+                label = 'AWS ECAPAC'
+                axs[i].set_ylabel(label)
+                try:
+                    y = var_t2_res[var]
+                except KeyError:
+                    print('error with ' + label)
+                    continue
+            try:
+                print('plotting scatter THAAO-' + label)
 
-    b, a = np.polyfit(x[idx], y[idx], deg=1)
-    xseq = np.linspace(extr[var]['min'], extr[var]['max'], num=1000)
-    plt.plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')
-    plt.plot([extr[var]['min'], extr[var]['max']], [extr[var]['min'], extr[var]['max']], color='black', lw=1.5, ls='-')
-    corcoef = ma.corrcoef(x[idx], y[idx])
-    # print(corcoef_wh)
-    N = x[idx].shape[0]
-    bias = np.nanmean((x[idx] - y[idx]) / y[idx]) * 100
-    plt.text(
-            0.75, 0.15, 'R=' + f"{corcoef[0, 1]:1.3}" + '\nbias=' + f"{bias:1.3}%" + '\nN=' + str(N), fontsize=20,
-            transform=ax.transAxes)
-    plt.xlabel('THAAO')
-    plt.ylabel('CARRA')
+                fig.suptitle(var.upper() + ' ' + seass[seas]['name'], fontweight='bold')
+                axs[i].set_title(label)
+                x = var_t_res[var]
 
-    ax.set_xlim(extr[var]['min'], extr[var]['max'])
-    ax.set_ylim(extr[var]['min'], extr[var]['max'])
+                time_list = pd.date_range(start=dt.datetime(2016, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
+                x_all = x.reindex(time_list)
+                x = x_all.loc[(x_all.index.month.isin(seass[seas]['months']))]
+                y_all = y.reindex(time_list)
+                y = y_all.loc[(y_all.index.month.isin(seass[seas]['months']))]
 
-    plt.tight_layout()
-    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JFM' + '_' + f'{var}.png'))
-    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'AMJ' + '_' + f'{var}.png'))
-    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'JAS' + '_' + f'{var}.png'))
-    # plt.savefig(os.path.join(basefol_out, tres + '_' + 'OND' + '_' + f'{var}.png'))
-    plt.savefig(os.path.join(basefol_out, tres + '_' + 'scatter' + '_' + f'{var}.png'))
-    plt.close('all')
+                idx = np.isfinite(x) & np.isfinite(y)
+
+                if seass[seas]['name'] != 'all':
+                    axs[i].scatter(x[idx], y[idx], color=seass[seas]['col'])
+                else:
+                    axs[i].hist2d(x[idx], y[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
+
+                b, a = np.polyfit(x[idx], y[idx], deg=1)
+                xseq = np.linspace(extr[var]['min'], extr[var]['max'], num=1000)
+                axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')
+                axs[i].plot(
+                        [extr[var]['min'], extr[var]['max']], [extr[var]['min'], extr[var]['max']], color='black',
+                        lw=1.5, ls='-')
+                corcoef = ma.corrcoef(x[idx], y[idx])
+
+                N = x[idx].shape[0]
+                rmse = np.sqrt(np.sum((x[idx] - y[idx]) ** 2) / N)
+                axs[i].text(
+                        0.60, 0.15, 'R=' + f"{corcoef[0, 1]:1.3}" + '\nrmse=' + f"{rmse:1.3}" + '\nN=' + str(N),
+                        fontsize=14, transform=axs[i].transAxes)
+                axs[i].set_xlabel('THAAO (or VESPA)')
+                axs[i].set_xlim(extr[var]['min'], extr[var]['max'])
+                axs[i].set_ylim(extr[var]['min'], extr[var]['max'])
+            except:
+                print('error with ' + label)
+        plt.savefig(os.path.join(basefol_out, tres + '_scatter_' + seass[seas]['name'] + '_' + f'{var}.png'))
+        plt.close('all')
