@@ -183,6 +183,7 @@ def read_rh():
     e_t = pd.DataFrame()
     e_td = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
@@ -204,7 +205,6 @@ def read_rh():
 
     # ERA5
     fn1 = 'thaao_era5_2m_dewpoint_temperature_'
-    fn2 = 'thaao_era5_surface_pressure_'
     fn3 = 'thaao_era5_2m_temperature_'
     for yy, year in enumerate(years):
         try:
@@ -274,13 +274,14 @@ def read_rh():
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["RH"]).astype(float)
     t2.columns = [var]
-    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
-    return [c, e, t, t1, t2]
+
+    return [c, e, l, t, t1, t2]
 
 
 def read_msl_pres():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
@@ -318,12 +319,13 @@ def read_msl_pres():
     # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
     # t2.columns = [var]
 
-    return [c, e, t, t1, t2]
+    return [c, e, l, t, t1, t2]
 
 
 def read_surf_pres():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
@@ -391,12 +393,13 @@ def read_surf_pres():
     t2 = t2.iloc[:, :].filter(["BP_mbar"]).astype(float)
     t2.columns = [var]
     # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
-    return [c, e, t, t1, t2]
+    return [c, e, l, t, t1, t2]
 
 
 def read_alb():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
 
     # CARRA
@@ -466,12 +469,14 @@ def read_alb():
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     t.columns = [var]
-    return [c, e, t]
+
+    return [c, e, l, t]
 
 
 def read_iwv():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
 
@@ -543,12 +548,13 @@ def read_iwv():
     t1['IWV'] = t1['IWV'].values
     t1.columns = [var]
 
-    return [c, e, t, t1]
+    return [c, e, l, t, t1]
 
 
 def read_winds():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
@@ -620,13 +626,14 @@ def read_winds():
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WS_aws"]).astype(float)
     t2.columns = [var]
-    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
-    return [c, e, t, t1, t2]
+
+    return [c, e, l, t, t1, t2]
 
 
 def read_windd():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
@@ -697,13 +704,14 @@ def read_windd():
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WD_aws"]).astype(float)
     t2.columns = [var]
-    # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
-    return [c, e, t, t1, t2]
+
+    return [c, e, l, t, t1, t2]
 
 
 def read_tcc():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l = pd.DataFrame()
     t = pd.DataFrame()
 
     # CARRA
@@ -738,12 +746,13 @@ def read_tcc():
     e[2] = e.values * 100.
     e.columns = [var]
 
-    return [c, e, t]
+    return [c, e, l, t]
 
 
 def read_cbh():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
 
     # CARRA
@@ -777,12 +786,13 @@ def read_cbh():
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [var]
 
-    return [c, e, t]
+    return [c, e, l, t]
 
 
 def read_precip():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l = pd.DatFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
@@ -839,15 +849,16 @@ def read_precip():
     t2.columns = [var]
     t2 = t2
 
-    return [c, e, t, t1, t2]
+    return [c, e, l, t, t1, t2]
 
 
 def read_lwp():
     c = pd.DataFrame()
     e = pd.DataFrame()
+    l=pd.DataFrame()
     t = pd.DataFrame()
     t1 = pd.DataFrame()
-    t2 = pd.DataFrame()
+
 
     # CARRA
     fn = 'thaao_carra_total_column_cloud_liquid_water_'
@@ -906,7 +917,7 @@ def read_lwp():
             print('NOT FOUND: ' + fn + str(year) + '.dat')
     t1.columns = [var]
 
-    return [c, e, t, t1]
+    return [c, e, l, t, t1]
 
 
 def read(var):
