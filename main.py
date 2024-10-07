@@ -107,23 +107,23 @@ def read_temp():
     c[2] = c.values - 273.15
     c.columns = [var]
 
-    # # ERA5
-    # fn = 'thaao_era5_2m_temperature_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e_tmp[e_tmp == -32767.0] = np.nan
-    #         e = pd.concat([e, e_tmp], axis=0)
-    #
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
-    # e.drop(columns=[0, 1], inplace=True)
-    # e[2] = e[2].values - 273.15
-    # e.columns = [var]
+    # ERA5
+    fn = 'thaao_era5_2m_temperature_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2] = e[2].values - 273.15
+    e.columns = [var]
 
     # ERA5-L
     fn = 'thaao_era5-land_2m_temperature_'
@@ -1026,7 +1026,8 @@ def plot_ts(period_label):
             pass
         try:
             ax[yy].plot(
-                    var_l_res[var_l_res.index.year == year], color=l_col, label='ERA5-LAND ' + tres, lw=0, marker='.', ms=2)
+                    var_l_res[var_l_res.index.year == year], color=l_col, label='ERA5-LAND ' + tres, lw=0, marker='.',
+                    ms=2)
         except AttributeError:
             pass
         try:
@@ -1095,6 +1096,12 @@ def plot_residuals(period_label):
             pass
         try:
             ax[yy].plot(
+                    (var_l_res[var_l_res.index.year == year] - var_ref[var_ref.index.year == year]), color=l_col,
+                    label='ERA5-LAND ' + tres, lw=1, marker='.', ms=0)
+        except AttributeError:
+            pass
+        try:
+            ax[yy].plot(
                     (var_t1_res[var_t1_res.index.year == year] - var_ref[var_ref.index.year == year]), color=t1_col,
                     label='HATPRO ' + tres, lw=1, marker='.', ms=0)
         except AttributeError:
@@ -1117,10 +1124,6 @@ def plot_residuals(period_label):
         ax[yy].set_ylim(extr[var]['res_min'], extr[var]['res_max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
         ax[yy].xaxis.set_major_formatter(myFmt)
-        # ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 3, 31))
-        # ax[yy].set_xlim(dt.datetime(year, 4, 1), dt.datetime(year, 6, 30))
-        # ax[yy].set_xlim(dt.datetime(year, 7, 1), dt.datetime(year, 9, 30))
-        # ax[yy].set_xlim(dt.datetime(year, 10, 1), dt.datetime(year, 12, 31))
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
     plt.xlabel('Time')
     plt.legend()
@@ -1235,7 +1238,7 @@ def plot_scatter(period_label):
 
 def data_resampling(vr, var_c, var_e, var_l, var_t, var_t1, var_t2):
     if vr == 'windd':
-        [var_c_ws, var_e_ws, var_t_ws, var_t1_ws, var_t2_ws] = read('winds')
+        [var_c_ws, var_e_ws, var_l_ws, var_t_ws, var_t1_ws, var_t2_ws] = read('winds')
         try:
             var_c_res = windd_res(var_c, var_c_ws, tres)
         except (TypeError, NameError, ValueError):
@@ -1244,6 +1247,10 @@ def data_resampling(vr, var_c, var_e, var_l, var_t, var_t1, var_t2):
             var_e_res = windd_res(var_e, var_e_ws, tres)
         except (TypeError, NameError, ValueError):
             var_e_res = pd.DataFrame()
+        try:
+            var_l_res = windd_res(var_l, var_l_ws, tres)
+        except (TypeError, NameError, ValueError):
+            var_l_res = pd.DataFrame()
         try:
             var_t_res = windd_res(var_t, var_t_ws, tres)
         except (TypeError, NameError, ValueError):
@@ -1265,6 +1272,10 @@ def data_resampling(vr, var_c, var_e, var_l, var_t, var_t1, var_t2):
             var_e_res = precip_res(var_e, tres)
         except (TypeError, NameError, ValueError):
             var_e_res = pd.DataFrame()
+        try:
+            var_l_res = precip_res(var_l, tres)
+        except:
+            var_l_res = pd.DataFrame()
         try:
             var_t_res = precip_res(var_t, tres)
         except (TypeError, NameError, ValueError):
@@ -1319,11 +1330,11 @@ if __name__ == "__main__":
         var_t1 = pd.DataFrame()
         var_t2 = pd.DataFrame()
         if var in ['iwv', 'lwp']:
-            [var_c, var_e, var_t, var_t1] = read(var)
+            [var_c, var_e, var_l, var_t, var_t1] = read(var)
         elif var in ['temp', 'msl_pres', 'surf_pres', 'rh', 'winds', 'windd', 'precip']:
             [var_c, var_e, var_l, var_t, var_t1, var_t2] = read(var)
         else:
-            [var_c, var_e, var_t] = read(var)
+            [var_c, var_e, var_l, var_t] = read(var)
 
         # time RESAMPLING (specific for windd-->using wind components, and precip--> cumulative)
         var_c_res, var_e_res, var_l_res, var_t_res, var_t1_res, var_t2_res = data_resampling(
