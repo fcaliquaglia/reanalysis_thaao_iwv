@@ -44,9 +44,11 @@ if __name__ == "__main__":
 
         # time RESAMPLING (specific for windd-->using wind components, and precip--> cumulative)
         var_c_res, var_e_res, var_l_res, var_t_res, var_t1_res, var_t2_res = data_resampling(
-                var, var_c, var_e, var_l, var_t, var_t1, var_t2)
+                var, tres, var_c, var_e, var_l, var_t, var_t1, var_t2)
 
-        plot_ts('all')
-        plot_residuals('all')
+        all_var = [var_c, var_e, var_l, var_t, var_t1, var_t2, var_c_res, var_e_res, var_l_res, var_t_res, var_t1_res,
+                   var_t2_res]
+        plot_ts(var, all_var, 'all')
+        plot_residuals(var, all_var, 'all')
         for seas in seass:
-            plot_scatter(seas)
+            plot_scatter(var, all_var, seas)

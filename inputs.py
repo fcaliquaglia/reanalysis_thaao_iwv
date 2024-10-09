@@ -21,10 +21,12 @@ __email__ = "filippo.caliquaglia@gmail.com"
 __status__ = "Research"
 __lastupdate__ = ""
 
+import datetime as dt
 import os
 
 import matplotlib.dates as mdates
 import numpy as np
+import pandas as pd
 
 ## FOLDERS
 basefol_c = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'carra', 'thaao')
@@ -35,7 +37,7 @@ basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_compari
 
 ##
 tres = '24h '
-var_list = ['temp', 'lwp', 'precip', 'windd', 'winds', 'alb', 'iwv', 'rh', 'surf_pres']
+var_list = ['temp']  # , 'lwp', 'precip', 'windd', 'winds', 'alb', 'iwv', 'rh', 'surf_pres']
 # 'lw_down', 'lw_up', 'sw_up', 'sw_down', 'tcc', 'cbh'
 
 years = np.arange(2016, 2025, 1)
@@ -52,14 +54,14 @@ seass = {'all': {'name': 'all', 'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 SMALL_SIZE = 12
 c_col = 'red'
 e_col = 'blue'
-l_col = 'purple'
+l_col = 'darkgreen'
 t_col = 'black'
 t1_col = 'green'
 t2_col = 'purple'
 
 c_col_ori = 'orange'
 e_col_ori = 'cyan'
-l_col_ori = 'violet'
+l_col_ori = 'lightgreen'
 t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
@@ -76,3 +78,5 @@ extr = {'temp'     : {'min': -40, 'max': 20, 'res_min': -10, 'res_max': 10},
         'surf_pres': {'min': 925, 'max': 1013, 'res_min': -20, 'res_max': 20},
         'alb'      : {'min': 0, 'max': 1, 'res_min': -0.5, 'res_max': 0.5},
         'iwv'      : {'min': 0, 'max': 20, 'res_min': -5, 'res_max': 5}}
+
+aws_ecapac_daterage = pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 12, 31), freq='1D')

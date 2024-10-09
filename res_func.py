@@ -25,6 +25,8 @@ import pandas as pd
 from metpy.calc import wind_components, wind_direction
 from metpy.units import units
 
+from read_func import read_winds
+
 
 def precip_res(pr, timeres):
     pr_res = pr.resample(timeres).sum()
@@ -54,9 +56,9 @@ def windd_res(wd, ws, timeres):
     return wd_res
 
 
-def data_resampling(vr, var_c, var_e, var_l, var_t, var_t1, var_t2):
+def data_resampling(vr, tres, var_c, var_e, var_l, var_t, var_t1, var_t2):
     if vr == 'windd':
-        [var_c_ws, var_e_ws, var_l_ws, var_t_ws, var_t1_ws, var_t2_ws] = read('winds')
+        [var_c_ws, var_e_ws, var_l_ws, var_t_ws, var_t1_ws, var_t2_ws] = read_winds('winds')
         try:
             var_c_res = windd_res(var_c, var_c_ws, tres)
         except (TypeError, NameError, ValueError):

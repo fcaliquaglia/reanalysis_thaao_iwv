@@ -22,12 +22,13 @@ __status__ = "Research"
 __lastupdate__ = ""
 
 import julian
-import pandas as pd
+from metpy.calc import relative_humidity_from_dewpoint, wind_direction, wind_speed
+from metpy.units import units
 
 from inputs import *
 
 
-def read_temp():
+def read_temp(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -49,7 +50,7 @@ def read_temp():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values - 273.15
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_2m_temperature_'
@@ -67,7 +68,7 @@ def read_temp():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e[2].values - 273.15
-    e.columns = [var]
+    e.columns = [vr]
 
     # ERA5-L
     fn = 'thaao_era5-land_2m_temperature_'
@@ -85,7 +86,7 @@ def read_temp():
     l.index = pd.to_datetime(l[0] + ' ' + l[1], format='%Y-%m-%d %H:%M:%S')
     l.drop(columns=[0, 1], inplace=True)
     l[2] = l[2].values - 273.15
-    l.columns = [var]
+    l.columns = [vr]
 
     # THAAO
     import xarray as xr
@@ -97,11 +98,11 @@ def read_temp():
         print('NOT FOUND: ' + fn + '.nc')
     t.drop(columns=['BP_hPa', 'RH_%'], inplace=True)
     t['Air_K'] = t.values - 273.15
-    t.columns = [var]
+    t.columns = [vr]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    for i in aws_ecapac_daterange:
         try:
             file = os.path.join(
                     basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
@@ -116,12 +117,12 @@ def read_temp():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
-    t2.columns = [var]
+    t2.columns = [vr]
 
     return [c, e, l, t, t1, t2]
 
 
-def read_rh():
+def read_rh(vr):
     c = pd.DataFrame()
     e_p = pd.DataFrame()
     e_t = pd.DataFrame()
@@ -145,7 +146,7 @@ def read_rh():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn1 = 'thaao_era5_2m_dewpoint_temperature_'
@@ -163,7 +164,7 @@ def read_rh():
             print('NOT FOUND: ' + fn3 + str(year) + '.txt')
     e_t.index = pd.to_datetime(e_t[0] + ' ' + e_t[1], format='%Y-%m-%d %H:%M:%S')
     e_t.drop(columns=[0, 1], inplace=True)
-    e_t[2].name = var
+    e_t[2].name = vr
     e_t.columns = ['e_t']
 
     for yy, year in enumerate(years):
@@ -179,14 +180,14 @@ def read_rh():
             print('NOT FOUND: ' + fn1 + str(year) + '.txt')
     e_td.index = pd.to_datetime(e_td[0] + ' ' + e_td[1], format='%Y-%m-%d %H:%M:%S')
     e_td.drop(columns=[0, 1], inplace=True)
-    e_td[2].name = var
+    e_td[2].name = vr
     e_td.columns = ['e_td']
 
     e = pd.concat([e_td, e_t], axis=1)
 
     e['rh'] = relative_humidity_from_dewpoint(e['e_t'].values * units.K, e['e_td'].values * units.K).to('percent')
     e.drop(columns=['e_t', 'e_td'], inplace=True)
-    e.columns = [var]
+    e.columns = [vr]
 
     # THAAO
     import xarray as xr
@@ -197,12 +198,12 @@ def read_rh():
     except FileNotFoundError:
         print('NOT FOUND: ' + fn + '.nc')
     t.drop(columns=['BP_hPa', 'Air_K'], inplace=True)
-    t.columns = [var]
+    t.columns = [vr]
     #    t.drop(columns=['BP_hPa','Air_K', 'RH_%'], inplace=True)
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    for i in aws_ecapac_daterange:
         try:
             file = os.path.join(
                     basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
@@ -217,12 +218,12 @@ def read_rh():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["RH"]).astype(float)
-    t2.columns = [var]
+    t2.columns = [vr]
 
     return [c, e, l, t, t1, t2]
 
 
-def read_msl_pres():
+def read_msl_pres(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -243,11 +244,11 @@ def read_msl_pres():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # # AWS ECAPAC
     # fn = 'AWS_THAAO_'
-    # for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    # for i in aws_ecapac_daterange:
     #     try:
     #         file = os.path.join(
     #                 basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
@@ -261,12 +262,12 @@ def read_msl_pres():
     # t2.index = pd.DatetimeIndex(t2.index)
     # t2.index.name = 'datetime'
     # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
-    # t2.columns = [var]
+    # t2.columns = [vr]
 
     return [c, e, l, t, t1, t2]
 
 
-def read_surf_pres():
+def read_surf_pres(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -288,7 +289,7 @@ def read_surf_pres():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 100.
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_surface_pressure_'
@@ -305,7 +306,7 @@ def read_surf_pres():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 100.
-    e.columns = [var]
+    e.columns = [vr]
 
     # THAAO
     import xarray as xr
@@ -316,11 +317,11 @@ def read_surf_pres():
     except FileNotFoundError:
         print('NOT FOUND: ' + fn + '.nc')
     t.drop(columns=['Air_K', 'RH_%'], inplace=True)
-    t.columns = [var]
+    t.columns = [vr]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    for i in aws_ecapac_daterange:
         try:
             file = os.path.join(
                     basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
@@ -335,12 +336,12 @@ def read_surf_pres():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["BP_mbar"]).astype(float)
-    t2.columns = [var]
+    t2.columns = [vr]
     # "BP_mbar", "AirTC", "RH", "WS_aws", "WD_aws"
     return [c, e, l, t, t1, t2]
 
 
-def read_alb():
+def read_alb(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -360,7 +361,7 @@ def read_alb():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 100.
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_forecast_albedo_'
@@ -376,7 +377,7 @@ def read_alb():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e.columns = [var]
+    e.columns = [vr]
 
     # # ERA5
     # fn = 'thaao_era5_snow_albedo_'
@@ -392,7 +393,7 @@ def read_alb():
     #         print('NOT FOUND: ' + fn + str(year) + '.txt')
     # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     # e.drop(columns=[0, 1], inplace=True)
-    # e.columns = [var]
+    # e.columns = [vr]
 
     # THAAO
     fn = 'ALBEDO_SW_'
@@ -412,12 +413,12 @@ def read_alb():
             print('OK: ' + fn + str(year) + '.txt')
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.txt')
-    t.columns = [var]
+    t.columns = [vr]
 
     return [c, e, l, t]
 
 
-def read_iwv():
+def read_iwv(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -437,7 +438,7 @@ def read_iwv():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_total_column_water_vapour_'
@@ -453,7 +454,7 @@ def read_iwv():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e.columns = [var]
+    e.columns = [vr]
 
     # THAAO (vespa)
     fn = 'Vapor_20160712_20221130'
@@ -466,7 +467,7 @@ def read_iwv():
         print('NOT FOUND: ' + fn + str(year) + '.txt')
     t.index = pd.to_datetime(t[0] + ' ' + t[1], format='%Y-%m-%d %H:%M:%S')
     t.drop(columns=[0, 1], inplace=True)
-    t.columns = [var]
+    t.columns = [vr]
 
     # THAAO (hatpro)
     fn = 'QC_IWV_15_min_'
@@ -490,12 +491,12 @@ def read_iwv():
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.DAT')
     t1['IWV'] = t1['IWV'].values
-    t1.columns = [var]
+    t1.columns = [vr]
 
     return [c, e, l, t, t1]
 
 
-def read_winds():
+def read_winds(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -516,7 +517,7 @@ def read_winds():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn_u = 'thaao_era5_10m_u_component_of_wind_'
@@ -549,12 +550,12 @@ def read_winds():
     e_ws = wind_speed(e_u.values * units('m/s'), e_v.values * units('m/s'))
 
     e.index = e_v.index
-    e[var] = e_ws.magnitude
-    e.columns = [var]
+    e[vr] = e_ws.magnitude
+    e.columns = [vr]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    for i in aws_ecapac_daterange:
         try:
             file = os.path.join(
                     basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
@@ -569,12 +570,12 @@ def read_winds():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WS_aws"]).astype(float)
-    t2.columns = [var]
+    t2.columns = [vr]
 
     return [c, e, l, t, t1, t2]
 
 
-def read_windd():
+def read_windd(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -595,7 +596,7 @@ def read_windd():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn_u = 'thaao_era5_10m_u_component_of_wind_'
@@ -627,12 +628,12 @@ def read_windd():
 
     e_wd = wind_direction(e_u.values * units('m/s'), e_v.values * units('m/s'))
     e.index = e_v.index
-    e[var] = e_wd.magnitude
-    e.columns = [var]
+    e[vr] = e_wd.magnitude
+    e.columns = [vr]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    for i in aws_ecapac_daterange:
         try:
             file = os.path.join(
                     basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
@@ -647,12 +648,12 @@ def read_windd():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WD_aws"]).astype(float)
-    t2.columns = [var]
+    t2.columns = [vr]
 
     return [c, e, l, t, t1, t2]
 
 
-def read_tcc():
+def read_tcc(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -671,7 +672,7 @@ def read_tcc():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_total_cloud_cover_'
@@ -688,12 +689,12 @@ def read_tcc():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 100.
-    e.columns = [var]
+    e.columns = [vr]
 
     return [c, e, l, t]
 
 
-def read_cbh():
+def read_cbh(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -712,7 +713,7 @@ def read_cbh():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_cloud_base_height_'
@@ -728,12 +729,12 @@ def read_cbh():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e.columns = [var]
+    e.columns = [vr]
 
     return [c, e, l, t]
 
 
-def read_precip():
+def read_precip(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -754,7 +755,7 @@ def read_precip():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_total_precipitation_'
@@ -771,11 +772,11 @@ def read_precip():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 1000.
-    e.columns = [var]
+    e.columns = [vr]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
-    for i in pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 6, 30), freq='1D'):
+    for i in aws_ecapac_daterange:
         try:
             file = os.path.join(
                     basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
@@ -790,13 +791,13 @@ def read_precip():
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["PR"]).astype(float)
-    t2.columns = [var]
+    t2.columns = [vr]
     t2 = t2
 
     return [c, e, l, t, t1, t2]
 
 
-def read_lwp():
+def read_lwp(vr):
     c = pd.DataFrame()
     e = pd.DataFrame()
     l = pd.DataFrame()
@@ -817,7 +818,7 @@ def read_lwp():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values * 10000
-    c.columns = [var]
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_total_column_cloud_liquid_water_'
@@ -834,7 +835,7 @@ def read_lwp():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 1000
-    e.columns = [var]
+    e.columns = [vr]
 
     # THAAO (hatpro)
     fn = 'LWP_15_min_'
@@ -858,7 +859,7 @@ def read_lwp():
             print('OK: ' + fn + str(year) + '.dat')
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.dat')
-    t1.columns = [var]
+    t1.columns = [vr]
 
     return [c, e, l, t, t1]
 
@@ -870,26 +871,26 @@ def read(var):
     :return:
     """
     if var == 'temp':
-        return read_temp()
+        return read_temp(var)
     if var == 'rh':
-        return read_rh()
+        return read_rh(var)
     if var == 'surf_pres':
-        return read_surf_pres()
+        return read_surf_pres(var)
     if var == 'msl_pres':
-        return read_msl_pres()
+        return read_msl_pres(var)
     if var == 'iwv':
-        return read_iwv()
+        return read_iwv(var)
     if var == 'winds':
-        return read_winds()
+        return read_winds(var)
     if var == 'windd':
-        return read_windd()
+        return read_windd(var)
     if var == 'alb':
-        return read_alb()
+        return read_alb(var)
     if var == 'precip':
-        return read_precip()
+        return read_precip(var)
     if var == 'cbh':
-        return read_cbh()
+        return read_cbh(var)
     if var == 'tcc':
-        return read_tcc()
+        return read_tcc(var)
     if var == 'lwp':
-        return read_lwp()
+        return read_lwp(var)
