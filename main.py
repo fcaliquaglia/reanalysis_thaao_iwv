@@ -37,7 +37,7 @@ if __name__ == "__main__":
         var_t2 = pd.DataFrame()
         if var in ['iwv', 'lwp']:
             [var_c, var_e, var_l, var_t, var_t1] = read(var)
-        elif var in ['temp', 'msl_pres', 'surf_pres', 'rh', 'winds', 'windd', 'precip']:
+        elif var in ['temp', 'msl_pres', 'surf_pres', 'rh', 'winds', 'windd', 'precip', 'alb']:
             [var_c, var_e, var_l, var_t, var_t1, var_t2] = read(var)
         else:
             [var_c, var_e, var_l, var_t] = read(var)
