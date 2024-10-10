@@ -496,6 +496,9 @@ def read_iwv():
             print('NOT FOUND: ' + fn + str(year) + '.DAT')
     t1['IWV'] = t1['IWV'].values
     t1.columns = [vr]
+    # cleaning HATPRO DATA
+    t1[t1 < 0] = np.nan
+
 
     return [c, e, l, t, t1]
 
@@ -827,8 +830,10 @@ def read_lwp():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2] = c.values * 1000
+    c[2] = c.values * 1000000
     c.columns = [vr]
+    c[c < 0] = np.nan
+    c[c < 5] = 0
 
     # ERA5
     fn = 'thaao_era5_total_column_cloud_liquid_water_'
@@ -846,6 +851,8 @@ def read_lwp():
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 1000
     e.columns = [vr]
+    e[c < 0] = np.nan
+    e[e < 5] = 0
 
     # THAAO (hatpro)
     fn = 'LWP_15_min_'
@@ -870,6 +877,9 @@ def read_lwp():
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.dat')
     t1.columns = [vr]
+    # cleaning HATPRO DATA
+    t1[t1 < 0] = np.nan
+    t1[t1 < 5] = 0
 
     return [c, e, l, t, t1]
 

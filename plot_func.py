@@ -35,7 +35,7 @@ def plot_ts(vr, avar, period_label):
     :param period_label:
     :return:
     """
-
+    print('TIMESERIES')
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
     fig.suptitle(vr.upper() + ' all ' + tres, fontweight='bold')
@@ -139,6 +139,7 @@ def plot_residuals(vr, avar, period_label):
     :param period_label:
     :return:
     """
+    print('RESIDUALS')
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
     fig.suptitle('residuals ' + vr.upper() + ' all ' + tres, fontweight='bold')
@@ -212,6 +213,7 @@ def plot_scatter(vr, avar, period_label):
     :param period_label:
     :return:
     """
+    print('SCATTERPLOTS')
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
     axs = ax.ravel()
