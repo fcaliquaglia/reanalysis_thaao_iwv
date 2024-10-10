@@ -365,6 +365,7 @@ def read_alb():
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 100.
     c.columns = [vr]
+    c[c <= 0.1] = np.nan
 
     # ERA5
     fn = 'thaao_era5_forecast_albedo_'
@@ -381,6 +382,7 @@ def read_alb():
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [vr]
+    e[e <= 0.1] = np.nan
 
     # ERA5
     fn = 'thaao_era5_snow_albedo_'
@@ -397,6 +399,7 @@ def read_alb():
     t2.index = pd.to_datetime(t2[0] + ' ' + t2[1], format='%Y-%m-%d %H:%M:%S')
     t2.drop(columns=[0, 1], inplace=True)
     t2.columns = [vr]
+    t2[t2 <= 0.1] = np.nan
 
     # THAAO
     fn = 'ALBEDO_SW_'
@@ -417,6 +420,7 @@ def read_alb():
         except FileNotFoundError:
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     t.columns = [vr]
+    t[t <= 0.1] = np.nan
 
     return [c, e, l, t, t1, t2]
 
@@ -498,7 +502,6 @@ def read_iwv():
     t1.columns = [vr]
     # cleaning HATPRO DATA
     t1[t1 < 0] = np.nan
-
 
     return [c, e, l, t, t1]
 
@@ -833,7 +836,7 @@ def read_lwp():
     c[2] = c.values * 1000000
     c.columns = [vr]
     c[c < 0] = np.nan
-    c[c < 5] = 0
+    c[c < 15] = 0
 
     # ERA5
     fn = 'thaao_era5_total_column_cloud_liquid_water_'
@@ -852,7 +855,7 @@ def read_lwp():
     e[2] = e.values * 1000
     e.columns = [vr]
     e[c < 0] = np.nan
-    e[e < 5] = 0
+    e[e < 15] = 0
 
     # THAAO (hatpro)
     fn = 'LWP_15_min_'
@@ -879,7 +882,7 @@ def read_lwp():
     t1.columns = [vr]
     # cleaning HATPRO DATA
     t1[t1 < 0] = np.nan
-    t1[t1 < 5] = 0
+    t1[t1 < 15] = 0
 
     return [c, e, l, t, t1]
 

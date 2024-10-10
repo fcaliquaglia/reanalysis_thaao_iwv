@@ -303,28 +303,28 @@ def plot_scatter(vr, avar, period_label):
             if x.empty | y.empty:
                 continue
             x_all = x.reindex(time_list)
-            x = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
+            x_s = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
             y_all = y.reindex(time_list)
-            y = y_all.loc[(y_all.index.month.isin(seass[period_label]['months']))]
+            y_s = y_all.loc[(y_all.index.month.isin(seass[period_label]['months']))]
 
-            idx = np.isfinite(x) & np.isfinite(y)
+            idx = np.isfinite(x_s) & np.isfinite(y_s)
 
             if seass[period_label]['name'] != 'all':
-                axs[i].scatter(x[idx], y[idx], color=seass[period_label]['col'])
+                axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
             else:
-                axs[i].hist2d(x[idx], y[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
+                axs[i].hist2d(x_s[idx], y_s[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
 
-            b, a = np.polyfit(x[idx], y[idx], deg=1)
+            b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
             xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
             axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')
             axs[i].plot(
                     [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,
                     ls='-')
-            corcoef = ma.corrcoef(x[idx], y[idx])
+            corcoef = ma.corrcoef(x_s[idx], y_s[idx])
 
-            N = x[idx].shape[0]
-            rmse = np.sqrt(np.nanmean((x[idx] - y[idx]) ** 2))
-            mae = np.nanmean(np.abs(x[idx] - y[idx]))
+            N = x_s[idx].shape[0]
+            rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))
+            mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))
             axs[i].text(
                     0.60, 0.15, 'R=' + f"{corcoef[0, 1]:1.3}" + '\nrmse=' + f"{rmse:1.3}" + '\nN=' + str(
                             N) + '\nmae=' + f"{mae:1.3}", fontsize=14, transform=axs[i].transAxes)

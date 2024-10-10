@@ -36,8 +36,8 @@ basefol_t = os.path.join('H:\\Shared drives', 'Dati')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 ##
-tres = '24h '
-var_list = ['lwp', 'iwv', 'temp', 'precip', 'windd', 'winds', 'alb', 'iwv', 'rh', 'surf_pres']
+tres = '3h '
+var_list = ['alb', 'lwp', 'iwv', 'temp', 'precip', 'windd', 'winds', 'alb', 'iwv', 'rh', 'surf_pres']
 # 'lw_down', 'lw_up', 'sw_up', 'sw_down', 'tcc', 'cbh'
 
 years = np.arange(2016, 2025, 1)
