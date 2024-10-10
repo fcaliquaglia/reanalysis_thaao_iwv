@@ -218,6 +218,8 @@ def plot_scatter(vr, avar, period_label):
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
     axs = ax.ravel()
+
+    # define which is the reference measurement for each variable
     if vr == 'lwp':
         comps = ['c', 'e', 't', 't1']
         x = vr_t1_res[vr]
@@ -226,13 +228,18 @@ def plot_scatter(vr, avar, period_label):
         comps = ['c', 'e', 't', 't1']
         x = vr_t2_res[vr]
         xlabel = 'AWS_ECAPAC'
+    elif vr == 'iwv':
+        comps = ['c', 'e', 't1', 't2']
+        x = vr_t_res[vr]
+        xlabel = 'VESPA'
+    elif vr=='temp':
+        comps = ['c', 'e', 'l', 't2']
+        x = vr_t_res[vr]
+        xlabel = 'THAAO'
     else:
         comps = ['c', 'e', 't1', 't2']
         x = vr_t_res[vr]
-        if vr == 'iwv':
-            xlabel = 'VESPA'
-        else:
-            xlabel = 'THAAO'
+        xlabel = 'THAAO'
 
     for i, comp in enumerate(comps):
         axs[i].set_xlabel(xlabel)
@@ -249,6 +256,14 @@ def plot_scatter(vr, avar, period_label):
             axs[i].set_ylabel(label)
             try:
                 y = vr_e_res[vr]
+            except KeyError:
+                print('error with ' + label)
+                continue
+        if comp == 'l':
+            label = 'ERA5-L'
+            axs[i].set_ylabel(label)
+            try:
+                y = vr_l_res[vr]
             except KeyError:
                 print('error with ' + label)
                 continue
@@ -306,11 +321,11 @@ def plot_scatter(vr, avar, period_label):
             corcoef = ma.corrcoef(x[idx], y[idx])
 
             N = x[idx].shape[0]
-            rmse = np.sqrt(np.sum((x[idx] - y[idx]) ** 2) / N)
-            bias = np.nanmean(x[idx] - y[idx])
+            rmse = np.sqrt(np.nanmean((x[idx] - y[idx]) ** 2))
+            mae = np.nanmean(np.abs(x[idx] - y[idx]))
             axs[i].text(
                     0.60, 0.15, 'R=' + f"{corcoef[0, 1]:1.3}" + '\nrmse=' + f"{rmse:1.3}" + '\nN=' + str(
-                            N) + '\nbias=' + f"{bias:1.3}", fontsize=14, transform=axs[i].transAxes)
+                            N) + '\nmae=' + f"{mae:1.3}", fontsize=14, transform=axs[i].transAxes)
             axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
             axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
         except:
