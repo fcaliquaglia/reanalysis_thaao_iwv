@@ -48,34 +48,34 @@ def plot_ts(vr, avar, period_label):
         # original resolution
         try:
             ax[yy].plot(
-                    vr_c[vr_c.index.year == year], color=c_col_ori, label='CARRA 3h', alpha=0.2, lw=0, marker='.', ms=1)
+                    vr_c[vr_c.index.year == year], color=c_col_ori, label='CARRA \t\t 3h', alpha=0.2, lw=0, marker='.', ms=1)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_e[vr_e.index.year == year], color=e_col_ori, label='ERA5 1h', alpha=0.2, lw=0, marker='.', ms=1)
+                    vr_e[vr_e.index.year == year], color=e_col_ori, label='ERA5 \t\t 1h', alpha=0.2, lw=0, marker='.', ms=1)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_l[vr_l.index.year == year], color=l_col_ori, label='ERA5 1h', alpha=0.2, lw=0, marker='.', ms=1)
+                    vr_l[vr_l.index.year == year], color=l_col_ori, label='ERA5 \t\t 1h', alpha=0.2, lw=0, marker='.', ms=1)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t[vr_t.index.year == year], color=t_col_ori, label='THAAO ori', alpha=0.2, lw=0, marker='.',
+                    vr_t[vr_t.index.year == year], color=t_col_ori, label='THAAO \t\t ori', alpha=0.2, lw=0, marker='.',
                     ms=1)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t1[vr_t1.index.year == year], color=t1_col_ori, label='HATPRO ori', alpha=0.2, lw=0, marker='.',
+                    vr_t1[vr_t1.index.year == year], color=t1_col_ori, label='HATPRO \t\t ori', alpha=0.2, lw=0, marker='.',
                     ms=1)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t2[vr_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC 1 min', alpha=0.02, lw=0,
+                    vr_t2[vr_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC \t\t 1 min', alpha=0.02, lw=0,
                     marker='.', ms=1)
         except AttributeError:
             pass
@@ -83,34 +83,34 @@ def plot_ts(vr, avar, period_label):
         # resampled resolution
         try:
             ax[yy].plot(
-                    vr_c_res[vr_c_res.index.year == year], color=c_col, label='CARRA ' + tres, lw=0, marker='.', ms=2)
+                    vr_c_res[vr_c_res.index.year == year], color=c_col, label='CARRA', lw=0, marker='.', ms=2)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_e_res[vr_e_res.index.year == year], color=e_col, label='ERA5 ' + tres, lw=0, marker='.', ms=2)
+                    vr_e_res[vr_e_res.index.year == year], color=e_col, label='ERA5', lw=0, marker='.', ms=2)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_l_res[vr_l_res.index.year == year], color=l_col, label='ERA5-LAND ' + tres, lw=0, marker='.',
+                    vr_l_res[vr_l_res.index.year == year], color=l_col, label='ERA5-L', lw=0, marker='.',
                     ms=2)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t_res[vr_t_res.index.year == year], color=t_col, label='THAAO ' + tres, lw=0, marker='.', ms=2)
+                    vr_t_res[vr_t_res.index.year == year], color=t_col, label='THAAO', lw=0, marker='.', ms=2)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t1_res[vr_t1_res.index.year == year], color=t1_col, label='HATPRO ' + tres, lw=0, marker='.',
+                    vr_t1_res[vr_t1_res.index.year == year], color=t1_col, label='HATPRO', lw=0, marker='.',
                     ms=2)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t2_res[vr_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC ' + tres, lw=0, marker='.',
+                    vr_t2_res[vr_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC', lw=0, marker='.',
                     ms=2)
         except AttributeError:
             pass
@@ -128,7 +128,7 @@ def plot_ts(vr, avar, period_label):
         ax[yy].xaxis.set_major_formatter(myFmt)
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
     plt.xlabel('Time')
-    plt.legend()
+    plt.legend(ncol=2)
     plt.tight_layout()
     plt.savefig(os.path.join(basefol_out, tres + '_' + period_label + '_' + f'{vr}.png'))
     plt.close('all')
