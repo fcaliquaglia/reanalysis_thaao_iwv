@@ -827,7 +827,7 @@ def read_lwp():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2] = c.values * 10000
+    c[2] = c.values * 1000
     c.columns = [vr]
 
     # ERA5

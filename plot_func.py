@@ -21,11 +21,8 @@ __email__ = "filippo.caliquaglia@gmail.com"
 __status__ = "Research"
 __lastupdate__ = ""
 
-import datetime as dt
-
 import matplotlib.pyplot as plt
 import numpy.ma as ma
-import pandas as pd
 
 from inputs import *
 
@@ -48,34 +45,37 @@ def plot_ts(vr, avar, period_label):
         # original resolution
         try:
             ax[yy].plot(
-                    vr_c[vr_c.index.year == year], color=c_col_ori, label='CARRA \t\t 3h', alpha=0.2, lw=0, marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_e[vr_e.index.year == year], color=e_col_ori, label='ERA5 \t\t 1h', alpha=0.2, lw=0, marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_l[vr_l.index.year == year], color=l_col_ori, label='ERA5 \t\t 1h', alpha=0.2, lw=0, marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_t[vr_t.index.year == year], color=t_col_ori, label='THAAO \t\t ori', alpha=0.2, lw=0, marker='.',
+                    vr_c[vr_c.index.year == year], color=c_col_ori, label='CARRA 3h', alpha=0.2, lw=0, marker='.',
                     ms=1)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t1[vr_t1.index.year == year], color=t1_col_ori, label='HATPRO \t\t ori', alpha=0.2, lw=0, marker='.',
+                    vr_e[vr_e.index.year == year], color=e_col_ori, label='ERA5 1h', alpha=0.2, lw=0, marker='.',
                     ms=1)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t2[vr_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC \t\t 1 min', alpha=0.02, lw=0,
+                    vr_l[vr_l.index.year == year], color=l_col_ori, label='ERA5 1h', alpha=0.2, lw=0, marker='.',
+                    ms=1)
+        except AttributeError:
+            pass
+        try:
+            ax[yy].plot(
+                    vr_t[vr_t.index.year == year], color=t_col_ori, label='THAAO ori', alpha=0.2, lw=0, marker='.',
+                    ms=1)
+        except AttributeError:
+            pass
+        try:
+            ax[yy].plot(
+                    vr_t1[vr_t1.index.year == year], color=t1_col_ori, label='HATPRO ori', alpha=0.2, lw=0,
+                    marker='.', ms=1)
+        except AttributeError:
+            pass
+        try:
+            ax[yy].plot(
+                    vr_t2[vr_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC 1 min', alpha=0.02, lw=0,
                     marker='.', ms=1)
         except AttributeError:
             pass
@@ -93,8 +93,7 @@ def plot_ts(vr, avar, period_label):
             pass
         try:
             ax[yy].plot(
-                    vr_l_res[vr_l_res.index.year == year], color=l_col, label='ERA5-L', lw=0, marker='.',
-                    ms=2)
+                    vr_l_res[vr_l_res.index.year == year], color=l_col, label='ERA5-L', lw=0, marker='.', ms=2)
         except AttributeError:
             pass
         try:
@@ -104,14 +103,12 @@ def plot_ts(vr, avar, period_label):
             pass
         try:
             ax[yy].plot(
-                    vr_t1_res[vr_t1_res.index.year == year], color=t1_col, label='HATPRO', lw=0, marker='.',
-                    ms=2)
+                    vr_t1_res[vr_t1_res.index.year == year], color=t1_col, label='HATPRO', lw=0, marker='.', ms=2)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
-                    vr_t2_res[vr_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC', lw=0, marker='.',
-                    ms=2)
+                    vr_t2_res[vr_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC', lw=0, marker='.', ms=2)
         except AttributeError:
             pass
 
@@ -160,31 +157,31 @@ def plot_residuals(vr, avar, period_label):
         try:
             ax[yy].plot(
                     (vr_c_res[vr_c_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=c_col,
-                    label='CARRA ' + tres, lw=1, marker='.', ms=0)
+                    label='CARRA', lw=1, marker='.', ms=0)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
                     (vr_e_res[vr_e_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=e_col,
-                    label='ERA5 ' + tres, lw=1, marker='.', ms=0)
+                    label='ERA5', lw=1, marker='.', ms=0)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
                     (vr_l_res[vr_l_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=l_col,
-                    label='ERA5-LAND ' + tres, lw=1, marker='.', ms=0)
+                    label='ERA5-L', lw=1, marker='.', ms=0)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
                     (vr_t1_res[vr_t1_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=t1_col,
-                    label='HATPRO ' + tres, lw=1, marker='.', ms=0)
+                    label='HATPRO', lw=1, marker='.', ms=0)
         except AttributeError:
             pass
         try:
             ax[yy].plot(
                     (vr_t2_res[vr_t2_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=t2_col,
-                    label='AWS ECAPAC ' + tres, lw=1, marker='.', ms=0)
+                    label='AWS ECAPAC', lw=1, marker='.', ms=0)
         except AttributeError:
             pass
 
@@ -232,7 +229,7 @@ def plot_scatter(vr, avar, period_label):
         comps = ['c', 'e', 't1', 't2']
         x = vr_t_res[vr]
         xlabel = 'VESPA'
-    elif vr=='temp':
+    elif vr == 'temp':
         comps = ['c', 'e', 'l', 't2']
         x = vr_t_res[vr]
         xlabel = 'THAAO'
@@ -284,7 +281,10 @@ def plot_scatter(vr, avar, period_label):
                 print('error with ' + label)
                 continue
         if comp == 't2':
-            label = 'AWS ECAPAC'
+            if vr == 'alb':
+                label = 'ERA5 snow alb'
+            else:
+                label = 'AWS ECAPAC'
             axs[i].set_ylabel(label)
             try:
                 y = vr_t2_res[vr]
