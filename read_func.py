@@ -910,21 +910,23 @@ def read_lw_down():
     # c[2] = c.values / 100.
     # c.columns = [vr]
 
-    # # ERA5
-    # fn = 'thaao_era5_surface_thermal_radiation_downwards_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e_tmp[e_tmp == -32767.0] = np.nan
-    #         e = pd.concat([e, e_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
-    # e.drop(columns=[0, 1], inplace=True)
-    # e.columns = [vr]
+    # ERA5
+    fn = 'thaao_era5_surface_thermal_radiation_downwards_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2] = e.values / 3600. # originele in J*m-2
+    e.columns = [vr]
+
 
     # # THAAO
     # fn = ''
@@ -976,21 +978,23 @@ def read_lw_up():
             print('NOT FOUND: ' + fn1 + str(year) + '.txt')
     e_n.index = pd.to_datetime(e_n[0] + ' ' + e_n[1], format='%Y-%m-%d %H:%M:%S')
     e_n.drop(columns=[0, 1], inplace=True)
+    e_n[2] = e_n.values / 3600. # originele in J*m-2
     e_n.columns = ['surface_net_solar_radiation']
 
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, fn2 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e_tmp[e_tmp == -32767.0] = np.nan
-    #         e_d = pd.concat([e_d, e_tmp], axis=0)
-    #         print('OK: ' + fn2 + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn2 + str(year) + '.txt')
-    # e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
-    # e_d.drop(columns=[0, 1], inplace=True)
-    # e_d.columns = ['surface_solar_radiation_downwards']
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn2 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e_d = pd.concat([e_d, e_tmp], axis=0)
+            print('OK: ' + fn2 + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn2 + str(year) + '.txt')
+    e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
+    e_d.drop(columns=[0, 1], inplace=True)
+    e_d[2] = e_d.values / 3600. # originele in J*m-2
+    e_d.columns = ['surface_solar_radiation_downwards']
 
     e = pd.concat([e_n, e_d], axis=1)
 
@@ -1044,22 +1048,23 @@ def read_sw_down():
     # c[2] = c.values / 100.
     # c.columns = [vr]
 
-    # # ERA5
-    # fn = 'thaao_era5_surface_solar_radiation_downwards_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e_tmp[e_tmp == -32767.0] = np.nan
-    #         e = pd.concat([e, e_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
-    # e.drop(columns=[0, 1], inplace=True)
-    # e.columns = [vr]
-    #
+    # ERA5
+    fn = 'thaao_era5_surface_solar_radiation_downwards_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e[2] = e.values / 3600. # originele in J*m-2
+    e.columns = [vr]
+
     # # THAAO
     # fn = ''
     # for yy, year in enumerate(years):
@@ -1110,21 +1115,23 @@ def read_sw_up():
             print('NOT FOUND: ' + fn1 + str(year) + '.txt')
     e_n.index = pd.to_datetime(e_n[0] + ' ' + e_n[1], format='%Y-%m-%d %H:%M:%S')
     e_n.drop(columns=[0, 1], inplace=True)
+    e_n[2] = e_n.values / 3600. # originele in J*m-2
     e_n.columns = ['surface_net_solar_radiation']
 
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, fn2 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e_tmp[e_tmp == -32767.0] = np.nan
-    #         e_d = pd.concat([e_d, e_tmp], axis=0)
-    #         print('OK: ' + fn2 + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn2 + str(year) + '.txt')
-    # e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
-    # e_d.drop(columns=[0, 1], inplace=True)
-    # e_d.columns = ['surface_solar_radiation_downwards']
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, fn2 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e_d = pd.concat([e_d, e_tmp], axis=0)
+            print('OK: ' + fn2 + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn2 + str(year) + '.txt')
+    e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
+    e_d.drop(columns=[0, 1], inplace=True)
+    e_d[2] = e_d.values / 3600. # originele in J*m-2
+    e_d.columns = ['surface_solar_radiation_downwards']
 
     e = pd.concat([e_n, e_d], axis=1)
 
