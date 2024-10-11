@@ -36,8 +36,8 @@ basefol_t = os.path.join('H:\\Shared drives', 'Dati')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 ##
-tres = '3h '
-var_list = ['lw_down', 'lw_up', 'sw_up', 'sw_down', 'alb', 'lwp', 'iwv', 'temp', 'precip', 'windd', 'winds', 'alb',
+tres = '24h '
+var_list = ['lw_up', 'lw_down', 'sw_up', 'sw_down', 'alb', 'lwp', 'iwv', 'temp', 'precip', 'windd', 'winds', 'alb',
             'iwv', 'rh', 'surf_pres']
 # 'tcc', 'cbh'
 
@@ -81,7 +81,7 @@ extr = {'temp'     : {'min': -40, 'max': 20, 'res_min': -10, 'res_max': 10},
         'iwv'      : {'min': 0, 'max': 20, 'res_min': -5, 'res_max': 5},
         'lw_up'    : {'min': 0, 'max': 500, 'res_min': -5, 'res_max': 5},
         'lw_down'  : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
-        'sw_up'    : {'min': 0, 'max': 600, 'res_min': -20, 'res_max': 20},
-        'sw_down'  : {'min': 0, 'max': 600, 'res_min': -20, 'res_max': 20}}
+        'sw_up'    : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
+        'sw_down'  : {'min': 0, 'max': 700, 'res_min': -20, 'res_max': 20}}
 
 aws_ecapac_daterange = pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 12, 31), freq='1D')

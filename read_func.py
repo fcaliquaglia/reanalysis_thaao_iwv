@@ -402,6 +402,30 @@ def read_alb():
     t2[t2 <= 0.1] = np.nan
 
     # THAAO
+    # TODO: sostituire con questo blocco che prende direttamente dal file MERGED_SW_LW_UP_DW_METEO_YYYY.dat
+
+    # fn = 'MERGED_SW_LW_UP_DW_METEO_'
+    # for yy, year in enumerate(years):
+    #     try:
+    #         t_tmp = pd.read_table(
+    #                 os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
+    #                 skiprows=None, header=0, decimal='.', sep='\s+')
+    #         tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
+    #         for ii, el in enumerate(t_tmp['JDAY_UT']):
+    #             new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
+    #             tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
+    #             tmp[ii] = tmp[ii].replace(microsecond=0)
+    #         t_tmp.index = pd.DatetimeIndex(tmp)
+    #         t_tmp.drop(
+    #                 ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP','PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP',
+    #                  'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
+    #         t = pd.concat([t, t_tmp], axis=0)
+    #         print('OK: ' + fn + str(year) + '.txt')
+    #     except FileNotFoundError:
+    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
+    # t.columns = [vr]
+
+
     fn = 'ALBEDO_SW_'
     for yy, year in enumerate(years):
         try:
@@ -924,29 +948,30 @@ def read_lw_down():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e[2] = e.values / 3600. # originele in J*m-2
+    e[2] = e.values / 3600.  # originele in J*m-2
     e.columns = [vr]
 
-
-    # # THAAO
-    # fn = ''
-    # for yy, year in enumerate(years):
-    #     try:
-    #         t_tmp = pd.read_table(
-    #                 os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.DAT'), engine='python',
-    #                 skiprows=None, header=0, decimal='.', sep='\s+')
-    #         tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
-    #         for ii, el in enumerate(t_tmp['JDAY_UT']):
-    #             new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
-    #             tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
-    #             tmp[ii] = tmp[ii].replace(microsecond=0)
-    #         t_tmp.index = pd.DatetimeIndex(tmp)
-    #         t_tmp.drop(['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP'], axis=1, inplace=True)
-    #         t = pd.concat([t, t_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # t.columns = [vr]
+    # THAAO
+    fn = 'MERGED_SW_LW_UP_DW_METEO_'
+    for yy, year in enumerate(years):
+        try:
+            t_tmp = pd.read_table(
+                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
+                    skiprows=None, header=0, decimal='.', sep='\s+')
+            tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
+            for ii, el in enumerate(t_tmp['JDAY_UT']):
+                new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
+                tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
+                tmp[ii] = tmp[ii].replace(microsecond=0)
+            t_tmp.index = pd.DatetimeIndex(tmp)
+            t_tmp.drop(
+                    ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'PAR_DOWN', 'PAR_UP', 'SW_UP', 'LW_UP', 'TBP',
+                     'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
+            t = pd.concat([t, t_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    t.columns = [vr]
 
     return [c, e, l, t]
 
@@ -964,8 +989,8 @@ def read_lw_up():
     # fn2 = 'thaao_carra_surface_solarl_radiation_downwards_'
 
     # ERA5
-    fn1 = 'thaao_era5_surface_net_solar_radiation_'
-    fn2 = 'thaao_era5_surface_solar_radiation_downwards_'
+    fn1 = 'thaao_era5_surface_net_thermal_radiation_'
+    fn2 = 'thaao_era5_surface_thermal_radiation_downwards_'
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
@@ -978,8 +1003,8 @@ def read_lw_up():
             print('NOT FOUND: ' + fn1 + str(year) + '.txt')
     e_n.index = pd.to_datetime(e_n[0] + ' ' + e_n[1], format='%Y-%m-%d %H:%M:%S')
     e_n.drop(columns=[0, 1], inplace=True)
-    e_n[2] = e_n.values / 3600. # originele in J*m-2
-    e_n.columns = ['surface_net_solar_radiation']
+    e_n[2] = e_n.values / 3600.  # originele in J*m-2
+    e_n.columns = ['surface_net_thermal_radiation']
 
     for yy, year in enumerate(years):
         try:
@@ -993,34 +1018,37 @@ def read_lw_up():
             print('NOT FOUND: ' + fn2 + str(year) + '.txt')
     e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
     e_d.drop(columns=[0, 1], inplace=True)
-    e_d[2] = e_d.values / 3600. # originele in J*m-2
-    e_d.columns = ['surface_solar_radiation_downwards']
+    e_d[2] = e_d.values / 3600.  # originele in J*m-2
+    e_d.columns = ['surface_thermal_radiation_downwards']
 
     e = pd.concat([e_n, e_d], axis=1)
 
-    e['surface_solar_radiation_upwards'] = e['surface_solar_radiation_downwards'] + e['surface_net_solar_radiation']
-    e.drop(columns=['surface_net_solar_radiation', 'surface_solar_radiation_downwards'], inplace=True)
+    e['surface_thermal_radiation_upwards'] = e['surface_thermal_radiation_downwards'] - e[
+        'surface_net_thermal_radiation']
+    e.drop(columns=['surface_net_thermal_radiation', 'surface_thermal_radiation_downwards'], inplace=True)
     e.columns = [vr]
 
-    # # THAAO
-    # fn = ''
-    # for yy, year in enumerate(years):
-    #     try:
-    #         t_tmp = pd.read_table(
-    #                 os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.DAT'), engine='python',
-    #                 skiprows=None, header=0, decimal='.', sep='\s+')
-    #         tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
-    #         for ii, el in enumerate(t_tmp['JDAY_UT']):
-    #             new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
-    #             tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
-    #             tmp[ii] = tmp[ii].replace(microsecond=0)
-    #         t_tmp.index = pd.DatetimeIndex(tmp)
-    #         t_tmp.drop(['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP'], axis=1, inplace=True)
-    #         t = pd.concat([t, t_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # t.columns = [vr]
+    # THAAO
+    fn = 'MERGED_SW_LW_UP_DW_METEO_'
+    for yy, year in enumerate(years):
+        try:
+            t_tmp = pd.read_table(
+                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
+                    skiprows=None, header=0, decimal='.', sep='\s+')
+            tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
+            for ii, el in enumerate(t_tmp['JDAY_UT']):
+                new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
+                tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
+                tmp[ii] = tmp[ii].replace(microsecond=0)
+            t_tmp.index = pd.DatetimeIndex(tmp)
+            t_tmp.drop(
+                    ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'SW_UP', 'TBP',
+                     'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
+            t = pd.concat([t, t_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    t.columns = [vr]
 
     return [c, e, l, t]
 
@@ -1062,28 +1090,30 @@ def read_sw_down():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e[2] = e.values / 3600. # originele in J*m-2
+    e[2] = e.values / 3600.  # originele in J*m-2
     e.columns = [vr]
 
-    # # THAAO
-    # fn = ''
-    # for yy, year in enumerate(years):
-    #     try:
-    #         t_tmp = pd.read_table(
-    #                 os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.DAT'), engine='python',
-    #                 skiprows=None, header=0, decimal='.', sep='\s+')
-    #         tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
-    #         for ii, el in enumerate(t_tmp['JDAY_UT']):
-    #             new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
-    #             tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
-    #             tmp[ii] = tmp[ii].replace(microsecond=0)
-    #         t_tmp.index = pd.DatetimeIndex(tmp)
-    #         t_tmp.drop(['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP'], axis=1, inplace=True)
-    #         t = pd.concat([t, t_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # t.columns = [vr]
+    # THAAO
+    fn = 'MERGED_SW_LW_UP_DW_METEO_'
+    for yy, year in enumerate(years):
+        try:
+            t_tmp = pd.read_table(
+                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
+                    skiprows=None, header=0, decimal='.', sep='\s+')
+            tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
+            for ii, el in enumerate(t_tmp['JDAY_UT']):
+                new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
+                tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
+                tmp[ii] = tmp[ii].replace(microsecond=0)
+            t_tmp.index = pd.DatetimeIndex(tmp)
+            t_tmp.drop(
+                    ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_UP', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP',
+                     'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
+            t = pd.concat([t, t_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    t.columns = [vr]
 
     return [c, e, l, t]
 
@@ -1115,7 +1145,7 @@ def read_sw_up():
             print('NOT FOUND: ' + fn1 + str(year) + '.txt')
     e_n.index = pd.to_datetime(e_n[0] + ' ' + e_n[1], format='%Y-%m-%d %H:%M:%S')
     e_n.drop(columns=[0, 1], inplace=True)
-    e_n[2] = e_n.values / 3600. # originele in J*m-2
+    e_n[2] = e_n.values / 3600.  # originele in J*m-2
     e_n.columns = ['surface_net_solar_radiation']
 
     for yy, year in enumerate(years):
@@ -1130,34 +1160,37 @@ def read_sw_up():
             print('NOT FOUND: ' + fn2 + str(year) + '.txt')
     e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
     e_d.drop(columns=[0, 1], inplace=True)
-    e_d[2] = e_d.values / 3600. # originele in J*m-2
+    e_d[2] = e_d.values / 3600.  # originele in J*m-2
     e_d.columns = ['surface_solar_radiation_downwards']
 
     e = pd.concat([e_n, e_d], axis=1)
 
-    e['surface_solar_radiation_upwards'] = e['surface_solar_radiation_downwards'] + e['surface_net_solar_radiation']
+    e['surface_solar_radiation_upwards'] = e['surface_solar_radiation_downwards'] - e['surface_net_solar_radiation']
     e.drop(columns=['surface_net_solar_radiation', 'surface_solar_radiation_downwards'], inplace=True)
     e.columns = [vr]
 
-    # # THAAO
-    # fn = ''
-    # for yy, year in enumerate(years):
-    #     try:
-    #         t_tmp = pd.read_table(
-    #                 os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.DAT'), engine='python',
-    #                 skiprows=None, header=0, decimal='.', sep='\s+')
-    #         tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
-    #         for ii, el in enumerate(t_tmp['JDAY_UT']):
-    #             new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
-    #             tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
-    #             tmp[ii] = tmp[ii].replace(microsecond=0)
-    #         t_tmp.index = pd.DatetimeIndex(tmp)
-    #         t_tmp.drop(['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP'], axis=1, inplace=True)
-    #         t = pd.concat([t, t_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # t.columns = [vr]
+    # THAAO
+    fn = 'MERGED_SW_LW_UP_DW_METEO_'
+    for yy, year in enumerate(years):
+        try:
+            t_tmp = pd.read_table(
+                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
+                    skiprows=None, header=0, decimal='.', sep='\s+')
+            tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
+            for ii, el in enumerate(t_tmp['JDAY_UT']):
+                new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
+                tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
+                tmp[ii] = tmp[ii].replace(microsecond=0)
+            t_tmp.index = pd.DatetimeIndex(tmp)
+            t_tmp.drop(
+                    ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP',
+                     'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
+            # 'JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP', 'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'
+            t = pd.concat([t, t_tmp], axis=0)
+            print('OK: ' + fn + str(year) + '.txt')
+        except FileNotFoundError:
+            print('NOT FOUND: ' + fn + str(year) + '.txt')
+    t.columns = [vr]
 
     return [c, e, l, t]
 
