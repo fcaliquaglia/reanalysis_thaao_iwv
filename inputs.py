@@ -36,8 +36,8 @@ basefol_t = os.path.join('H:\\Shared drives', 'Dati')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 ##
-tres = '24h '
-var_list = ['lw_up', 'lw_down', 'sw_up', 'sw_down', 'alb', 'lwp', 'iwv', 'temp', 'precip', 'windd', 'winds', 'alb',
+tres = '24h'
+var_list = ['temp', 'sw_down', 'sw_up', 'lw_up', 'lw_down', 'alb', 'lwp', 'iwv', 'precip', 'windd', 'winds', 'alb',
             'iwv', 'rh', 'surf_pres']
 # 'tcc', 'cbh'
 
@@ -48,7 +48,7 @@ seass = {'all': {'name': 'all', 'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
          'MAM': {'name': 'MAM', 'months': [3, 4, 5], 'col': 'green'},
          'JJA': {'name': 'JJA', 'months': [6, 7, 8], 'col': 'orange'},
          'SON': {'name': 'SON', 'months': [9, 10, 11], 'col': 'brown'},
-         'MA' : {'name': 'MA', 'months': [3, 4], 'col': 'darkyellow'},
+         'MA' : {'name': 'MA', 'months': [3, 4], 'col': 'yellow'},
          'MJ' : {'name': 'MJ', 'months': [5, 6], 'col': 'cyan'}, 'JA': {'name': 'JA', 'months': [7, 8], 'col': 'grey'},
          'SO' : {'name': 'SO', 'months': [9, 10], 'col': 'purple'}}
 
@@ -79,7 +79,7 @@ extr = {'temp'     : {'min': -40, 'max': 20, 'res_min': -10, 'res_max': 10},
         'surf_pres': {'min': 925, 'max': 1013, 'res_min': -20, 'res_max': 20},
         'alb'      : {'min': 0, 'max': 1, 'res_min': -0.5, 'res_max': 0.5},
         'iwv'      : {'min': 0, 'max': 20, 'res_min': -5, 'res_max': 5},
-        'lw_up'    : {'min': 0, 'max': 500, 'res_min': -5, 'res_max': 5},
+        'lw_up'    : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'lw_down'  : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'sw_up'    : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'sw_down'  : {'min': 0, 'max': 700, 'res_min': -20, 'res_max': 20}}

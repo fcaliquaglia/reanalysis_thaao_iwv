@@ -920,19 +920,6 @@ def read_lw_down():
 
     # # CARRA
     # fn = 'thaao_carra_thermal_surface_radiation_downwards_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         c_tmp = pd.read_table(
-    #                 os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         c = pd.concat([c, c_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
-    #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
-    # c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
-    # c.drop(columns=[0, 1], inplace=True)
-    # c[2] = c.values / 100.
-    # c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_surface_thermal_radiation_downwards_'
@@ -1073,7 +1060,7 @@ def read_sw_down():
     #         print('NOT FOUND: ' + fn + str(year) + '.txt')
     # c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     # c.drop(columns=[0, 1], inplace=True)
-    # c[2] = c.values / 100.
+    # c[2] = c.values / 10800.
     # c.columns = [vr]
 
     # ERA5
@@ -1090,7 +1077,7 @@ def read_sw_down():
             print('NOT FOUND: ' + fn + str(year) + '.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e[2] = e.values / 3600.  # originele in J*m-2
+    e[2] = e.values / 3600.  # originale in J*m-2
     e.columns = [vr]
 
     # THAAO
@@ -1128,7 +1115,7 @@ def read_sw_up():
 
     # # CARRA
     # fn1 = 'thaao_carra_surface_net_solar_radiation_'
-    # fn2 = 'thaao_carra_surface_solarl_radiation_downwards_'
+    # fn2 = 'thaao_carra_surface_solar_radiation_downwards_'
 
     # ERA5
     fn1 = 'thaao_era5_surface_net_solar_radiation_'
