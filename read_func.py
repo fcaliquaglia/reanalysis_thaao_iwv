@@ -113,7 +113,7 @@ def read_temp():
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
             print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-        except FileNotFoundError:
+        except (FileNotFoundError, pd.errors.EmptyDataError):
             print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
@@ -213,7 +213,7 @@ def read_rh():
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
             print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-        except FileNotFoundError:
+        except (FileNotFoundError, pd.errors.EmptyDataError):
             print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
@@ -331,7 +331,7 @@ def read_surf_pres():
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
             print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-        except FileNotFoundError:
+        except (FileNotFoundError, pd.errors.EmptyDataError):
             print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
@@ -424,7 +424,6 @@ def read_alb():
     #     except FileNotFoundError:
     #         print('NOT FOUND: ' + fn + str(year) + '.txt')
     # t.columns = [vr]
-
 
     fn = 'ALBEDO_SW_'
     for yy, year in enumerate(years):
@@ -600,7 +599,7 @@ def read_winds():
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
             print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-        except FileNotFoundError:
+        except (FileNotFoundError, pd.errors.EmptyDataError):
             print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
@@ -679,7 +678,7 @@ def read_windd():
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
             print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-        except FileNotFoundError:
+        except (FileNotFoundError, pd.errors.EmptyDataError):
             print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
@@ -825,7 +824,7 @@ def read_precip():
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
             print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
-        except FileNotFoundError:
+        except (FileNotFoundError, pd.errors.EmptyDataError):
             print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'

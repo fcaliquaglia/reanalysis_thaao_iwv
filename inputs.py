@@ -36,7 +36,7 @@ basefol_t = os.path.join('H:\\Shared drives', 'Dati')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 ##
-tres = '24h'
+tres = '12h'
 var_list = ['temp', 'sw_down', 'sw_up', 'lw_up', 'lw_down', 'alb', 'lwp', 'iwv', 'precip', 'windd', 'winds', 'alb',
             'iwv', 'rh', 'surf_pres']
 # 'tcc', 'cbh'
