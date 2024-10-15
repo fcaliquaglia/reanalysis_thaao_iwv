@@ -29,6 +29,7 @@ albedo values for CARRA are the forecast ones. They have been masked to nan for 
 ## TCC
 
 ## CBH
+CBH for ceilometer is calculated as the median value over 1 h form the original 15 s time resolution, then averaged for the comparison.
 
 ## PRECIP 
 It is calculated as cumulative over the resampling time.

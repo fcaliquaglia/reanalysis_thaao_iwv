@@ -768,6 +768,25 @@ def read_cbh():
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [vr]
 
+    # THAAO (ceilometer)
+    fn = '_Thule_CHM190147_000_0060cloud'
+    for i in ceilometer_daterange:
+        try:
+            fn_i = i.strftime('%Y%m%d') + fn + '.txt'
+            t_tmp = pd.read_table(
+                    os.path.join(basefol_t_elab, 'thule_phaao_ceilometer_elab', 'medie_tat_rianalisi', fn_i), skipfooter=0,
+                    sep='\s+', header=0, skiprows=9, engine='python')
+            t_tmp[t_tmp == -9999.9] = np.nan
+            t_tmp = pd.concat([t, t_tmp], axis=0)
+            print('OK: ' + fn_i)
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            print('NOT FOUND: ' + fn_i)
+    t.index = pd.to_datetime(t['#'] + ' ' + t['date[y-m-d]time[h:m:s]'], format='%Y-%m-%d %H:%M:%S')
+    t.index.name = 'datetime'
+    t = t.iloc[:, :].filter(['CBH_L1[m]']).astype(float)
+    t.columns = [vr]
+
+
     return [c, e, l, t]
 
 
