@@ -37,10 +37,10 @@ basefol_t_elab = os.path.join('H:\\Shared drives', 'Dati_elab_docs')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 ##
-tres = '24h'
-var_list = ['cbh', 'sw_down', 'sw_up', 'lw_up', 'lw_down', 'temp', 'alb', 'lwp', 'iwv', 'precip', 'windd', 'winds', 'rh',
-            'surf_pres']
-# 'tcc', 'cbh'
+tres = '6h'
+var_list = [
+    'cbh', 'sw_down', 'sw_up', 'lw_up', 'lw_down', 'temp', 'alb', 'lwp', 'iwv', 'precip', 'windd', 'winds', 'rh', 'surf_pres']
+# 'tcc'
 
 years = np.arange(2016, 2025, 1)
 
@@ -85,7 +85,9 @@ extr = {'temp'     : {'min': -40, 'max': 20, 'res_min': -10, 'res_max': 10},
         'lw_up'    : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'lw_down'  : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'sw_up'    : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
-        'sw_down'  : {'min': 0, 'max': 700, 'res_min': -20, 'res_max': 20}}
+        'sw_down'  : {'min': 0, 'max': 700, 'res_min': -20, 'res_max': 20},
+        'cbh'      : {'min': 0, 'max': 10000, 'res_min': -500, 'res_max': 500},
+        'tcc'      : {'min': 0, 'max': 1, 'res_min': -50, 'res_max': 50}}
 
 aws_ecapac_daterange = pd.date_range(start=dt.datetime(2023, 4, 1), end=dt.datetime(2024, 12, 31), freq='1D')
-ceilometer_daterange = pd.date_range(start=dt.datetime(2023, 12, 29), end=dt.datetime(2023, 12, 31), freq='1D')
+ceilometer_daterange = pd.date_range(start=dt.datetime(2019, 9, 1), end=dt.datetime(2024, 12, 31), freq='1D')

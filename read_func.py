@@ -43,12 +43,12 @@ def read_temp():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values - 273.15
@@ -59,14 +59,14 @@ def read_temp():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
 
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e[2].values - 273.15
@@ -77,14 +77,14 @@ def read_temp():
     for yy, year in enumerate(years):
         try:
             l_tmp = pd.read_table(
-                    os.path.join(basefol_l, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_l, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             l_tmp[l_tmp == -32767.0] = np.nan
             l = pd.concat([l, l_tmp], axis=0)
 
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     l.index = pd.to_datetime(l[0] + ' ' + l[1], format='%Y-%m-%d %H:%M:%S')
     l.drop(columns=[0, 1], inplace=True)
     l[2] = l[2].values - 273.15
@@ -93,10 +93,10 @@ def read_temp():
     # THAAO
     fn = 'Meteo_weekly_all'
     try:
-        t = xr.open_dataset(os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.nc'), engine='netcdf4').to_dataframe()
-        print('OK: ' + fn + '.nc')
+        t = xr.open_dataset(os.path.join(basefol_t, 'thaao_meteo', f'{fn}.nc'), engine='netcdf4').to_dataframe()
+        print(f'OK: {fn}.nc')
     except FileNotFoundError:
-        print('NOT FOUND: ' + fn + '.nc')
+        print(f'NOT FOUND: {fn}.nc')
     t.drop(columns=['BP_hPa', 'RH_%'], inplace=True)
     t['Air_K'] = t.values - 273.15
     t.columns = [vr]
@@ -104,17 +104,17 @@ def read_temp():
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
     for i in aws_ecapac_daterange:
+        i_fmt = i.strftime('%Y_%m_%d')
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thaao_ecapac_aws_snow', 'AWS_ECAPAC', f'{fn}{i_fmt}_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
-            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'OK: {fn}{i_fmt}_00_00.dat')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'NOT_FOUND: {fn}{i_fmt}_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
@@ -139,12 +139,12 @@ def read_rh():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -155,14 +155,14 @@ def read_rh():
     for yy, year in enumerate(years):
         try:
             e_t_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn3 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn3}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_t_tmp[e_t_tmp == -32767.0] = np.nan
             e_t = pd.concat([e_t, e_t_tmp], axis=0)
 
-            print('OK: ' + fn3 + str(year) + '.txt')
+            print(f'OK: {fn3}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn3 + str(year) + '.txt')
+            print(f'NOT FOUND: {fn3}{year}.txt')
     e_t.index = pd.to_datetime(e_t[0] + ' ' + e_t[1], format='%Y-%m-%d %H:%M:%S')
     e_t.drop(columns=[0, 1], inplace=True)
     e_t[2].name = vr
@@ -171,14 +171,14 @@ def read_rh():
     for yy, year in enumerate(years):
         try:
             e_td_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn1 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_td[e_td_tmp == -32767.0] = np.nan
             e_td = pd.concat([e_td, e_td_tmp], axis=0)
 
-            print('OK: ' + fn1 + str(year) + '.txt')
+            print(f'OK: {fn1}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn1 + str(year) + '.txt')
+            print(f'NOT FOUND: {fn1}{year}.txt')
     e_td.index = pd.to_datetime(e_td[0] + ' ' + e_td[1], format='%Y-%m-%d %H:%M:%S')
     e_td.drop(columns=[0, 1], inplace=True)
     e_td[2].name = vr
@@ -193,10 +193,10 @@ def read_rh():
     # THAAO
     fn = 'Meteo_weekly_all'
     try:
-        t = xr.open_dataset(os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.nc'), engine='netcdf4').to_dataframe()
-        print('OK: ' + fn + '.nc')
+        t = xr.open_dataset(os.path.join(basefol_t, 'thaao_meteo', f'{fn}.nc'), engine='netcdf4').to_dataframe()
+        print(f'OK: {fn}.nc')
     except FileNotFoundError:
-        print('NOT FOUND: ' + fn + '.nc')
+        print(f'NOT FOUND: {fn}.nc')
     t.drop(columns=['BP_hPa', 'Air_K'], inplace=True)
     t.columns = [vr]
     #    t.drop(columns=['BP_hPa','Air_K', 'RH_%'], inplace=True)
@@ -204,17 +204,17 @@ def read_rh():
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
     for i in aws_ecapac_daterange:
+        i_fmt = i.strftime('%Y_%m_%d')
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thaao_ecapac_aws_snow', 'AWS_ECAPAC', f'{fn}{i_fmt}_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
-            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'OK: {fn}{i_fmt}_00_00.dat')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'NOT_FOUND: {fn}{i.fmt}_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["RH"]).astype(float)
@@ -237,12 +237,12 @@ def read_msl_pres():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -250,16 +250,17 @@ def read_msl_pres():
     # # AWS ECAPAC
     # fn = 'AWS_THAAO_'
     # for i in aws_ecapac_daterange:
+    # i_tmp = i.strftime('%Y_%m_%d')
     #     try:
     #         file = os.path.join(
-    #                 basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp', fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #                 basefol_t, 'thaao_ecapac_aws_snow', 'AWS_ECAPAC', f'{fn}{i_tmp}_00_00.dat')
     #         t2_tmp = pd.read_csv(
     #                 file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
     #                 index_col='TIMESTAMP').iloc[1:, :]
     #         t2 = pd.concat([t2, t2_tmp], axis=0)
-    #         print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #         print(f'OK: {fn}{i_tmp}_00_00.dat')
     #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+    #         print(f'NOT_FOUND: {fn}{i_tmp}_00_00.dat')
     # t2.index = pd.DatetimeIndex(t2.index)
     # t2.index.name = 'datetime'
     # t2 = t2.iloc[:, :].filter(["AirTC"]).astype(float)
@@ -281,29 +282,29 @@ def read_surf_pres():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
-    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
-    c.drop(columns=[0, 1], inplace=True)
-    c[2] = c.values / 100.
-    c.columns = [vr]
+            print(f'NOT FOUND: {fn}{year}.txt')
+            c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+            c.drop(columns=[0, 1], inplace=True)
+            c[2] = c.values / 100.
+            c.columns = [vr]
 
-    # ERA5
-    fn = 'thaao_era5_surface_pressure_'
-    for yy, year in enumerate(years):
-        try:
-            e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
-            e_tmp[e_tmp == -32767.0] = np.nan
-            e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
-        except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            # ERA5
+            fn = 'thaao_era5_surface_pressure_'
+            for yy, year in enumerate(years):
+                try:
+                    e_tmp = pd.read_table(
+                            os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None,
+                            skiprows=1, engine='python')
+                    e_tmp[e_tmp == -32767.0] = np.nan
+                    e = pd.concat([e, e_tmp], axis=0)
+                    print(f'OK: {fn}{year}.txt')
+                except FileNotFoundError:
+                    print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 100.
@@ -312,27 +313,27 @@ def read_surf_pres():
     # THAAO
     fn = 'Meteo_weekly_all'
     try:
-        t = xr.open_dataset(os.path.join(basefol_t, 'thule_phaao_meteo', fn + '.nc'), engine='netcdf4').to_dataframe()
-        print('OK: ' + fn + '.nc')
+        t = xr.open_dataset(os.path.join(basefol_t, 'thaao_meteo', f'{fn}.nc'), engine='netcdf4').to_dataframe()
+        print(f'OK: {fn}.nc')
     except FileNotFoundError:
-        print('NOT FOUND: ' + fn + '.nc')
+        print(f'NOT FOUND: {fn}.nc')
     t.drop(columns=['Air_K', 'RH_%'], inplace=True)
     t.columns = [vr]
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
     for i in aws_ecapac_daterange:
+        i_fmt = i.strftime('%Y_%m_%d')
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thaao_ecapac_aws_snow', 'AWS_ECAPAC', f'{fn}{i_fmt}_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
-            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'OK: {fn}{i_fmt}_00_00.dat')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'NOT_FOUND: {fn}{i_fmt}_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["BP_mbar"]).astype(float)
@@ -355,12 +356,12 @@ def read_alb():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 100.
@@ -372,13 +373,13 @@ def read_alb():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [vr]
@@ -389,13 +390,13 @@ def read_alb():
     for yy, year in enumerate(years):
         try:
             t2_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             t2_tmp[t2_tmp == -32767.0] = np.nan
             t2 = pd.concat([t2, t2_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     t2.index = pd.to_datetime(t2[0] + ' ' + t2[1], format='%Y-%m-%d %H:%M:%S')
     t2.drop(columns=[0, 1], inplace=True)
     t2.columns = [vr]
@@ -408,7 +409,7 @@ def read_alb():
     # for yy, year in enumerate(years):
     #     try:
     #         t_tmp = pd.read_table(
-    #                 os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
+    #                 os.path.join(basefol_t, 'thaao_rad', f'{fn}{year}_5MIN.dat'), engine='python',
     #                 skiprows=None, header=0, decimal='.', sep='\s+')
     #         tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
     #         for ii, el in enumerate(t_tmp['JDAY_UT']):
@@ -420,17 +421,17 @@ def read_alb():
     #                 ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP','PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP',
     #                  'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
     #         t = pd.concat([t, t_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
+    #         print(f'OK: {fn}{year}.txt')
     #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
+    #         print(f'NOT FOUND: {fn}{year}.txt')
     # t.columns = [vr]
 
     fn = 'ALBEDO_SW_'
     for yy, year in enumerate(years):
         try:
             t_tmp = pd.read_table(
-                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.DAT'), engine='python',
-                    skiprows=None, header=0, decimal='.', sep='\s+')
+                    os.path.join(basefol_t, 'thaao_rad', f'{fn}{year}_5MIN.DAT'), engine='python', skiprows=None,
+                    header=0, decimal='.', sep='\s+')
             tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t_tmp['JDAY_UT']):
                 new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
@@ -439,9 +440,9 @@ def read_alb():
             t_tmp.index = pd.DatetimeIndex(tmp)
             t_tmp.drop(['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP'], axis=1, inplace=True)
             t = pd.concat([t, t_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
     t[t <= 0.1] = np.nan
 
@@ -461,12 +462,12 @@ def read_iwv():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -476,13 +477,13 @@ def read_iwv():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [vr]
@@ -491,11 +492,11 @@ def read_iwv():
     fn = 'Vapor_20160712_20221130'
     try:
         t = pd.read_table(
-                os.path.join(basefol_t, 'thule_phaao_vespa', fn + '.txt'), skipfooter=1, sep='\s+', header=None,
-                skiprows=1, engine='python')
-        print('OK: ' + fn + '.txt')
+                os.path.join(basefol_t, 'thaao_vespa', f'{fn}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                engine='python')
+        print(f'OK: {fn}.txt')
     except FileNotFoundError:
-        print('NOT FOUND: ' + fn + str(year) + '.txt')
+        print(f'NOT FOUND: {fn}{year}.txt')
     t.index = pd.to_datetime(t[0] + ' ' + t[1], format='%Y-%m-%d %H:%M:%S')
     t.drop(columns=[0, 1], inplace=True)
     t.columns = [vr]
@@ -506,8 +507,7 @@ def read_iwv():
         try:
             t1_tmp = pd.read_table(
                     os.path.join(
-                            basefol_t, 'thule_phaao_hatpro', 'definitivi_da_giando', fn + str(year),
-                                                                                     fn + str(year) + '.DAT'),
+                            basefol_t, 'thaao_hatpro', 'definitivi_da_giando', f'{fn}{year}', f'{fn}{year}.DAT'),
                     sep='\s+', engine='python', header=None, skiprows=1)
             t1_tmp.columns = ['JD_rif', 'IWV', 'STD_IWV', 'RF', 'N']
             tmp = np.empty(t1_tmp['JD_rif'].shape, dtype=dt.datetime)
@@ -518,9 +518,9 @@ def read_iwv():
             t1_tmp.index = pd.DatetimeIndex(tmp)
             t1_tmp.drop(columns=['JD_rif', 'STD_IWV', 'RF', 'N'], axis=1, inplace=True)
             t1 = pd.concat([t1, t1_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.DAT')
+            print(f'OK: {fn}{year}.DAT')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.DAT')
+            print(f'NOT FOUND: {fn}{year}.DAT')
     t1['IWV'] = t1['IWV'].values
     t1.columns = [vr]
     # cleaning HATPRO DATA
@@ -543,12 +543,12 @@ def read_winds():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -561,23 +561,23 @@ def read_winds():
     for yy, year in enumerate(years):
         try:
             e_u_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn_u + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
-                    skiprows=1, engine='python')
+                    os.path.join(basefol_e, f'{fn_u}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
             e_u = pd.concat([e_u, e_u_tmp], axis=0)
-            print('OK: ' + fn_u + str(year) + '.txt')
+            print(f'OK: {fn_u}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn_u + str(year) + '.txt')
+            print(f'NOT FOUND: {fn_u}{year}.txt')
     e_u.drop(columns=[0, 1], inplace=True)
 
     for yy, year in enumerate(years):
         try:
             e_v_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn_v + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
-                    skiprows=1, engine='python')
+                    os.path.join(basefol_e, f'{fn_v}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
             e_v = pd.concat([e_v, e_v_tmp], axis=0)
-            print('OK: ' + fn_v + str(year) + '.txt')
+            print(f'OK: {fn_v}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn_v + str(year) + '.txt')
+            print(f'NOT FOUND: {fn_v}{year}.txt')
     e_v.index = pd.to_datetime(e_v[0] + ' ' + e_v[1], format='%Y-%m-%d %H:%M:%S')
     e_v.drop(columns=[0, 1], inplace=True)
 
@@ -590,17 +590,17 @@ def read_winds():
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
     for i in aws_ecapac_daterange:
+        i_fmt = i.strftime('%Y_%m_%d')
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thaao_ecapac_aws_snow', 'AWS_ECAPAC', f'{fn}{i_fmt}_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
-            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'OK: {fn}{i_fmt}_00_00.dat')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'NOT_FOUND: {fn}{i_fmt}_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WS_aws"]).astype(float)
@@ -623,12 +623,12 @@ def read_windd():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -641,23 +641,23 @@ def read_windd():
     for yy, year in enumerate(years):
         try:
             e_u_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn_u + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
-                    skiprows=1, engine='python')
+                    os.path.join(basefol_e, f'{fn_u}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
             e_u = pd.concat([e_u, e_u_tmp], axis=0)
-            print('OK: ' + fn_u + str(year) + '.txt')
+            print(f'OK: {fn_u}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn_u + str(year) + '.txt')
+            print(f'NOT FOUND: {fn_u}{year}.txt')
     e_u.drop(columns=[0, 1], inplace=True)
 
     for yy, year in enumerate(years):
         try:
             e_v_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn_v + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None,
-                    skiprows=1, engine='python')
+                    os.path.join(basefol_e, f'{fn_v}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
             e_v = pd.concat([e_v, e_v_tmp], axis=0)
-            print('OK: ' + fn_v + str(year) + '.txt')
+            print(f'OK: {fn_v}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn_v + str(year) + '.txt')
+            print(f'NOT FOUND: {fn_v}{year}.txt')
     e_v.index = pd.to_datetime(e_v[0] + ' ' + e_v[1], format='%Y-%m-%d %H:%M:%S')
     e_v.drop(columns=[0, 1], inplace=True)
 
@@ -669,17 +669,17 @@ def read_windd():
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
     for i in aws_ecapac_daterange:
+        i_fmt = i.strftime('%Y_%m_%d')
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thaao_ecapac_aws_snow', 'AWS_ECAPAC', f'{fn}{i_fmt}_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
-            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'OK: {fn}{i_fmt}_00_00.dat')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'NOT_FOUND: {fn}{i_fmt}_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["WD_aws"]).astype(float)
@@ -700,12 +700,12 @@ def read_tcc():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -715,17 +715,35 @@ def read_tcc():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 100.
     e.columns = [vr]
+
+    # THAAO (ceilometer)
+    fn = '_Thule_CHM190147_000_0060cloud'
+    for i in ceilometer_daterange:
+        i_fmt = i.strftime('%Y%m%d')
+        try:
+            t_tmp = pd.read_table(
+                    os.path.join(basefol_t_elab, 'thaao_ceilometer_elab', 'medie_tat_rianalisi', f'{i_fmt}{fn}.txt'),
+                    skipfooter=0, sep='\s+', header=0, skiprows=9, engine='python')
+            t_tmp[t_tmp == -9999.9] = np.nan
+            t_tmp = pd.concat([t, t_tmp], axis=0)
+            print(f'OK: {i_fmt}{fn}.txt')
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            print(f'NOT FOUND: {i_fmt}{fn}.txt')
+    t.index = pd.to_datetime(t['#'] + ' ' + t['date[y-m-d]time[h:m:s]'], format='%Y-%m-%d %H:%M:%S')
+    t.index.name = 'datetime'
+    t = t.iloc[:, :].filter(['TCC[okt]']).astype(float)
+    t.columns = [vr]
 
     return [c, e, l, t]
 
@@ -742,12 +760,12 @@ def read_cbh():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -757,13 +775,13 @@ def read_cbh():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [vr]
@@ -771,21 +789,21 @@ def read_cbh():
     # THAAO (ceilometer)
     fn = '_Thule_CHM190147_000_0060cloud'
     for i in ceilometer_daterange:
+        i_fmt = i.strftime('%Y%m%d')
         try:
-            fn_i = i.strftime('%Y%m%d') + fn + '.txt'
+
             t_tmp = pd.read_table(
-                    os.path.join(basefol_t_elab, 'thule_phaao_ceilometer_elab', 'medie_tat_rianalisi', fn_i), skipfooter=0,
-                    sep='\s+', header=0, skiprows=9, engine='python')
+                    os.path.join(basefol_t_elab, 'thaao_ceilometer_elab', 'medie_tat_rianalisi', f'{i_fmt}{fn}.txt'),
+                    skipfooter=0, sep='\s+', header=0, skiprows=9, engine='python')
             t_tmp[t_tmp == -9999.9] = np.nan
-            t_tmp = pd.concat([t, t_tmp], axis=0)
-            print('OK: ' + fn_i)
+            t = pd.concat([t, t_tmp], axis=0)
+            print(f'OK: {i_fmt}{fn}.txt')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print('NOT FOUND: ' + fn_i)
+            print(f'NOT FOUND: {i_fmt}{fn}.txt')
     t.index = pd.to_datetime(t['#'] + ' ' + t['date[y-m-d]time[h:m:s]'], format='%Y-%m-%d %H:%M:%S')
     t.index.name = 'datetime'
     t = t.iloc[:, :].filter(['CBH_L1[m]']).astype(float)
     t.columns = [vr]
-
 
     return [c, e, l, t]
 
@@ -804,12 +822,12 @@ def read_precip():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c.columns = [vr]
@@ -819,13 +837,13 @@ def read_precip():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 1000.
@@ -834,17 +852,17 @@ def read_precip():
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
     for i in aws_ecapac_daterange:
+        i_fmt = i.strftime('%Y_%m_%d')
         try:
             file = os.path.join(
-                    basefol_t, 'thule_phaao_ecapac_aws_snow', 'AWS_ECAPAC', 'Dati_giornalieri_ftp',
-                    fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+                    basefol_t, 'thaao_ecapac_aws_snow', 'AWS_ECAPAC', f'{fn}{i_fmt}_00_00.dat')
             t2_tmp = pd.read_csv(
                     file, skiprows=[0, 3], header=0, decimal='.', delimiter=',', engine='python',
                     index_col='TIMESTAMP').iloc[1:, :]
             t2 = pd.concat([t2, t2_tmp], axis=0)
-            print('OK: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'OK: {fn}{i_fmt}_00_00.dat')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print('NOT FOUND: ' + fn + i.strftime('%Y_%m_%d') + '_00_00.dat')
+            print(f'NOT_FOUND: {fn}{i_fmt}_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["PR"]).astype(float)
@@ -867,12 +885,12 @@ def read_lwp():
     for yy, year in enumerate(years):
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             c = pd.concat([c, c_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values * 1000000
@@ -885,13 +903,13 @@ def read_lwp():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 1000
@@ -905,9 +923,8 @@ def read_lwp():
         try:
             t1_tmp = pd.read_table(
                     os.path.join(
-                            basefol_t, 'thule_phaao_hatpro', 'definitivi_da_giando', fn + str(year) + '_SITO',
-                                                                                     fn + str(year) + '_SITO.dat'),
-                    sep='\s+', engine='python')
+                            basefol_t, 'thaao_hatpro', 'definitivi_da_giando', f'{fn}{year}_SITO',
+                            f'{fn}{year}_SITO.dat'), sep='\s+', engine='python')
             tmp = np.empty(t1_tmp['JD_rif'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t1_tmp['JD_rif']):
                 new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
@@ -918,9 +935,9 @@ def read_lwp():
             t1_tmp.drop(columns=['JD_rif', 'RF', 'N', 'STD_LWP'], axis=1, inplace=True)
             t1 = pd.concat([t1, t1_tmp], axis=0)
 
-            print('OK: ' + fn + str(year) + '.dat')
+            print(f'OK: {fn}{year}.dat')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.dat')
+            print(f'NOT FOUND: {fn}{year}.dat')
     t1.columns = [vr]
     # cleaning HATPRO DATA
     t1[t1 < 0] = np.nan
@@ -944,13 +961,13 @@ def read_lw_down():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 3600.  # originele in J*m-2
@@ -961,8 +978,8 @@ def read_lw_down():
     for yy, year in enumerate(years):
         try:
             t_tmp = pd.read_table(
-                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
-                    skiprows=None, header=0, decimal='.', sep='\s+')
+                    os.path.join(basefol_t, 'thaao_rad', f'{fn}{year}_5MIN.dat'), engine='python', skiprows=None,
+                    header=0, decimal='.', sep='\s+')
             tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t_tmp['JDAY_UT']):
                 new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
@@ -973,9 +990,9 @@ def read_lw_down():
                     ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'PAR_DOWN', 'PAR_UP', 'SW_UP', 'LW_UP', 'TBP',
                      'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
             t = pd.concat([t, t_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
 
     return [c, e, l, t]
@@ -999,13 +1016,13 @@ def read_lw_up():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn1 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e_n = pd.concat([e_n, e_tmp], axis=0)
-            print('OK: ' + fn1 + str(year) + '.txt')
+            print(f'OK: {fn1}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn1 + str(year) + '.txt')
+            print(f'NOT FOUND: {fn1}{year}.txt')
     e_n.index = pd.to_datetime(e_n[0] + ' ' + e_n[1], format='%Y-%m-%d %H:%M:%S')
     e_n.drop(columns=[0, 1], inplace=True)
     e_n[2] = e_n.values / 3600.  # originele in J*m-2
@@ -1014,13 +1031,13 @@ def read_lw_up():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn2 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e_d = pd.concat([e_d, e_tmp], axis=0)
-            print('OK: ' + fn2 + str(year) + '.txt')
+            print(f'OK: {fn2}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn2 + str(year) + '.txt')
+            print(f'NOT FOUND: {fn2}{year}.txt')
     e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
     e_d.drop(columns=[0, 1], inplace=True)
     e_d[2] = e_d.values / 3600.  # originele in J*m-2
@@ -1038,8 +1055,8 @@ def read_lw_up():
     for yy, year in enumerate(years):
         try:
             t_tmp = pd.read_table(
-                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
-                    skiprows=None, header=0, decimal='.', sep='\s+')
+                    os.path.join(basefol_t, 'thaao_rad', f'{fn}{year}_5MIN.dat'), engine='python', skiprows=None,
+                    header=0, decimal='.', sep='\s+')
             tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t_tmp['JDAY_UT']):
                 new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
@@ -1050,9 +1067,9 @@ def read_lw_up():
                     ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'SW_UP', 'TBP',
                      'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
             t = pd.concat([t, t_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
 
     return [c, e, l, t]
@@ -1070,12 +1087,12 @@ def read_sw_down():
     # for yy, year in enumerate(years):
     #     try:
     #         c_tmp = pd.read_table(
-    #                 os.path.join(basefol_c, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+    #                 os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
     #                 engine='python')
     #         c = pd.concat([c, c_tmp], axis=0)
-    #         print('OK: ' + fn + str(year) + '.txt')
+    #         print(f'OK: {fn}{year}.txt')
     #     except FileNotFoundError:
-    #         print('NOT FOUND: ' + fn + str(year) + '.txt')
+    #         print(f'NOT FOUND: {fn}{year}.txt')
     # c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     # c.drop(columns=[0, 1], inplace=True)
     # c[2] = c.values / 10800.
@@ -1086,13 +1103,13 @@ def read_sw_down():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e = pd.concat([e, e_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 3600.  # originale in J*m-2
@@ -1103,8 +1120,8 @@ def read_sw_down():
     for yy, year in enumerate(years):
         try:
             t_tmp = pd.read_table(
-                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
-                    skiprows=None, header=0, decimal='.', sep='\s+')
+                    os.path.join(basefol_t, 'thaao_rad', f'{fn}{year}_5MIN.dat'), engine='python', skiprows=None,
+                    header=0, decimal='.', sep='\s+')
             tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t_tmp['JDAY_UT']):
                 new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
@@ -1115,9 +1132,9 @@ def read_sw_down():
                     ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_UP', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP',
                      'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
             t = pd.concat([t, t_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
 
     return [c, e, l, t]
@@ -1141,13 +1158,13 @@ def read_sw_up():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn1 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e_n = pd.concat([e_n, e_tmp], axis=0)
-            print('OK: ' + fn1 + str(year) + '.txt')
+            print(f'OK: {fn1}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn1 + str(year) + '.txt')
+            print(f'NOT FOUND: {fn1}{year}.txt')
     e_n.index = pd.to_datetime(e_n[0] + ' ' + e_n[1], format='%Y-%m-%d %H:%M:%S')
     e_n.drop(columns=[0, 1], inplace=True)
     e_n[2] = e_n.values / 3600.  # originele in J*m-2
@@ -1156,13 +1173,13 @@ def read_sw_up():
     for yy, year in enumerate(years):
         try:
             e_tmp = pd.read_table(
-                    os.path.join(basefol_e, fn2 + str(year) + '.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    os.path.join(basefol_e, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
             e_tmp[e_tmp == -32767.0] = np.nan
             e_d = pd.concat([e_d, e_tmp], axis=0)
-            print('OK: ' + fn2 + str(year) + '.txt')
+            print(f'OK: {fn2}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn2 + str(year) + '.txt')
+            print(f'NOT FOUND: {fn2}{year}.txt')
     e_d.index = pd.to_datetime(e_d[0] + ' ' + e_d[1], format='%Y-%m-%d %H:%M:%S')
     e_d.drop(columns=[0, 1], inplace=True)
     e_d[2] = e_d.values / 3600.  # originele in J*m-2
@@ -1179,8 +1196,8 @@ def read_sw_up():
     for yy, year in enumerate(years):
         try:
             t_tmp = pd.read_table(
-                    os.path.join(basefol_t, 'thule_phaao_rad', fn + str(year) + '_5MIN.dat'), engine='python',
-                    skiprows=None, header=0, decimal='.', sep='\s+')
+                    os.path.join(basefol_t, 'thaao_rad', f'{fn}{year}_5MIN.dat'), engine='python', skiprows=None,
+                    header=0, decimal='.', sep='\s+')
             tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t_tmp['JDAY_UT']):
                 new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
@@ -1192,9 +1209,9 @@ def read_sw_up():
                      'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
             # 'JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_DOWN', 'SW_UP', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP', 'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'
             t = pd.concat([t, t_tmp], axis=0)
-            print('OK: ' + fn + str(year) + '.txt')
+            print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
-            print('NOT FOUND: ' + fn + str(year) + '.txt')
+            print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
 
     return [c, e, l, t]
