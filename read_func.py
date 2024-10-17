@@ -791,7 +791,6 @@ def read_cbh():
     for i in ceilometer_daterange:
         i_fmt = i.strftime('%Y%m%d')
         try:
-
             t_tmp = pd.read_table(
                     os.path.join(basefol_t_elab, 'thaao_ceilometer_elab', 'medie_tat_rianalisi', f'{i_fmt}{fn}.txt'),
                     skipfooter=0, sep='\s+', header=0, skiprows=9, engine='python')

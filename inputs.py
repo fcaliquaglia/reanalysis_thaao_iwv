@@ -37,9 +37,9 @@ basefol_t_elab = os.path.join('H:\\Shared drives', 'Dati_elab_docs')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 ##
-tres = '6h'
-var_list = [
-    'cbh', 'sw_down', 'sw_up', 'lw_up', 'lw_down', 'temp', 'alb', 'lwp', 'iwv', 'precip', 'windd', 'winds', 'rh', 'surf_pres']
+tres = '24h'
+var_list = ['iwv', 'sw_down', 'sw_up', 'lw_up', 'lw_down', 'temp', 'alb', 'lwp', 'cbh', 'precip', 'windd', 'winds',
+    'rh', 'surf_pres']
 # 'tcc'
 
 years = np.arange(2016, 2025, 1)

@@ -23,6 +23,7 @@ __lastupdate__ = ""
 
 import matplotlib.pyplot as plt
 import numpy.ma as ma
+from pyCompare import blandAltman
 
 from inputs import *
 
@@ -342,7 +343,6 @@ def plot_ba(vr, avar, period_label):
     :param period_label:
     :return:
     """
-    # TODO: develop with pycompare
     print('BLAND-ALTMAN')
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     seas_name = seass[period_label]['name']
@@ -425,7 +425,7 @@ def plot_ba(vr, avar, period_label):
                 print(f'error with {label}')
                 continue
         try:
-            print(f'plotting scatter THAAO-{label}')
+            print(f'plotting ba THAAO-{label}')
 
             fig.suptitle(f'{vr.upper()} {seas_name} {tres}', fontweight='bold')
             axs[i].set_title(label)
@@ -440,27 +440,25 @@ def plot_ba(vr, avar, period_label):
 
             idx = np.isfinite(x_s) & np.isfinite(y_s)
 
-            if seas_name != 'all':
-                axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
-            else:
-                axs[i].hist2d(x_s[idx], y_s[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
+            blandAltman(x_s[idx], y_s[idx], ax=axs[i], limitOfAgreement=1.96, confidenceInterval=95,
+                        confidenceIntervalMethod='approximate', detrend=None, percentage=False)
 
-            b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
-            xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
-            axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')
-            axs[i].plot(
-                    [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,
-                    ls='-')
-            corcoef = ma.corrcoef(x_s[idx], y_s[idx])
-
-            N = x_s[idx].shape[0]
-            rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))
-            mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))
-            axs[i].text(
-                    0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,
-                    transform=axs[i].transAxes)
-            axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
-            axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
+            # b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
+            # xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
+            # axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')
+            # axs[i].plot(
+            #         [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,
+            #         ls='-')
+            # corcoef = ma.corrcoef(x_s[idx], y_s[idx])
+            #
+            # N = x_s[idx].shape[0]
+            # rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))
+            # mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))
+            # axs[i].text(
+            #         0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,
+            #         transform=axs[i].transAxes)
+            # axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
+            # axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
         except:
             print(f'error with {label}')
     plt.savefig(os.path.join(basefol_out, f'{tres}_ba_{seas_name}_{vr}.png'))
