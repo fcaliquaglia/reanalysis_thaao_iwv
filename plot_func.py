@@ -442,6 +442,8 @@ def plot_ba(vr, avar, period_label):
 
             blandAltman(x_s[idx], y_s[idx], ax=axs[i], limitOfAgreement=1.96, confidenceInterval=95,
                         confidenceIntervalMethod='approximate', detrend=None, percentage=False)
+            # confidenceIntervalMethod='exact paired' or 'approximate'
+            # detrend='Linear' or 'None'
 
             # b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
             # xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)

@@ -214,7 +214,7 @@ def read_rh():
             t2 = pd.concat([t2, t2_tmp], axis=0)
             print(f'OK: {fn}{i_fmt}_00_00.dat')
         except (FileNotFoundError, pd.errors.EmptyDataError):
-            print(f'NOT_FOUND: {fn}{i.fmt}_00_00.dat')
+            print(f'NOT_FOUND: {fn}{i_fmt}_00_00.dat')
     t2.index = pd.DatetimeIndex(t2.index)
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["RH"]).astype(float)
