@@ -74,7 +74,6 @@ myFmt = mdates.DateFormatter('%d-%b')
 extr = {'temp'     : {'min': -40, 'max': 20, 'res_min': -10, 'res_max': 10},
         'lwp'      : {'min': 0, 'max': 50, 'res_min': -20, 'res_max': 20},
         'rh'       : {'min': 0, 'max': 100, 'res_min': -10, 'res_max': 10},
-        'tcc'      : {'min': 0, 'max': 100, 'res_min': -10, 'res_max': 10},
         'windd'    : {'min': 0, 'max': 360, 'res_min': -90, 'res_max': 90},
         'winds'    : {'min': 0, 'max': 30, 'res_min': -10, 'res_max': 10},
         'precip'   : {'min': 0, 'max': 25, 'res_min': -10, 'res_max': 10},

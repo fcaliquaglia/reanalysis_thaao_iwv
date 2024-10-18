@@ -25,6 +25,7 @@ LWP values have been masked to nan for values<0.0, and to 0 for values<15.
 albedo values for CARRA are the forecast ones. They have been masked to nan for values<0.1, since they are unrealistic.
 
 ## IWV
+The integration for rs is 
 
 ## TCC
 

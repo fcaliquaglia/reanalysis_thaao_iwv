@@ -22,10 +22,9 @@ __status__ = "Research"
 __lastupdate__ = ""
 
 import julian
-import pandas as pd
 import xarray as xr
-from metpy.calc import dewpoint_from_relative_humidity, precipitable_water, \
-    relative_humidity_from_dewpoint, wind_direction, wind_speed
+from metpy.calc import dewpoint_from_relative_humidity, precipitable_water, relative_humidity_from_dewpoint, \
+    wind_direction, wind_speed
 from metpy.units import units
 
 from inputs import *
@@ -542,29 +541,39 @@ def read_iwv():
                         skipinitialspace=False, decimal=".", names=['height', 'pres', 'temp', 'rh'], engine='python',
                         usecols=[0, 1, 2, 3])
                 dfs = pd.read_table(os.path.join(fol_input, i), **kw)
-                dfs.dropna(subset=["height"], inplace=True)
+                dfs.dropna(subset=['temp', 'pres', 'rh', "height"], inplace=True)
+                dfs.drop_duplicates(inplace=True)
+
                 dfs2 = dfs.set_index(['height'])
+                # intv = [(i, j) for (i, j) in
+                #         zip(np.arange(0, np.nanmax(dfs['height']), 100), np.arange(99, np.nanmax(dfs['height']), 100))]
+                # intvInd = pd.IntervalIndex.from_tuples(intv)
+                # dfs2[[intvInd.contains(v) for v in dfs.index.values]].mean()
+                # ciccio=dfs2[[any(intvInd.contains(v)) for v in dfs2.index.values]].mean()
                 t2_tmp = pd.DataFrame(index=pd.DatetimeIndex([file_date]), data=[convert_rs_to_iwv(dfs2).magnitude])
+                # print(file_date)
+                # print(convert_rs_to_iwv(dfs2).magnitude)
                 t2 = pd.concat([t2, t2_tmp], axis=0)
             print(f'OK: year {year}')
         except FileNotFoundError:
             print(f'NOT FOUND: year {year}')
     t2.columns = [vr]
+    np.savetxt(os.path.join(basefol_t, 'rs_pwv.txt'), t2, fmt='%s')
 
     return [c, e, l, t, t1, t2]
 
 
 def convert_rs_to_iwv(df):
     """
-    da codice di Giovanni: PWV_Gio.m
+    Convertito in python da codice di Giovanni: PWV_Gio.m
     :param df:
     :return:
     """
 
     df['td'] = dewpoint_from_relative_humidity(
-            df['temp'].to_xarray() * units("degC"), df['rh'].to_xarray() * units("percent"))
+            df['temp'].to_xarray() * units("degC"), df['rh'].to_xarray() / 100)
     iwv = precipitable_water(
-            df['pres'].to_xarray() * units("Pa"), df['td'].to_xarray() * units("degC"), bottom=None, top=None)
+            df['pres'].to_xarray() * units("hPa"), df['td'].to_xarray() * units("degC"), bottom=None, top=None)
     # avo_num = 6.022 * 1e23  # [  # /mol]
     # gas_c = 8.314  # [J / (K * mol)]
     # M_water = 18.015e-3  # kg / mol
