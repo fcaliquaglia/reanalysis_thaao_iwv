@@ -22,8 +22,10 @@ __status__ = "Research"
 __lastupdate__ = ""
 
 import julian
+import pandas as pd
 import xarray as xr
-from metpy.calc import mixing_ratio_from_relative_humidity, relative_humidity_from_dewpoint, wind_direction, wind_speed
+from metpy.calc import dewpoint_from_relative_humidity, precipitable_water, \
+    relative_humidity_from_dewpoint, wind_direction, wind_speed
 from metpy.units import units
 
 from inputs import *
@@ -528,27 +530,25 @@ def read_iwv():
     t1[t1 < 0] = np.nan
 
     # RS (sondes)
-    fn = ''
     for yy, year in enumerate(years):
         try:
             fol_input = os.path.join(basefol_t, 'thaao_rs_sondes', 'txt', f'{year}')
             file_l = os.listdir(fol_input)
             file_l.sort()
             for i in file_l:
-                # file_date = dt.datetime.strptime(i[9:22], '%Y%m%d_%H%M')
+                file_date = dt.datetime.strptime(i[9:22], '%Y%m%d_%H%M')
                 kw = dict(
                         skiprows=17, skipfooter=1, header=None, delimiter=" ", na_values="nan", na_filter=True,
                         skipinitialspace=False, decimal=".", names=['height', 'pres', 'temp', 'rh'], engine='python',
                         usecols=[0, 1, 2, 3])
-                dfs = pd.read_table(i, **kw)
+                dfs = pd.read_table(os.path.join(fol_input, i), **kw)
                 dfs.dropna(subset=["height"], inplace=True)
                 dfs2 = dfs.set_index(['height'])
-                t2_tmp = convert_rs_to_iwv(dfs2)
+                t2_tmp = pd.DataFrame(index=pd.DatetimeIndex([file_date]), data=[convert_rs_to_iwv(dfs2).magnitude])
                 t2 = pd.concat([t2, t2_tmp], axis=0)
             print(f'OK: year {year}')
         except FileNotFoundError:
             print(f'NOT FOUND: year {year}')
-    t2['IWV'] = t2['IWV'].values
     t2.columns = [vr]
 
     return [c, e, l, t, t1, t2]
@@ -561,55 +561,61 @@ def convert_rs_to_iwv(df):
     :return:
     """
 
-    avo_num = 6.022 * 1e23  # [  # /mol]
-    gas_c = 8.314  # [J / (K * mol)]
-    M_water = 18.015e-3  # kg / mol
-    eps = 0.622
-    pressure = df['pres'] * 100  # Pa moltiplico per 100 dato che è in hPa
-    height = df['height'] / 1000  # km divido per 1000 perchè è in metri
-    tempK = df['temp'] + 273.15  # T in K
-    tempC = df['temp']  # T in C
+    df['td'] = dewpoint_from_relative_humidity(
+            df['temp'].to_xarray() * units("degC"), df['rh'].to_xarray() * units("percent"))
+    iwv = precipitable_water(
+            df['pres'].to_xarray() * units("Pa"), df['td'].to_xarray() * units("degC"), bottom=None, top=None)
+    # avo_num = 6.022 * 1e23  # [  # /mol]
+    # gas_c = 8.314  # [J / (K * mol)]
+    # M_water = 18.015e-3  # kg / mol
+    # eps = 0.622
+    # pressure = df['pres'] * 100  # Pa moltiplico per 100 dato che è in hPa
+    # height = df.index.values / 1000  # km divido per 1000 perchè è in metri
+    # tempK = df['temp'] + 273.15  # T in K
+    # tempC = df['temp']  # T in C
+    #
+    # RH = df['rh'] / 100  # frazione di umidità relativa
+    #
+    # ## calcolo la pressione di vapore saturo sull'acqua liquida in Pa (Buck, 1996)
+    # a = 18.678 - tempC / 234.5
+    # b = 257.14 + tempC
+    # c = a * tempC / b
+    # Ps = 611.21 * np.exp(c)  # pressione di vapore saturo [Pa]
+    #
+    # ## pressione parziale di vapore acqueo
+    # Ph2o = RH * Ps
+    #
+    # ## vmr vapore acqueo
+    # # vmr = Ph2o / pressure
+    # vmr = mixing_ratio_from_relative_humidity(
+    #         df['pres'].to_xarray() * units("Pa"), df['temp'].to_xarray() * units("degC"),
+    #         df['rh'].to_xarray() * units("percent"))
+    #
+    # ## mixmass
+    # mix_mass = vmr * eps
+    #
+    # ## Concentrazione di vapore acqueo
+    # conc_h2o = (Ph2o * avo_num / (gas_c * tempK))  ##/m^3
+    #
+    # ## calcolo il numero totale di molecole
+    # conc_tot = np.sum(conc_h2o * 100)
+    #
+    # ## calcolo Tatm
+    # # T_sup = T_int(1)
+    # # Tatm = sum(T_int * conc_h2o_int) * 100 / conc_tot + T_int(1) * conc_h2o_int(1) * (bot - 50 - zGrd) / conc_tot;
+    #
+    # ## calcolo PWV
+    # mol_tot = conc_tot / avo_num  # numero totale di moli
+    # m_tot = mol_tot * M_water  # massa totale in kg
+    # # carico la funzione di densità dell'acqua liquida
+    # rho_lw_T = load('rho_liquid_water vs T')  # in kg al m^3
+    # rho_lw = rho_lw_T.rho_lw
+    # T_lw = rho_lw_T.T_lw
+    # # [mini, ind] = min(abs(T_sup - T_lw))  # trovo a quale T ci troviamo
+    #
+    # PWV = m_tot / rho_lw(ind) * 1000  # [mm] area unitaria e moltiplico per 1000 per averlo im mm
 
-    RH = df['rh'] / 100  # frazione di umidità relativa
-
-    ## calcolo la pressione di vapore saturo sull'acqua liquida in Pa (Buck, 1996)
-    a = 18.678 - tempC / 234.5
-    b = 257.14 + tempC
-    c = a * tempC / b
-    Ps = 611.21 * np.exp(c)  # pressione di vapore saturo [Pa]
-
-    ## pressione parziale di vapore acqueo
-    Ph2o = RH * Ps
-
-    ## vmr vapore acqueo
-    vmr = Ph2o / pressure
-    mixing_ratio_from_relative_humidity(df['pres'], df['temp'], df['rh'])
-
-    ## mixmass
-    mix_mass = vmr * eps
-
-    ## Concentrazione di vapore acqueo
-    conc_h2o = (Ph2o * avo_num / (gas_c * tempK))  ##/m^3
-
-    ## calcolo il numero totale di molecole
-    conc_tot = np.sum(conc_h2o * 100)
-
-    ## calcolo Tatm
-    # T_sup = T_int(1)
-    # Tatm = sum(T_int * conc_h2o_int) * 100 / conc_tot + T_int(1) * conc_h2o_int(1) * (bot - 50 - zGrd) / conc_tot;
-
-    ## calcolo PWV
-    mol_tot = conc_tot / avo_num  # numero totale di moli
-    m_tot = mol_tot * M_water  # massa totale in kg
-    # carico la funzione di densità dell'acqua liquida
-    rho_lw_T = load('rho_liquid_water vs T')  # in kg al m^3
-    rho_lw = rho_lw_T.rho_lw
-    T_lw = rho_lw_T.T_lw
-    # [mini, ind] = min(abs(T_sup - T_lw))  # trovo a quale T ci troviamo
-
-    PWV = m_tot / rho_lw(ind) * 1000  # [mm] area unitaria e moltiplico per 1000 per averlo im mm
-
-    return PWV
+    return iwv
 
 
 def read_winds():

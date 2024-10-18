@@ -284,6 +284,8 @@ def plot_scatter(vr, avar, period_label):
         if comp == 't2':
             if vr == 'alb':
                 label = 'ERA5 snow alb'
+            elif vr == 'iwv':
+                label = 'RS'
             else:
                 label = 'AWS ECAPAC'
             axs[i].set_ylabel(label)
