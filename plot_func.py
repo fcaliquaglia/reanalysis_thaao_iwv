@@ -40,6 +40,13 @@ def plot_ts(vr, avar, period_label):
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
     fig.suptitle(f'{vr.upper()} all {tres}', fontweight='bold')
+    if vr != 'iwv':
+        label_t2_ori = 'AWS ECAPAC 1 min'
+        label_t2 = 'AWS ECAPAC'
+    else:
+        label_t2_ori = 'RS'
+        label_t2 = 'RS'
+
     for [yy, year] in enumerate(years):
         print(f'plotting {year}')
 
@@ -73,8 +80,8 @@ def plot_ts(vr, avar, period_label):
             pass
         try:
             ax[yy].plot(
-                    vr_t2[vr_t2.index.year == year], color=t2_col_ori, label='AWS ECAPAC 1 min', alpha=0.02, lw=0,
-                    marker='.', ms=1)
+                    vr_t2[vr_t2.index.year == year], color=t2_col_ori, label=label_t2_ori, alpha=0.02, lw=0, marker='.',
+                    ms=1)
         except AttributeError:
             pass
 
@@ -106,7 +113,7 @@ def plot_ts(vr, avar, period_label):
             pass
         try:
             ax[yy].plot(
-                    vr_t2_res[vr_t2_res.index.year == year], color=t2_col, label='AWS ECAPAC', lw=0, marker='.', ms=2)
+                    vr_t2_res[vr_t2_res.index.year == year], color=t2_col, label=label_t2, lw=0, marker='.', ms=2)
         except AttributeError:
             pass
 
@@ -144,6 +151,13 @@ def plot_residuals(vr, avar, period_label):
     for [yy, year] in enumerate(years):
         print(f'plotting {year}')
 
+        if vr != 'iwv':
+            label_t2_ori = 'AWS ECAPAC 1 min'
+            label_t2 = 'AWS ECAPAC'
+        else:
+            label_t2_ori = 'RS'
+            label_t2 = 'RS'
+
         if vr == 'lwp':
             vr_ref = vr_t1_res
         elif vr in ['precip', 'windd', 'winds']:
@@ -180,7 +194,7 @@ def plot_residuals(vr, avar, period_label):
         try:
             ax[yy].plot(
                     (vr_t2_res[vr_t2_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=t2_col,
-                    label='AWS ECAPAC', lw=1, marker='.', ms=0)
+                    label=label_t2, lw=1, marker='.', ms=0)
         except AttributeError:
             pass
 
@@ -290,7 +304,10 @@ def plot_scatter(vr, avar, period_label):
                 label = 'AWS ECAPAC'
             axs[i].set_ylabel(label)
             try:
-                y = vr_t2_res[vr]
+                if vr == 'iwv':
+                    y = vr_t2[vr].resample('5min')
+                else:
+                    y = vr_t2_res[vr]
             except KeyError:
                 print(f'error with {label}')
                 continue
@@ -442,27 +459,12 @@ def plot_ba(vr, avar, period_label):
 
             idx = np.isfinite(x_s) & np.isfinite(y_s)
 
-            blandAltman(x_s[idx], y_s[idx], ax=axs[i], limitOfAgreement=1.96, confidenceInterval=95,
-                        confidenceIntervalMethod='approximate', detrend=None, percentage=False)
-            # confidenceIntervalMethod='exact paired' or 'approximate'
-            # detrend='Linear' or 'None'
+            blandAltman(
+                    x_s[idx], y_s[idx], ax=axs[i], limitOfAgreement=1.96, confidenceInterval=95,
+                    confidenceIntervalMethod='approximate', detrend=None,
+                    percentage=False)  # confidenceIntervalMethod='exact paired' or 'approximate'  # detrend='Linear' or 'None'
 
-            # b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
-            # xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
-            # axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')
-            # axs[i].plot(
-            #         [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,
-            #         ls='-')
-            # corcoef = ma.corrcoef(x_s[idx], y_s[idx])
-            #
-            # N = x_s[idx].shape[0]
-            # rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))
-            # mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))
-            # axs[i].text(
-            #         0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,
-            #         transform=axs[i].transAxes)
-            # axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
-            # axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
+            # b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)  # xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)  # axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')  # axs[i].plot(  #         [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,  #         ls='-')  # corcoef = ma.corrcoef(x_s[idx], y_s[idx])  #  # N = x_s[idx].shape[0]  # rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))  # mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))  # axs[i].text(  #         0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,  #         transform=axs[i].transAxes)  # axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])  # axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
         except:
             print(f'error with {label}')
     plt.savefig(os.path.join(basefol_out, f'{tres}_ba_{seas_name}_{vr}.png'))

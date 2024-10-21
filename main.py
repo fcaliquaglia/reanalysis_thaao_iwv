@@ -23,6 +23,7 @@ __lastupdate__ = ""
 
 from plot_func import plot_ba, plot_residuals, plot_scatter, plot_ts
 from read_func import *
+from inputs import *
 from res_func import data_resampling
 
 if __name__ == "__main__":
@@ -35,7 +36,7 @@ if __name__ == "__main__":
         var_t = pd.DataFrame()
         var_t1 = pd.DataFrame()
         var_t2 = pd.DataFrame()
-        if var in [ 'lwp']:
+        if var in ['lwp']:
             [var_c, var_e, var_l, var_t, var_t1] = read(var)
         elif var in ['temp', 'msl_pres', 'surf_pres', 'rh', 'winds', 'windd', 'precip', 'alb', 'iwv']:
             [var_c, var_e, var_l, var_t, var_t1, var_t2] = read(var)
@@ -53,3 +54,6 @@ if __name__ == "__main__":
         for seas in seass:
             plot_scatter(var, all_var, seas)
             plot_ba(var, all_var, seas)
+
+    # TODO: Giovanni ha dei rs che io non ho e devo aggiungere nel database.
+    # TODO: chiedere a Giovanni fino a che quota integra e considera troposfera nei profili di vespa?

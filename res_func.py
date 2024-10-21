@@ -21,10 +21,10 @@ __email__ = "filippo.caliquaglia@gmail.com"
 __status__ = "Research"
 __lastupdate__ = ""
 
-import pandas as pd
 from metpy.calc import wind_components, wind_direction
 from metpy.units import units
 
+from inputs import *
 from read_func import read
 
 
@@ -38,6 +38,7 @@ def lwp_res(lwp, timeres):
     lwp_res = lwp.resample(timeres).sum()
 
     return lwp_res
+
 
 def windd_res(wd, ws, timeres):
     u_df = pd.DataFrame()
@@ -99,7 +100,7 @@ def data_resampling(vr, tres, var_c, var_e, var_l, var_t, var_t1, var_t2):
             var_e_res = pd.DataFrame()
         try:
             var_l_res = precip_res(var_l, tres)
-        except:
+        except(TypeError, NameError):
             var_l_res = pd.DataFrame()
         try:
             var_t_res = precip_res(var_t, tres)
@@ -141,29 +142,30 @@ def data_resampling(vr, tres, var_c, var_e, var_l, var_t, var_t1, var_t2):
     else:
         try:
             var_c_res = var_c.resample(tres).mean()
-        except TypeError:
+        except (TypeError, NameError):
             var_c_res = pd.DataFrame()
         try:
             var_e_res = var_e.resample(tres).mean()
-        except TypeError:
+        except (TypeError, NameError):
             var_e_res = pd.DataFrame()
         try:
             var_l_res = var_l.resample(tres).mean()
-        except:
+        except (TypeError, NameError):
             var_l_res = pd.DataFrame()
         try:
             var_t_res = var_t.resample(tres).mean()
-        except:
+        except (TypeError, NameError):
             var_t_res = pd.DataFrame()
         try:
             var_t1_res = var_t1.resample(tres).mean()
         except (TypeError, NameError):
-
             var_t1_res = pd.DataFrame()
         try:
-            var_t2_res = var_t2.resample(tres).mean()
+            if vr != 'iwv':
+                var_t2_res = var_t2.resample(tres).mean()
+            else:
+                var_t2_res = var_t2.resample(tres_rs).mean()
         except (TypeError, NameError):
-
             var_t2_res = pd.DataFrame()
 
     return var_c_res, var_e_res, var_l_res, var_t_res, var_t1_res, var_t2_res

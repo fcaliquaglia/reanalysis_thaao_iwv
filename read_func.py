@@ -541,39 +541,44 @@ def read_iwv():
                         skipinitialspace=False, decimal=".", names=['height', 'pres', 'temp', 'rh'], engine='python',
                         usecols=[0, 1, 2, 3])
                 dfs = pd.read_table(os.path.join(fol_input, i), **kw)
+                # unphysical values checks
+                dfs.loc[(dfs['pres'] > 1013) | (dfs['pres'] < 0), 'pres'] = np.nan
+                dfs.loc[(dfs['height'] < 0), 'height'] = np.nan
+                dfs.loc[(dfs['temp'] < -100) | (dfs['temp'] > 30), 'temp'] = np.nan
+                dfs.loc[(dfs['rh'] < 1.) | (dfs['rh'] > 120), 'rh'] = np.nan
                 dfs.dropna(subset=['temp', 'pres', 'rh', "height"], inplace=True)
-                dfs.drop_duplicates(inplace=True)
-
-                dfs2 = dfs.set_index(['height'])
-                # intv = [(i, j) for (i, j) in
-                #         zip(np.arange(0, np.nanmax(dfs['height']), 100), np.arange(99, np.nanmax(dfs['height']), 100))]
-                # intvInd = pd.IntervalIndex.from_tuples(intv)
-                # dfs2[[intvInd.contains(v) for v in dfs.index.values]].mean()
-                # ciccio=dfs2[[any(intvInd.contains(v)) for v in dfs2.index.values]].mean()
-                t2_tmp = pd.DataFrame(index=pd.DatetimeIndex([file_date]), data=[convert_rs_to_iwv(dfs2).magnitude])
+                dfs.drop_duplicates(subset=['height'],inplace=True)
+                # min_pres_ind exclude values recorded during descent
+                min_pres = np.nanmin(dfs['pres'])
+                min_pres_ind = np.nanmin(np.where(dfs['pres'] == min_pres)[0])
+                dfs1 = dfs.iloc[:min_pres_ind]
+                dfs2 = dfs1.set_index(['height'])
+                rs_iwv = convert_rs_to_iwv(dfs2, 1.01)
+                t2_tmp = pd.DataFrame(index=pd.DatetimeIndex([file_date]), data=[rs_iwv.magnitude])
                 # print(file_date)
-                # print(convert_rs_to_iwv(dfs2).magnitude)
+                # print(rs_iwv.magnitude)
                 t2 = pd.concat([t2, t2_tmp], axis=0)
             print(f'OK: year {year}')
         except FileNotFoundError:
             print(f'NOT FOUND: year {year}')
     t2.columns = [vr]
-    np.savetxt(os.path.join(basefol_t, 'rs_pwv.txt'), t2, fmt='%s')
+    # np.savetxt(os.path.join(basefol_t, 'rs_pwv.txt'), t2, fmt='%s')
+    t2.to_csv(os.path.join(basefol_t, 'rs_pwv.txt'), index=True)
 
     return [c, e, l, t, t1, t2]
 
 
-def convert_rs_to_iwv(df):
+def convert_rs_to_iwv(df, tp):
     """
-    Convertito in python da codice di Giovanni: PWV_Gio.m
+    Convertito concettualmente in python da codice di Giovanni: PWV_Gio.m
+    :param tp: % of the max pressure value up to which calculate the iwv. it is necessary because interpolation fails.
     :param df:
     :return:
     """
 
-    df['td'] = dewpoint_from_relative_humidity(
+    td = dewpoint_from_relative_humidity(
             df['temp'].to_xarray() * units("degC"), df['rh'].to_xarray() / 100)
-    iwv = precipitable_water(
-            df['pres'].to_xarray() * units("hPa"), df['td'].to_xarray() * units("degC"), bottom=None, top=None)
+    iwv = precipitable_water(df['pres'].to_xarray() * units("hPa"),td, bottom=None, top=np.nanmin(df['pres'])*tp*units('hPa'))
     # avo_num = 6.022 * 1e23  # [  # /mol]
     # gas_c = 8.314  # [J / (K * mol)]
     # M_water = 18.015e-3  # kg / mol
