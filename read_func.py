@@ -472,6 +472,7 @@ def read_iwv():
             print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
+    c[c <= 0] = np.nan
     c.columns = [vr]
 
     # ERA5
@@ -527,6 +528,7 @@ def read_iwv():
     t1.columns = [vr]
     # cleaning HATPRO DATA
     t1[t1 < 0] = np.nan
+    t1[t1 > 30] = np.nan
 
     # RS (sondes)
     for yy, year in enumerate(years):
@@ -546,8 +548,8 @@ def read_iwv():
                 dfs.loc[(dfs['height'] < 0), 'height'] = np.nan
                 dfs.loc[(dfs['temp'] < -100) | (dfs['temp'] > 30), 'temp'] = np.nan
                 dfs.loc[(dfs['rh'] < 1.) | (dfs['rh'] > 120), 'rh'] = np.nan
-                dfs.dropna(subset=['temp', 'pres', 'rh', "height"], inplace=True)
-                dfs.drop_duplicates(subset=['height'],inplace=True)
+                dfs.dropna(subset=['temp', 'pres', 'rh'], inplace=True)
+                dfs.drop_duplicates(subset=['height'], inplace=True)
                 # min_pres_ind exclude values recorded during descent
                 min_pres = np.nanmin(dfs['pres'])
                 min_pres_ind = np.nanmin(np.where(dfs['pres'] == min_pres)[0])
@@ -555,8 +557,6 @@ def read_iwv():
                 dfs2 = dfs1.set_index(['height'])
                 rs_iwv = convert_rs_to_iwv(dfs2, 1.01)
                 t2_tmp = pd.DataFrame(index=pd.DatetimeIndex([file_date]), data=[rs_iwv.magnitude])
-                # print(file_date)
-                # print(rs_iwv.magnitude)
                 t2 = pd.concat([t2, t2_tmp], axis=0)
             print(f'OK: year {year}')
         except FileNotFoundError:
@@ -578,7 +578,8 @@ def convert_rs_to_iwv(df, tp):
 
     td = dewpoint_from_relative_humidity(
             df['temp'].to_xarray() * units("degC"), df['rh'].to_xarray() / 100)
-    iwv = precipitable_water(df['pres'].to_xarray() * units("hPa"),td, bottom=None, top=np.nanmin(df['pres'])*tp*units('hPa'))
+    iwv = precipitable_water(
+            df['pres'].to_xarray() * units("hPa"), td, bottom=None, top=np.nanmin(df['pres']) * tp * units('hPa'))
     # avo_num = 6.022 * 1e23  # [  # /mol]
     # gas_c = 8.314  # [J / (K * mol)]
     # M_water = 18.015e-3  # kg / mol

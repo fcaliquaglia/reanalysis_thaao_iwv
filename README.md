@@ -26,6 +26,7 @@ albedo values for CARRA are the forecast ones. They have been masked to nan for 
 
 ## IWV
 The integration for rs is 
+IWV HATPRO values have been masked to nan for values<0.0 and values>30.
 
 ## TCC
 

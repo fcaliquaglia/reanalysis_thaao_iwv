@@ -304,10 +304,7 @@ def plot_scatter(vr, avar, period_label):
                 label = 'AWS ECAPAC'
             axs[i].set_ylabel(label)
             try:
-                if vr == 'iwv':
-                    y = vr_t2[vr].resample('5min')
-                else:
-                    y = vr_t2_res[vr]
+                y = vr_t2_res[vr]
             except KeyError:
                 print(f'error with {label}')
                 continue
