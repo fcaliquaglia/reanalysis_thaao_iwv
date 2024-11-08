@@ -116,8 +116,8 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 
 - CARRA: ``total_column_integrated_water_vapour``
 
-> [!WARNING] c'è un problema per CARRA iwv nel dicembre 2023. i valori sono tutti nulli. Ho provato a riscaricare ma non
-> cambia. Alla fine ho filtrato i dati <=0.
+> [!WARNING]  
+> C'è un problema per CARRA iwv nel dicembre 2023. i valori sono tutti nulli. Ho provato a riscaricare ma non cambia. Alla fine ho filtrato i dati <=0.
 
 - ERA-5: ``total_column_water_vapour``
 - ERA5-L: /
