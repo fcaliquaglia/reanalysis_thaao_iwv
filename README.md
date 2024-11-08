@@ -10,6 +10,7 @@
 - [ ] focus on weather variables
 - [ ] riportare valori di pressione al livello del mare?
 - [ ] recuperare da Giovanni i rs che io non ho e devo aggiungere in archivio per l'analisi
+ 
 
 ## Reanalysis considered
 
@@ -115,8 +116,8 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 
 - CARRA: ``total_column_integrated_water_vapour``
 
-[!WARNING] c'è un problema per CARRA iwv nel dicembre 2023. i valori sono tutti nulli. Ho provato a riscaricare ma non
-cambia. Alla fine ho filtrato i dati <=0.
+> [!WARNING] c'è un problema per CARRA iwv nel dicembre 2023. i valori sono tutti nulli. Ho provato a riscaricare ma non
+> cambia. Alla fine ho filtrato i dati <=0.
 
 - ERA-5: ``total_column_water_vapour``
 - ERA5-L: /
@@ -228,3 +229,18 @@ cambia. Alla fine ho filtrato i dati <=0.
 - ERA-5:
 - ERA5-L:
 - THAAO ():
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!TIP]
+> Optional information to help a user be more successful.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
+> [!CAUTION]
+> Negative potential consequences of an action.
