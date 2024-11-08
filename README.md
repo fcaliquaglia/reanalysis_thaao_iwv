@@ -31,8 +31,7 @@ forecasts up to 30 hours initialised from the analyses at 00 and 12 UTC are avai
 The dataset includes two domains. The West domain covers Greenland, the Labrador Sea, Davis Strait, Baffin Bay,
 Denmark Strait, Iceland, Jan Mayen, the Greenland Sea and Svalbard. The East domain covers Svalbard, Jan Mayen, Franz
 Josef Land, Novaya Zemlya, Barents Sea, and the Northern parts of the Norwegian Sea and Scandinavia.
-
->The dataset has been produced with the use of the HARMONIE-AROME state-of-the-art non-hydrostatic regional numerical
+The dataset has been produced with the use of the HARMONIE-AROME state-of-the-art non-hydrostatic regional numerical
 weather prediction model. High resolution reanalysis for the Arctic region is particularly important because the
 climate change is more pronounced in the Arctic region than elsewhere in the Earth. This fact calls for a better
 description of this region providing additional details with respect to the global reanalyses (ERA5 for instance). The
@@ -40,8 +39,7 @@ additional information is provided by the higher horizontal resolution, more loc
 countries and Greenland), better description of surface characteristics (high resolution satellite and physiographic
 data), high resolution non-hydrostatic dynamics and improved physical parameterisation of clouds and precipitation in
 particular.
-
->The inputs to CARRA reanalysis are the observations, the ERA5 global reanalysis as lateral boundary conditions and the
+The inputs to CARRA reanalysis are the observations, the ERA5 global reanalysis as lateral boundary conditions and the
 physiographic datasets describing the surface characteristics of the model. The observation values and information
 about their quality are used together to constrain the reanalysis where observations are available and provide
 information for the data assimilation system in areas in where less observations are available.
@@ -53,14 +51,13 @@ information for the data assimilation system in areas in where less observations
 - https://cds.climate.copernicus.eu/datasets/reanalysis-era5-complete?tab=overview
 
 > [!NOTE]
->(from the official website) ERA5 is the fifth generation ECMWF atmospheric reanalysis of the global climate covering the
+> (from the official website) ERA5 is the fifth generation ECMWF atmospheric reanalysis of the global climate covering the
 period from January 1940
 to present1. It is produced by the Copernicus Climate Change Service (C3S) at ECMWF and provides hourly estimates of a
 large number of atmospheric, land and oceanic climate variables. The data cover the Earth on a 31km grid and resolve
 the atmosphere using 137 levels from the surface up to a height of 80km. ERA5 includes an ensemble component at half
 the resolution to provide information on synoptic uncertainty of its products.
-
->ERA5 uses a state-of-the-art numerical weather prediction model to assimilate a variety of observations,
+ERA5 uses a state-of-the-art numerical weather prediction model to assimilate a variety of observations,
 including satellite and ground-based measurements, and produces a comprehensive and consistent view of the Earth's
 atmosphere. These products are widely used by researchers and practitioners in various fields, including climate
 science, weather forecasting, energy production and machine learning among others, to understand and analyse past and
@@ -79,16 +76,14 @@ at an enhanced resolution compared to ERA5. ERA5-Land has been produced by repla
 ERA5 climate reanalysis. Reanalysis combines model data with observations from across the world into a globally
 complete and consistent dataset using the laws of physics. Reanalysis produces data that goes several decades back in
 time, providing an accurate description of the climate of the past.
-
->ERA5-Land uses as input to control the simulated land fields ERA5 atmospheric variables, such as air temperature and
+ERA5-Land uses as input to control the simulated land fields ERA5 atmospheric variables, such as air temperature and
 air humidity. This is called the atmospheric forcing. Without the constraint of the atmospheric forcing, the
 model-based estimates can rapidly deviate from reality. Therefore, while observations are not directly used in the
 production of ERA5-Land, they have an indirect influence through the atmospheric forcing used to run the simulation.
 In addition, the input air temperature, air humidity and pressure used to run ERA5-Land are corrected to account for
 the altitude difference between the grid of the forcing and the higher resolution grid of ERA5-Land. This correction
 is called 'lapse rate correction'.
-
->The ERA5-Land dataset, as any other simulation, provides estimates which have some degree of uncertainty. Numerical
+The ERA5-Land dataset, as any other simulation, provides estimates which have some degree of uncertainty. Numerical
 models can only provide a more or less accurate representation of the real physical processes governing different
 components of the Earth System. In general, the uncertainty of model estimates grows as we go back in time, because
 the number of observations available to create a good quality atmospheric forcing is lower. ERA5-land parameter fields
