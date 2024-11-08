@@ -109,7 +109,7 @@ The reference values are always from THAAO measurements, except for IWV (ref: VE
 
 > [!TIP]
 > wind component combination, conversion from dewpoint temperature to rh and similar, have been performed using the
-``metpy`` package
+``metpy`` package.
 
 ## Liquid Water Path - LWP (``lwp``)
 
