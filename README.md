@@ -89,7 +89,7 @@ and use more accurate information on land states.
 
 # THAAO reference instruments
 
-Instrument involved are HATPRO (IWV, LWP), AWS_ECAPAC (temp, press, rh, windd, winds), AWS_vespa (temp, press, rh,
+Instrument involved are HATPRO (IWV, LWP), aws_ECAPAC (temp, press, rh, windd, winds), aws_vespa (temp, press, rh,
 windd, winds), VESPA (iwv), sw radiometers (up and down), radiosoundings (iwv)
 The reference values are always from THAAO measurements, except for IWV (ref: VESPA) and LWP (ref:HATPRO)
 
