@@ -20,7 +20,7 @@
 
 - 3h resolution at 2.5 km
 - 10.24381/cds.713858f6
-- https://cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels?tab=overview
+- [cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels](https://cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels?tab=overview)
 
 > [!NOTE]
 > (from the official website) The C3S Arctic Regional Reanalysis (CARRA) dataset contains 3-hourly analyses and hourly
@@ -48,7 +48,7 @@
 
 - 1 h resolution at 0.25° x 0.25°
 - 10.24381/cds.143582cf
-- https://cds.climate.copernicus.eu/datasets/reanalysis-era5-complete?tab=overview
+- [cds.climate.copernicus.eu/datasets/reanalysis-era5-complete](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-complete?tab=overview)
 
 > [!NOTE]
 > (from the official website) ERA5 is the fifth generation ECMWF atmospheric reanalysis of the global climate covering
@@ -68,7 +68,7 @@
 
 - 1 h resolution at 0.1° x 0.1°
 - 10.24381/cds.e2161bac
-- https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land?tab=overview
+- [cds.climate.copernicus.eu/datasets/reanalysis-era5-land](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land?tab=overview)
 
 > [!NOTE]
 > (from the official website) ERA5-Land is a reanalysis dataset providing a consistent view of the evolution of land
@@ -110,6 +110,44 @@ The reference values are always from THAAO measurements, except for IWV (ref: VE
 > [!TIP]
 > wind component combination, conversion from dewpoint temperature to rh and similar, have been performed using the
 ``metpy`` package.
+
+# Statistics
+
+## Time series
+
+## Scatterplots
+
+> [!WARNING] The scatterplots containing all season data is a 2D density histogram, meaning that not all data are
+> plotted (there are too many and they would result overlaid), therefore the colorbar towards the warm color indicates
+> higher density of values in that bin. For scatterplots with a limited number of data the result is a few number of
+> points compared to the variable N (printed). Seasonal scatterplots are standard.
+
+### Bland-Altman plot
+
+A reference for this type of plots used for atmospheric analysis can be found
+here: [Validation of the Cloud_CCI (Cloud Climate Change Initiative) cloud products in the Arctic](https://amt.copernicus.org/articles/16/2903/2023/).
+
+## N
+
+Total number of points analysed.
+
+### MAE
+
+> mae = np.nanmean(np.abs(x - y))
+
+Excluding nan values. x(t): reference value, usually THAAO, see above; y(t): reanalysis or other
+
+### R
+
+Pearson correlation coefficient
+
+### RMSE
+
+> rmse = np.sqrt(np.nanmean((x - y) ** 2)
+
+Excluding nan values. x(t): reference value; y(t): reanalysis or other
+
+# Variables
 
 ## Liquid Water Path - LWP (``lwp``)
 
@@ -233,10 +271,3 @@ The reference values are always from THAAO measurements, except for IWV (ref: VE
 - ERA-5: ``forecast_albedo`` (also ``snow_albedo``)
 - ERA5-L: /
 - THAAO (pyrgeometers): ``DSI``+``USI``
-
-## empty
-
-- CARRA:
-- ERA-5:
-- ERA5-L:
-- THAAO ():
