@@ -54,8 +54,3 @@ if __name__ == "__main__":
         for seas in seass:
             plot_scatter(var, all_var, seas)
             plot_ba(var, all_var, seas)
-
-    # TODO: Giovanni ha dei rs che io non ho e devo aggiungere nel database.
-    # TODO: chiedere a Giovanni fino a che quota integra e considera troposfera nei profili di vespa
-    # TODO: c'è un problema per CARRA iwv dicembre 2023. i valori sono tutti nulli... ho provato a riscaricare ma non è un problema mio.
-    # TODO: alla fine ho filtrato i dati <=0.

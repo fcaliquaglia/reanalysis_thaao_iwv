@@ -9,6 +9,7 @@
 - [ ] download more ERA-L products
 - [ ] focus on weather variables
 - [ ] riportare valori di pressione al livello del mare?
+- [ ] recuperare da Giovanni i rs che io non ho e devo aggiungere in archivio per l'analisi
 
 ## Reanalysis considered
 
@@ -113,9 +114,13 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 ## Integrated water vapour - IWV (``iwv``)
 
 - CARRA: ``total_column_integrated_water_vapour``
+
+[!WARNING] c'è un problema per CARRA iwv nel dicembre 2023. i valori sono tutti nulli. Ho provato a riscaricare ma non
+cambia. Alla fine ho filtrato i dati <=0.
+
 - ERA-5: ``total_column_water_vapour``
 - ERA5-L: /
-- THAAO (rs): The vertical integration for rs is **missing**
+- THAAO (rs): The vertical integration for rs is **missing**.
 - THAAO (vespa):
 - THAAO (hatpro): IWV HATPRO values have been masked to nan for values<0.0 and values>30.
 
@@ -152,7 +157,8 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 ## Wind Direction (``windd``)
 
 - CARRA:``10m_wind_direction``
-- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind`` (descrivere processo per ottenere velocità e direzione)
+- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind`` (descrivere processo per ottenere velocità e
+  direzione)
 - ERA5-L: /
 - THAAO (vespa):
 - THAAO (aws_ECAPAC):
@@ -160,7 +166,8 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 ## Wind Speed (``winds``)
 
 - CARRA: ``10m_wind_speed``
-- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind`` (descrivere processo per ottenere velocità e direzione)
+- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind`` (descrivere processo per ottenere velocità e
+  direzione)
 - ERA5-L: /
 - THAAO (aws_ECAPAC):
 
@@ -172,7 +179,7 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 - THAAO (vespa):
 - THAAO (aws_ECAPAC):
 
-## Surface Pressure (``press``)
+## Surface Pressure (``surf_press``)
 
 - CARRA: ``surface_pressure``
 - ERA-5: ``surface_pressure``
