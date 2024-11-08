@@ -99,14 +99,17 @@ Instrument involved are HATPRO (IWV, LWP), aws_ECAPAC (temp, press, rh, windd, w
 windd, winds), VESPA (iwv), sw radiometers (up and down), radiosoundings (iwv)
 The reference values are always from THAAO measurements, except for IWV (ref: VESPA) and LWP (ref:HATPRO)
 
-The code can be run at whichever time resolution.
-The pixel extraction is done before running this code using ``cdo remapnn`` for pixel 76.5, -68.8 which has a few
-hundreds
-meters offset from the exact location.
+> [!IMPORTANT]
+> The code can be run at whichever time resolution.
+
+> [!IMPORTANT]
+> The pixel extraction is done before running this code using ``cdo remapnn`` for pixel 76.5, -68.8 which has a few
+hundreds meters offset from the exact location.
 
 ## Liquid Water Path - LWP (``lwp``)
 
-LWP values have issues, at least for CARRA which has been divided by 10E-06 instead of 10e-03 as expected from the
+> [!CAUTION]  
+> LWP values have issues, at least for CARRA which has been divided by 10E-06 instead of 10e-03 as expected from the
 declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for LWP<15.
 
 - CARRA: ``total_column_cloud_liquid_water``
@@ -115,8 +118,6 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 - THAAO (hatpro):
 
 ## Integrated water vapour - IWV (``iwv``)
-
-
 
 > [!WARNING]  
 > - CARRA: ``total_column_integrated_water_vapour``: C'è un problema per CARRA iwv nel dicembre 2023. i valori sono tutti nulli. Ho provato a riscaricare ma non cambia. Alla fine ho filtrato i dati <=0.
