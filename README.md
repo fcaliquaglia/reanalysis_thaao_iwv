@@ -1,12 +1,14 @@
 # THAAO comparison with reanalysis
 
 ### TODO
+
 - [ ] extract better pixel
 - [ ] revise strategy for pixel extraction
 - [ ] download ``mean_sea_level_pressure``
 - [ ] extract CARRA radiation
 - [ ] download more ERA-L products
 - [ ] focus on weather variables
+- [ ] riportare valori di pressione al livello del mare?
 
 ## Reanalysis considered
 
@@ -106,18 +108,16 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 - CARRA: ``total_column_cloud_liquid_water``
 - ERA-5: ``total_column_cloud_liquid_water`` (also ``total_column_water``?)
 - ERA5-L: /
-- THAAO ()
+- THAAO (hatpro):
 
 ## Integrated water vapour - IWV (``iwv``)
 
 - CARRA: ``total_column_integrated_water_vapour``
 - ERA-5: ``total_column_water_vapour``
 - ERA5-L: /
-- THAAO (rs):
+- THAAO (rs): The vertical integration for rs is **missing**
 - THAAO (vespa):
-- THAAO (hatpro):
-  The vertical integration for rs is
-  IWV HATPRO values have been masked to nan for values<0.0 and values>30.
+- THAAO (hatpro): IWV HATPRO values have been masked to nan for values<0.0 and values>30.
 
 ## Total Cloud Cover (``tcc``)
 
@@ -131,17 +131,15 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 - CARRA: ``cloud_base``
 - ERA-5: ``cloud_base_height``
 - ERA5-L: /
-- THAAO (ceilometer): ``tcc``
-  CBH for ceilometer is calculated as the median value over 1 h form the original 15 s time resolution, then averaged
-  for
-  the comparison.
+- THAAO (ceilometer): ``tcc`` CBH is calculated as the median value over 1 h form the original 15 s time resolution,
+  then averaged for the comparison.
 
 ## Precipitation (``precip``)
 
 - CARRA: ``total_precipitation``
 - ERA-5: ``total_precipitation``
 - ERA5-L: /
-- THAAO (rain gauge): It is calculated as cumulative over the resampling time.
+- THAAO (rain gauge): It is calculated as cumulative value over the resampling time.
 
 ## Surface temperature (``temp``)
 
@@ -154,7 +152,7 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 ## Wind Direction (``windd``)
 
 - CARRA:``10m_wind_direction``
-- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind``
+- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind`` (descrivere processo per ottenere velocità e direzione)
 - ERA5-L: /
 - THAAO (vespa):
 - THAAO (aws_ECAPAC):
@@ -162,14 +160,14 @@ declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for L
 ## Wind Speed (``winds``)
 
 - CARRA: ``10m_wind_speed``
-- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind``
+- ERA-5: ``10m_u_component_of_wind`` + ``10m_v_component_of_wind`` (descrivere processo per ottenere velocità e direzione)
 - ERA5-L: /
 - THAAO (aws_ECAPAC):
 
 ## Relative Humidity (``rh``)
 
 - CARRA: ``2m_relative_humidity``
-- ERA-5: ``2m_dewpoint_temperature`` + ``surface_pressure``
+- ERA-5: ``2m_dewpoint_temperature`` + ``surface_pressure`` (descrivere processo per ottenere rh)
 - ERA5-L: /
 - THAAO (vespa):
 - THAAO (aws_ECAPAC):
