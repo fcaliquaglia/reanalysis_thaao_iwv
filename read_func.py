@@ -1225,6 +1225,13 @@ def read_sw_down():
             t_tmp = pd.read_table(
                     os.path.join(basefol_t, 'thaao_rad', f'{fn}{year}_5MIN.dat'), engine='python', skiprows=None,
                     header=0, decimal='.', sep='\s+')
+            file_ok = True
+            print(f'OK: {fn}{year}.txt')
+        except FileNotFoundError:
+            file_ok = False
+            print(f'NOT FOUND: {fn}{year}.txt')
+
+        if file_ok:
             tmp = np.empty(t_tmp['JDAY_UT'].shape, dtype=dt.datetime)
             for ii, el in enumerate(t_tmp['JDAY_UT']):
                 new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
@@ -1235,9 +1242,6 @@ def read_sw_down():
                     ['JDAY_UT', 'JDAY_LOC', 'SZA', 'SW_UP', 'PAR_DOWN', 'PAR_UP', 'LW_DOWN', 'LW_UP', 'TBP',
                      'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
             t = pd.concat([t, t_tmp], axis=0)
-            print(f'OK: {fn}{year}.txt')
-        except FileNotFoundError:
-            print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
 
     return [c, e, l, t]
