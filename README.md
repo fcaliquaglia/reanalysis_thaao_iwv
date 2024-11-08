@@ -5,10 +5,8 @@
 - [ ] revise strategy for pixel extraction
 - [ ] download ``mean_sea_level_pressure``
 - [ ] extract CARRA radiation
-- [ ] download ERA-L
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ] download more ERA-L products
+- [ ] focus on weather variables
 
 ## Reanalysis considered
 
