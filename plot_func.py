@@ -132,7 +132,7 @@ def plot_ts(vr, avar, period_label):
     plt.xlabel('Time')
     plt.legend(ncol=2)
     plt.tight_layout()
-    plt.savefig(os.path.join(basefol_out, f'{tres}_{period_label}_{vr}.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{vr}.png'))
     plt.close('all')
 
 
@@ -213,7 +213,7 @@ def plot_residuals(vr, avar, period_label):
     plt.xlabel('Time')
     plt.legend()
     plt.tight_layout()
-    plt.savefig(os.path.join(basefol_out, f'{tres}_{period_label}_residuals_{vr}.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_residuals_{vr}.png'))
     plt.close('all')
 
 
@@ -347,7 +347,7 @@ def plot_scatter(vr, avar, period_label):
             axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
         except:
             print(f'error with {label}')
-    plt.savefig(os.path.join(basefol_out, f'{tres}_scatter_{seas_name}_{vr}.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{vr}.png'))
     plt.close('all')
 
 
@@ -464,5 +464,5 @@ def plot_ba(vr, avar, period_label):
             # b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)  # xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)  # axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')  # axs[i].plot(  #         [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,  #         ls='-')  # corcoef = ma.corrcoef(x_s[idx], y_s[idx])  #  # N = x_s[idx].shape[0]  # rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))  # mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))  # axs[i].text(  #         0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,  #         transform=axs[i].transAxes)  # axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])  # axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
         except:
             print(f'error with {label}')
-    plt.savefig(os.path.join(basefol_out, f'{tres}_ba_{seas_name}_{vr}.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_ba_{seas_name}_{vr}.png'))
     plt.close('all')
