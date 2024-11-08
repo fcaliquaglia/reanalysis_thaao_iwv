@@ -1,37 +1,222 @@
 # THAAO comparison with reanalysis
 
 ### TODO: extract better pixel
-### TODO: missing ceilometer data (cbh and tcc)
 
-## Reanalysis
-CARRA has 3h resolution at 2.5 km
-ERA5 has 1 h resolution at 0.25°
-ERA5-LAND
+## Reanalysis considered
+
+### CARRA
+
+- 3h resolution at 2.5 km
+- 10.24381/cds.713858f6
+- https://cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels?tab=overview
+- The C3S Arctic Regional Reanalysis (CARRA) dataset contains 3-hourly analyses and hourly short term forecasts of
+  atmospheric and surface meteorological variables (surface and near-surface temperature, surface and top of atmosphere
+  fluxes, precipitation, cloud, humidity, wind, pressure, snow and sea variables) at 2.5 km resolution. Additionally,
+  forecasts up to 30 hours initialised from the analyses at 00 and 12 UTC are available.
+- The dataset includes two domains. The West domain covers Greenland, the Labrador Sea, Davis Strait, Baffin Bay,
+  Denmark Strait, Iceland, Jan Mayen, the Greenland Sea and Svalbard. The East domain covers Svalbard, Jan Mayen, Franz
+  Josef Land, Novaya Zemlya, Barents Sea, and the Northern parts of the Norwegian Sea and Scandinavia.
+- The dataset has been produced with the use of the HARMONIE-AROME state-of-the-art non-hydrostatic regional numerical
+  weather prediction model. High resolution reanalysis for the Arctic region is particularly important because the
+  climate change is more pronounced in the Arctic region than elsewhere in the Earth. This fact calls for a better
+  description of this region providing additional details with respect to the global reanalyses (ERA5 for instance). The
+  additional information is provided by the higher horizontal resolution, more local observations (from the Nordic
+  countries and Greenland), better description of surface characteristics (high resolution satellite and physiographic
+  data), high resolution non-hydrostatic dynamics and improved physical parameterisation of clouds and precipitation in
+  particular.
+- The inputs to CARRA reanalysis are the observations, the ERA5 global reanalysis as lateral boundary conditions and the
+  physiographic datasets describing the surface characteristics of the model. The observation values and information
+  about their quality are used together to constrain the reanalysis where observations are available and provide
+  information for the data assimilation system in areas in where less observations are available.
+
+### ERA5
+
+- 1 h resolution at 0.25° x 0.25°
+- 10.24381/cds.143582cf
+- https://cds.climate.copernicus.eu/datasets/reanalysis-era5-complete?tab=overview
+- ERA5 is the fifth generation ECMWF atmospheric reanalysis of the global climate covering the period from January 1940
+  to present1. It is produced by the Copernicus Climate Change Service (C3S) at ECMWF and provides hourly estimates of a
+  large number of atmospheric, land and oceanic climate variables. The data cover the Earth on a 31km grid and resolve
+  the atmosphere using 137 levels from the surface up to a height of 80km. ERA5 includes an ensemble component at half
+  the resolution to provide information on synoptic uncertainty of its products.
+
+- ERA5.1 is a dedicated product with the same horizontal and vertical resolution that was produced for the years 2000 to
+  2006 inclusive to significantly improve a discontinuity in global-mean temperature in the stratosphere and uppermost
+  troposphere that ERA5 suffers from during that period. Users that are interested in this part of the atmosphere in
+  this era are advised to access ERA5.1 rather than ERA5.
+
+- ERA5 and ERA5.1 use a state-of-the-art numerical weather prediction model to assimilate a variety of observations,
+  including satellite and ground-based measurements, and produces a comprehensive and consistent view of the Earth's
+  atmosphere. These products are widely used by researchers and practitioners in various fields, including climate
+  science, weather forecasting, energy production and machine learning among others, to understand and analyse past and
+  current weather and climate conditions.
+
+### ERA5-LAND
+
+- 1 h resolution at 0.1° x 0.1°
+- 10.24381/cds.e2161bac
+- https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land?tab=overview
+- ERA5-Land is a reanalysis dataset providing a consistent view of the evolution of land variables over several decades
+  at an enhanced resolution compared to ERA5. ERA5-Land has been produced by replaying the land component of the ECMWF
+  ERA5 climate reanalysis. Reanalysis combines model data with observations from across the world into a globally
+  complete and consistent dataset using the laws of physics. Reanalysis produces data that goes several decades back in
+  time, providing an accurate description of the climate of the past.
+
+- ERA5-Land uses as input to control the simulated land fields ERA5 atmospheric variables, such as air temperature and
+  air humidity. This is called the atmospheric forcing. Without the constraint of the atmospheric forcing, the
+  model-based estimates can rapidly deviate from reality. Therefore, while observations are not directly used in the
+  production of ERA5-Land, they have an indirect influence through the atmospheric forcing used to run the simulation.
+  In addition, the input air temperature, air humidity and pressure used to run ERA5-Land are corrected to account for
+  the altitude difference between the grid of the forcing and the higher resolution grid of ERA5-Land. This correction
+  is called 'lapse rate correction'.
+
+- The ERA5-Land dataset, as any other simulation, provides estimates which have some degree of uncertainty. Numerical
+  models can only provide a more or less accurate representation of the real physical processes governing different
+  components of the Earth System. In general, the uncertainty of model estimates grows as we go back in time, because
+  the number of observations available to create a good quality atmospheric forcing is lower. ERA5-land parameter fields
+  can currently be used in combination with the uncertainty of the equivalent ERA5 fields. The temporal and spatial
+  resolutions of ERA5-Land makes this dataset very useful for all kind of land surface applications such as flood or
+  drought forecasting. The temporal and spatial resolution of this dataset, the period covered in time, as well as the
+  fixed grid used for the data distribution at any period enables decisions makers, businesses and individuals to access
+  and use more accurate information on land states.
 
 # THAAO ref instruments
-Instrument involved are HATPRO, AWS ECAPC, AWS Giovanni, VESPA, sw radiometers (up and down). 
+
+Instrument involved are HATPRO (IWV, LWP), AWS ECAPC (temp, press, rh, windd, winds), AWS "vespa" (temp, press, rh,
+windd, winds), VESPA (iwv), sw radiometers (up and down), radiosoundings (iwv)
 The reference values are always from THAAO measurements, except for IWV (ref: VESPA) and LWP (ref:HATPRO)
 
 The code can be run at whichever time resolution.
-The pixel extraction is done before running this code using cdo remapnn for pixel 76.5, -68.8 
-which has a few hundreds meters offset from the exact location.
+The pixel extraction is done before running this code using 'cdo remapnn' for pixel 76.5, -68.8 which has a few hundreds
+meters offset from the exact location.
 
+## Liquid Water Path - LWP (lwp)
 
-## LWP
-LWP values have issues, at least for CARRA which has been divided by 10E-06 instead of 10e-03 as expected from the declared uom.
-LWP values have been masked to nan for values<0.0, and to 0 for values<15.
+LWP values have issues, at least for CARRA which has been divided by 10E-06 instead of 10e-03 as expected from the
+declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for LWP<15.
+CARRA: 'total_column_cloud_liquid_water'
+ERA-5:
+ERA5-L:
+THAAO: ()
 
-## ALB
-albedo values for CARRA are the forecast ones. They have been masked to nan for values<0.1, since they are unrealistic.
+## Surface albedo (alb)
 
-## IWV
-The integration for rs is 
+CARRA: 'albedo' (forecast). Values masked to nan for alb<0.1, since they are unrealistic.
+ERA-5:
+ERA5-L:
+THAAO: ()
+
+## Integrated water vapour - IWV (iwv)
+
+CARRA: 'total_column_integrated_water_vapour'
+ERA-5:
+ERA5-L:
+THAAO: (rs)
+THAAO: (vespa)
+THAAO: (hatpro)
+The integration for rs is
 IWV HATPRO values have been masked to nan for values<0.0 and values>30.
 
-## TCC
+## Total Cloud Cover (tcc)
 
-## CBH
-CBH for ceilometer is calculated as the median value over 1 h form the original 15 s time resolution, then averaged for the comparison.
+CARRA: 'total_cloud_cover'
+ERA-5:
+ERA5-L:
+THAAO: (ceilometer)
 
-## PRECIP 
-It is calculated as cumulative over the resampling time.
+## Cloud Base Height (cbh)
+
+CARRA: 'cloud_base'
+ERA-5:
+ERA5-L:
+THAAO: (ceilometer)
+CBH for ceilometer is calculated as the median value over 1 h form the original 15 s time resolution, then averaged for
+the comparison.
+
+## Precipitation (precip)
+
+CARRA: 'total_precipitation'
+ERA-5:
+ERA5-L:
+THAAO: () It is calculated as cumulative over the resampling time.
+
+## Surface temperature (temp)
+
+CARRA: '2m_temperature'
+ERA-5:
+ERA5-L:
+THAAO: (vespa)
+THAAO: ()
+
+## Wind Direction (windd)
+
+CARRA:'10m_wind_direction'
+ERA-5:
+ERA5-L:
+THAAO: (vespa)
+THAAO: ()
+
+## Wind Speed (winds)
+
+CARRA: '10m_wind_speed'
+ERA-5:
+ERA5-L:
+THAAO: ()
+
+## Relative Humidity (rh)
+
+CARRA: '2m_relative_humidity'
+ERA-5:
+ERA5-L:
+THAAO: (vespa)
+THAAO: ()
+
+## Surface Pressure (press)
+
+CARRA: 'surface_pressure'
+ERA-5:
+ERA5-L:
+THAAO: (vespa)
+THAAO: ()
+
+## Downward shortwave irradiance - DSI (sw_down)
+
+CARRA:
+ERA-5:
+ERA5-L:
+THAAO: (DSI)
+
+## Upward shortwave irradiance - USI (sw_up)
+
+CARRA:
+ERA-5:
+ERA5-L:
+THAAO: (USI)
+
+## Downward longwave irradiance - DLI (lw_down)
+
+CARRA:
+ERA-5:
+ERA5-L:
+THAAO: (DLI)
+
+## Upward longwave irradiance - ULI (lw_up)
+
+CARRA:
+ERA-5:
+ERA5-L:
+THAAO: (ULI)
+
+##                   
+
+CARRA:
+ERA-5:
+ERA5-L:
+THAAO: ()
+
+##                   
+
+CARRA:
+ERA-5:
+ERA5-L:
+THAAO: () 
