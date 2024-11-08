@@ -119,7 +119,7 @@ The reference values are always from THAAO measurements, except for IWV (ref: VE
 
 > [!WARNING] 
 > The scatterplots containing all season data is a 2D density histogram, meaning that not all data are
-> plotted (there are too many and they would result overlaid), therefore the colorbar towards the warm color indicates
+> plotted (there are too many, and they would result overlaid), therefore the colorbar towards the warm color indicates
 > higher density of values in that bin. For scatterplots with a limited number of data the result is a few number of
 > points compared to the variable N (printed). Seasonal scatterplots are standard.
 
