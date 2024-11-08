@@ -95,21 +95,21 @@ meters offset from the exact location.
 LWP values have issues, at least for CARRA which has been divided by 10E-06 instead of 10e-03 as expected from the
 declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for LWP<15.
 CARRA: 'total_column_cloud_liquid_water'
-ERA-5:
+ERA-5: 'total_column_cloud_liquid_water' ('total_column_water')
 ERA5-L:
 THAAO: ()
 
 ## Surface albedo (alb)
 
 CARRA: 'albedo' (forecast). Values masked to nan for alb<0.1, since they are unrealistic.
-ERA-5:
+ERA-5: 'forecast_albedo' ('snow_albedo')
 ERA5-L:
 THAAO: ()
 
 ## Integrated water vapour - IWV (iwv)
 
 CARRA: 'total_column_integrated_water_vapour'
-ERA-5:
+ERA-5: 'total_column_water_vapour'
 ERA5-L:
 THAAO: (rs)
 THAAO: (vespa)
@@ -120,14 +120,14 @@ IWV HATPRO values have been masked to nan for values<0.0 and values>30.
 ## Total Cloud Cover (tcc)
 
 CARRA: 'total_cloud_cover'
-ERA-5:
+ERA-5: 'total_cloud_cover'
 ERA5-L:
 THAAO: (ceilometer)
 
 ## Cloud Base Height (cbh)
 
 CARRA: 'cloud_base'
-ERA-5:
+ERA-5: 'cloud_base_height'
 ERA5-L:
 THAAO: (ceilometer)
 CBH for ceilometer is calculated as the median value over 1 h form the original 15 s time resolution, then averaged for
@@ -136,14 +136,14 @@ the comparison.
 ## Precipitation (precip)
 
 CARRA: 'total_precipitation'
-ERA-5:
+ERA-5: 'total_precipitation'
 ERA5-L:
 THAAO: () It is calculated as cumulative over the resampling time.
 
 ## Surface temperature (temp)
 
 CARRA: '2m_temperature'
-ERA-5:
+ERA-5: '2m_temperature'
 ERA5-L:
 THAAO: (vespa)
 THAAO: ()
@@ -151,7 +151,7 @@ THAAO: ()
 ## Wind Direction (windd)
 
 CARRA:'10m_wind_direction'
-ERA-5:
+ERA-5: '10m_u_component_of_wind' + '10m_v_component_of_wind'
 ERA5-L:
 THAAO: (vespa)
 THAAO: ()
@@ -159,14 +159,14 @@ THAAO: ()
 ## Wind Speed (winds)
 
 CARRA: '10m_wind_speed'
-ERA-5:
+ERA-5: '10m_u_component_of_wind' + '10m_v_component_of_wind'
 ERA5-L:
 THAAO: ()
 
 ## Relative Humidity (rh)
 
 CARRA: '2m_relative_humidity'
-ERA-5:
+ERA-5: '2m_dewpoint_temperature' + 
 ERA5-L:
 THAAO: (vespa)
 THAAO: ()
@@ -174,7 +174,7 @@ THAAO: ()
 ## Surface Pressure (press)
 
 CARRA: 'surface_pressure'
-ERA-5:
+ERA-5: 'surface_pressure'
 ERA5-L:
 THAAO: (vespa)
 THAAO: ()
@@ -182,28 +182,28 @@ THAAO: ()
 ## Downward shortwave irradiance - DSI (sw_down)
 
 CARRA:
-ERA-5:
+ERA-5: 'surface_net_solar_radiation' + 'surface_solar_radiation_downwards'
 ERA5-L:
 THAAO: (DSI)
 
 ## Upward shortwave irradiance - USI (sw_up)
 
 CARRA:
-ERA-5:
+ERA-5: 'surface_net_solar_radiation' + 'surface_solar_radiation_downwards'
 ERA5-L:
 THAAO: (USI)
 
 ## Downward longwave irradiance - DLI (lw_down)
 
 CARRA:
-ERA-5:
+ERA-5: 'surface_net_thermal_radiation' + 'surface_thermal_radiation_downwards'
 ERA5-L:
 THAAO: (DLI)
 
 ## Upward longwave irradiance - ULI (lw_up)
 
 CARRA:
-ERA-5:
+ERA-5: 'surface_net_thermal_radiation' + 'surface_thermal_radiation_downwards'
 ERA5-L:
 THAAO: (ULI)
 
