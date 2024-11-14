@@ -327,7 +327,10 @@ def plot_scatter(vr, avar, period_label):
             if seas_name != 'all':
                 axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
             else:
-                axs[i].hist2d(x_s[idx], y_s[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
+                if label =='RS':
+                    axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
+                else:
+                    axs[i].hist2d(x_s[idx], y_s[idx], bins=(100, 100), cmap=plt.cm.jet, cmin=1)
 
             b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
             xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
