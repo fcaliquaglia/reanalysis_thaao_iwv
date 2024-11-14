@@ -492,7 +492,7 @@ def read_iwv():
     e.columns = [vr]
 
     # THAAO (vespa)
-    fn = 'Vapor_20160712_20221130'
+    fn = 'vespaPWVClearSky'
     try:
         t = pd.read_table(
                 os.path.join(basefol_t, 'thaao_vespa', f'{fn}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
@@ -501,7 +501,7 @@ def read_iwv():
     except FileNotFoundError:
         print(f'NOT FOUND: {fn}{year}.txt')
     t.index = pd.to_datetime(t[0] + ' ' + t[1], format='%Y-%m-%d %H:%M:%S')
-    t.drop(columns=[0, 1], inplace=True)
+    t.drop(columns=[0, 1, 3, 4, 5], inplace=True)
     t.columns = [vr]
 
     # THAAO (hatpro)
