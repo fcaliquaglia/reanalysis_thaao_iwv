@@ -37,8 +37,8 @@ basefol_t_elab = os.path.join('H:\\Shared drives', 'Dati_elab_docs')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
 
 ##
-tres = '24h'
-tres_rs = '24h'  # only for radiosoundings
+tres = '3h'
+tres_rs = tres  # only for radiosoundings
 var_list = ['iwv', ]  # 'sw_down', 'sw_up', 'lw_up', 'lw_down', 'tcc'] ## 'temp', 'rh', 'iwv', 'alb', 'lwp', 'cbh', 'precip', 'windd', 'winds', 'surf_pres', 'sw_down', 'sw_up',
 # 'lw_up', 'lw_down', 'tcc']
 

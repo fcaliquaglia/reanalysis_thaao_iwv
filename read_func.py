@@ -537,6 +537,7 @@ def read_iwv():
             file_l = os.listdir(fol_input)
             file_l.sort()
             for i in file_l:
+                print(i)
                 file_date = dt.datetime.strptime(i[9:22], '%Y%m%d_%H%M')
                 kw = dict(
                         skiprows=17, skipfooter=1, header=None, delimiter=" ", na_values="nan", na_filter=True,
