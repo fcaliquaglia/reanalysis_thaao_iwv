@@ -197,28 +197,28 @@ Excluding nan values. x(t): reference value; y(t): reanalysis or other
 
 ### Downward shortwave irradiance - DSI (``sw_down``)
 
-- CARRA: ``surface_solar_radiation_downwards`` + ``surface_net_solar_radiation``
+- CARRA: ``surface_solar_radiation_downwards`` (forecast) + ``surface_net_solar_radiation`` (forecast).
 - ERA-5: ``surface_net_solar_radiation`` + ``surface_solar_radiation_downwards``
 - ERA5-L: /
 - THAAO (pyrgeometers): ``DSI``
 
 ### Upward shortwave irradiance - USI (``sw_up``)
 
-- CARRA: ``surface_solar_radiation_downwards`` + ``surface_net_solar_radiation``
+- CARRA: ``surface_solar_radiation_downwards`` (forecast) + ``surface_net_solar_radiation`` (forecast).
 - ERA-5: ``surface_net_solar_radiation`` + ``surface_solar_radiation_downwards``
 - ERA5-L: /
 - THAAO (pyrgeometers): ``USI``
 
 ### Downward longwave irradiance - DLI (``lw_down``)
 
-- CARRA: ``thermal_surface_radiation_downwards`` + ``surface_net_thermal_radiation``
+- CARRA: ``thermal_surface_radiation_downwards`` (forecast) + ``surface_net_thermal_radiation`` (forecast).
 - ERA-5: ``surface_net_thermal_radiation`` + ``surface_thermal_radiation_downwards``
 - ERA5-L: /
 - THAAO (pyranometers): ``DLI``
 
 ### Upward longwave irradiance - ULI (``lw_up``)
 
-- CARRA: ``thermal_surface_radiation_downwards`` + ``surface_net_thermal_radiation``
+- CARRA: ``thermal_surface_radiation_downwards`` (forecast) + ``surface_net_thermal_radiation`` (forecast).
 - ERA-5: ``surface_net_thermal_radiation`` + ``surface_thermal_radiation_downwards``
 - ERA5-L: /
 - THAAO (pyranometers): ``ULI``
