@@ -43,6 +43,7 @@ def read_temp():
     fn = 'thaao_carra_2m_temperature_'
     for yy, year in enumerate(years):
         try:
+            fn = extract_values(fn, year)
             c_tmp = pd.read_table(
                     os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
@@ -1187,8 +1188,10 @@ def read_sw_down():
     vr = 'sw_down'
 
     # # CARRA
-    # fn = 'thaao_carra_surface_solar_radiation_downwards_'
+    # fn_orig = 'carra_surface_solar_radiation_downwards_'
+    #
     # for yy, year in enumerate(years):
+    #     fn = extract_values(fn, year)
     #     try:
     #         c_tmp = pd.read_table(
     #                 os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
@@ -1201,6 +1204,9 @@ def read_sw_down():
     # c.drop(columns=[0, 1], inplace=True)
     # c[2] = c.values / 10800.
     # c.columns = [vr]
+    #
+    # for yy, year in enumerate(years):
+    #     continue
 
     # ERA5
     fn = 'thaao_era5_surface_solar_radiation_downwards_'
@@ -1248,6 +1254,19 @@ def read_sw_down():
     return [c, e, l, t]
 
 
+def extract_values(fn, year):
+    if not os.path.exists(os.path.join(basefol_c, fn + str(year) + '.nc')):
+        try:
+            filen = os.path.join(basefol_t, 'reanalysis', 'carra', '_'.join(fn.split('_')[1:]) + str(year) + '.nc')
+            NC = xr.open_dataset(str(filen), decode_cf=True, decode_times=True)
+
+            # tmp = NC.sel(x=y, y=x, method='nearest')
+        except FileNotFoundError:
+            print(f'cannot find {filen}')
+
+    return f'thaao_{fn}'
+
+
 def read_sw_up():
     c = pd.DataFrame()
     e_n = pd.DataFrame()
@@ -1258,7 +1277,27 @@ def read_sw_up():
 
     # # CARRA
     # fn1 = 'thaao_carra_surface_net_solar_radiation_'
+    # fn1_orig = 'carra_surface_solar_radiation_downwards_'
     # fn2 = 'thaao_carra_surface_solar_radiation_downwards_'
+    # fn2_orig = 'carra_surface_solar_radiation_downwards_'
+    #
+    # for yy, year in enumerate(years):
+    #     if not os.path.exists(os.path.join(basefol_c, fn1 + str(year) + '.nc')):
+    #         try:
+    #             filen = os.path.join(basefol_t, 'reanalysis', 'carra', fn1_orig + str(year) + '.nc')
+    #             NC = xr.open_dataset(filen, decode_cf=True, decode_times=True, drop_variables=['expver'])
+    #
+    #             ciccio=NC.ssrd
+    #             lat = NC.latitude
+    #             lon = NC.longitude
+    #             lat_idx=
+    #
+    #             ds_180 = ciccio.assign_coords(longitude=(((ciccio.longitude + 180) % 360) - 180)).sortby('longitude')
+    #
+    #             tmp = NC.sel(x=y, y=x, method='nearest')
+    #         except FileNotFoundError:
+    #             print('cannot find ' + filen)
+    #         continue
 
     # ERA5
     fn1 = 'thaao_era5_surface_net_solar_radiation_'
