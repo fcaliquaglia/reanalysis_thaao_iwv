@@ -1065,8 +1065,8 @@ def read_lw_down():
         # fn = extract_values(fn, year)
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,
+                    engine='python')[[0, 1, 4]]
             c = pd.concat([c, c_tmp], axis=0)
             print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
@@ -1074,6 +1074,7 @@ def read_lw_down():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 10800.
+    c.drop(columns=[4], inplace=True)
     c.columns = [vr]
 
     # ERA5
@@ -1135,8 +1136,8 @@ def read_lw_up():
         # fn = extract_values(fn, year)
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
+                    os.path.join(basefol_c, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,
+                    engine='python')[[0, 1, 4]]
             c_n = pd.concat([c_n, c_tmp], axis=0)
             print(f'OK: {fn1}{year}.txt')
         except FileNotFoundError:
@@ -1144,14 +1145,15 @@ def read_lw_up():
     c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
     c_n.drop(columns=[0, 1], inplace=True)
     c_n[2] = c_n.values / 10800.
+    c_n.drop(columns=[4], inplace=True)
     c_n.columns = ['surface_net_thermal_radiation']
 
     for yy, year in enumerate(years):
         # fn = extract_values(fn, year)
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
+                    os.path.join(basefol_c, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,
+                    engine='python')[[0, 1, 4]]
             c_d = pd.concat([c_d, c_tmp], axis=0)
             print(f'OK: {fn2}{year}.txt')
         except FileNotFoundError:
@@ -1159,6 +1161,7 @@ def read_lw_up():
     c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
     c_d.drop(columns=[0, 1], inplace=True)
     c_d[2] = c_d.values / 10800.
+    c_d.drop(columns=[4], inplace=True)
     c_d.columns = ['surface_thermal_radiation_downwards']
 
     c = pd.concat([c_n, c_d], axis=1)
@@ -1247,8 +1250,8 @@ def read_sw_down():
         # fn = extract_values(fn, year)
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,
+                    engine='python')[[0, 1, 4]]
             c = pd.concat([c, c_tmp], axis=0)
             print(f'OK: {fn}{year}.txt')
         except FileNotFoundError:
@@ -1256,6 +1259,7 @@ def read_sw_down():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values / 10800.
+    c.drop(columns=[4], inplace=True)
     c.columns = [vr]
 
     # ERA5
@@ -1321,8 +1325,8 @@ def read_sw_up():
         # fn = extract_values(fn, year)
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
+                    os.path.join(basefol_c, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,
+                    engine='python')[[0, 1, 4]]
             c_n = pd.concat([c_n, c_tmp], axis=0)
             print(f'OK: {fn1}{year}.txt')
         except FileNotFoundError:
@@ -1330,14 +1334,15 @@ def read_sw_up():
     c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
     c_n.drop(columns=[0, 1], inplace=True)
     c_n[2] = c_n.values / 10800.
+    c_n.drop(columns=[4], inplace=True)
     c_n.columns = ['surface_net_solar_radiation']
 
     for yy, year in enumerate(years):
         # fn = extract_values(fn, year)
         try:
             c_tmp = pd.read_table(
-                    os.path.join(basefol_c, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
+                    os.path.join(basefol_c, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,
+                    engine='python')[[0, 1, 4]]
             c_d = pd.concat([c_d, c_tmp], axis=0)
             print(f'OK: {fn2}{year}.txt')
         except FileNotFoundError:
@@ -1345,6 +1350,7 @@ def read_sw_up():
     c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
     c_d.drop(columns=[0, 1], inplace=True)
     c_d[2] = c_d.values / 10800.
+    c_d.drop(columns=[4], inplace=True)
     c_d.columns = ['surface_solar_radiation_downwards']
 
     c = pd.concat([c_n, c_d], axis=1)
@@ -1417,6 +1423,7 @@ def read_sw_up():
 
     return [c, e, l, t]
 
+
 def extract_values(fn, year):
     if not os.path.exists(os.path.join(basefol_c, fn + str(year) + '.nc')):
         try:
@@ -1428,6 +1435,8 @@ def extract_values(fn, year):
             print(f'cannot find {filen}')
 
     return f'thaao_{fn}'
+
+
 def read(var):
     """
 
