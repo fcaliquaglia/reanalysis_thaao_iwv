@@ -1119,7 +1119,8 @@ def read_lw_down():
 
 
 def read_lw_up():
-    c = pd.DataFrame()
+    c_n = pd.DataFrame()
+    c_d = pd.DataFrame()
     e_n = pd.DataFrame()
     e_d = pd.DataFrame()
     l = pd.DataFrame()
@@ -1142,8 +1143,8 @@ def read_lw_up():
             print(f'NOT FOUND: {fn1}{year}.txt')
     c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
     c_n.drop(columns=[0, 1], inplace=True)
-    c_n[2] = c.values / 10800.
-    c_n.columns = [vr]
+    c_n[2] = c_n.values / 10800.
+    c_n.columns = ['surface_net_thermal_radiation']
 
     for yy, year in enumerate(years):
         # fn = extract_values(fn, year)
@@ -1157,8 +1158,8 @@ def read_lw_up():
             print(f'NOT FOUND: {fn2}{year}.txt')
     c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
     c_d.drop(columns=[0, 1], inplace=True)
-    c_d[2] = c.values / 10800.
-    c_d.columns = [vr]
+    c_d[2] = c_d.values / 10800.
+    c_d.columns = ['surface_thermal_radiation_downwards']
 
     c = pd.concat([c_n, c_d], axis=1)
 
@@ -1303,21 +1304,9 @@ def read_sw_down():
     return [c, e, l, t]
 
 
-def extract_values(fn, year):
-    if not os.path.exists(os.path.join(basefol_c, fn + str(year) + '.nc')):
-        try:
-            filen = os.path.join(basefol_t, 'reanalysis', 'carra', '_'.join(fn.split('_')[1:]) + str(year) + '.nc')
-            NC = xr.open_dataset(str(filen), decode_cf=True, decode_times=True)
-
-            # tmp = NC.sel(x=y, y=x, method='nearest')
-        except FileNotFoundError:
-            print(f'cannot find {filen}')
-
-    return f'thaao_{fn}'
-
-
 def read_sw_up():
-    c = pd.DataFrame()
+    c_n = pd.DataFrame()
+    c_d = pd.DataFrame()
     e_n = pd.DataFrame()
     e_d = pd.DataFrame()
     l = pd.DataFrame()
@@ -1340,8 +1329,8 @@ def read_sw_up():
             print(f'NOT FOUND: {fn1}{year}.txt')
     c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
     c_n.drop(columns=[0, 1], inplace=True)
-    c_n[2] = c.values / 10800.
-    c_n.columns = [vr]
+    c_n[2] = c_n.values / 10800.
+    c_n.columns = ['surface_net_solar_radiation']
 
     for yy, year in enumerate(years):
         # fn = extract_values(fn, year)
@@ -1355,8 +1344,8 @@ def read_sw_up():
             print(f'NOT FOUND: {fn2}{year}.txt')
     c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
     c_d.drop(columns=[0, 1], inplace=True)
-    c_d[2] = c.values / 10800.
-    c_d.columns = [vr]
+    c_d[2] = c_d.values / 10800.
+    c_d.columns = ['surface_solar_radiation_downwards']
 
     c = pd.concat([c_n, c_d], axis=1)
 
@@ -1428,7 +1417,17 @@ def read_sw_up():
 
     return [c, e, l, t]
 
+def extract_values(fn, year):
+    if not os.path.exists(os.path.join(basefol_c, fn + str(year) + '.nc')):
+        try:
+            filen = os.path.join(basefol_t, 'reanalysis', 'carra', '_'.join(fn.split('_')[1:]) + str(year) + '.nc')
+            NC = xr.open_dataset(str(filen), decode_cf=True, decode_times=True)
 
+            # tmp = NC.sel(x=y, y=x, method='nearest')
+        except FileNotFoundError:
+            print(f'cannot find {filen}')
+
+    return f'thaao_{fn}'
 def read(var):
     """
 
