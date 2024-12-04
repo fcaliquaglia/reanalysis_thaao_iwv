@@ -1058,8 +1058,23 @@ def read_lw_down():
     t = pd.DataFrame()
     vr = 'lw_down'
 
-    # # CARRA
-    # fn = 'thaao_carra_thermal_surface_radiation_downwards_'
+    # CARRA
+    fn = 'thaao_carra_surface_thermal_radiation_downwards_'
+
+    for yy, year in enumerate(years):
+        # fn = extract_values(fn, year)
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c = pd.concat([c, c_tmp], axis=0)
+            print(f'OK: {fn}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn}{year}.txt')
+    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+    c.drop(columns=[0, 1], inplace=True)
+    c[2] = c.values / 10800.
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_surface_thermal_radiation_downwards_'
@@ -1111,9 +1126,46 @@ def read_lw_up():
     t = pd.DataFrame()
     vr = 'lw_up'
 
-    # # CARRA
-    # fn1 = 'thaao_carra_surface_net_solar_radiation_'
-    # fn2 = 'thaao_carra_surface_solarl_radiation_downwards_'
+    # CARRA
+    fn1 = 'thaao_carra_surface_net_thermal_radiation_'
+    fn2 = 'thaao_carra_surface_thermal_radiation_downwards_'
+
+    for yy, year in enumerate(years):
+        # fn = extract_values(fn, year)
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c_n = pd.concat([c_n, c_tmp], axis=0)
+            print(f'OK: {fn1}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn1}{year}.txt')
+    c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
+    c_n.drop(columns=[0, 1], inplace=True)
+    c_n[2] = c.values / 10800.
+    c_n.columns = [vr]
+
+    for yy, year in enumerate(years):
+        # fn = extract_values(fn, year)
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c_d = pd.concat([c_d, c_tmp], axis=0)
+            print(f'OK: {fn2}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn2}{year}.txt')
+    c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
+    c_d.drop(columns=[0, 1], inplace=True)
+    c_d[2] = c.values / 10800.
+    c_d.columns = [vr]
+
+    c = pd.concat([c_n, c_d], axis=1)
+
+    c['surface_thermal_radiation_upwards'] = c['surface_thermal_radiation_downwards'] - c[
+        'surface_net_thermal_radiation']
+    c.drop(columns=['surface_net_thermal_radiation', 'surface_thermal_radiation_downwards'], inplace=True)
+    c.columns = [vr]
 
     # ERA5
     fn1 = 'thaao_era5_surface_net_thermal_radiation_'
@@ -1187,26 +1239,23 @@ def read_sw_down():
     t = pd.DataFrame()
     vr = 'sw_down'
 
-    # # CARRA
-    # fn_orig = 'carra_surface_solar_radiation_downwards_'
-    #
-    # for yy, year in enumerate(years):
-    #     fn = extract_values(fn, year)
-    #     try:
-    #         c_tmp = pd.read_table(
-    #                 os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         c = pd.concat([c, c_tmp], axis=0)
-    #         print(f'OK: {fn}{year}.txt')
-    #     except FileNotFoundError:
-    #         print(f'NOT FOUND: {fn}{year}.txt')
-    # c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
-    # c.drop(columns=[0, 1], inplace=True)
-    # c[2] = c.values / 10800.
-    # c.columns = [vr]
-    #
-    # for yy, year in enumerate(years):
-    #     continue
+    # CARRA
+    fn = 'thaao_carra_surface_solar_radiation_downwards_'
+
+    for yy, year in enumerate(years):
+        # fn = extract_values(fn, year)
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c = pd.concat([c, c_tmp], axis=0)
+            print(f'OK: {fn}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn}{year}.txt')
+    c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
+    c.drop(columns=[0, 1], inplace=True)
+    c[2] = c.values / 10800.
+    c.columns = [vr]
 
     # ERA5
     fn = 'thaao_era5_surface_solar_radiation_downwards_'
@@ -1275,29 +1324,45 @@ def read_sw_up():
     t = pd.DataFrame()
     vr = 'sw_up'
 
-    # # CARRA
-    # fn1 = 'thaao_carra_surface_net_solar_radiation_'
-    # fn1_orig = 'carra_surface_solar_radiation_downwards_'
-    # fn2 = 'thaao_carra_surface_solar_radiation_downwards_'
-    # fn2_orig = 'carra_surface_solar_radiation_downwards_'
-    #
-    # for yy, year in enumerate(years):
-    #     if not os.path.exists(os.path.join(basefol_c, fn1 + str(year) + '.nc')):
-    #         try:
-    #             filen = os.path.join(basefol_t, 'reanalysis', 'carra', fn1_orig + str(year) + '.nc')
-    #             NC = xr.open_dataset(filen, decode_cf=True, decode_times=True, drop_variables=['expver'])
-    #
-    #             ciccio=NC.ssrd
-    #             lat = NC.latitude
-    #             lon = NC.longitude
-    #             lat_idx=
-    #
-    #             ds_180 = ciccio.assign_coords(longitude=(((ciccio.longitude + 180) % 360) - 180)).sortby('longitude')
-    #
-    #             tmp = NC.sel(x=y, y=x, method='nearest')
-    #         except FileNotFoundError:
-    #             print('cannot find ' + filen)
-    #         continue
+    # CARRA
+    fn1 = 'thaao_carra_surface_net_solar_radiation_'
+    fn2 = 'thaao_carra_surface_solar_radiation_downwards_'
+
+    for yy, year in enumerate(years):
+        # fn = extract_values(fn, year)
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c_n = pd.concat([c_n, c_tmp], axis=0)
+            print(f'OK: {fn1}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn1}{year}.txt')
+    c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
+    c_n.drop(columns=[0, 1], inplace=True)
+    c_n[2] = c.values / 10800.
+    c_n.columns = [vr]
+
+    for yy, year in enumerate(years):
+        # fn = extract_values(fn, year)
+        try:
+            c_tmp = pd.read_table(
+                    os.path.join(basefol_c, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            c_d = pd.concat([c_d, c_tmp], axis=0)
+            print(f'OK: {fn2}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn2}{year}.txt')
+    c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
+    c_d.drop(columns=[0, 1], inplace=True)
+    c_d[2] = c.values / 10800.
+    c_d.columns = [vr]
+
+    c = pd.concat([c_n, c_d], axis=1)
+
+    c['surface_solar_radiation_upwards'] = c['surface_solar_radiation_downwards_'] - c['surface_net_solar_radiation']
+    c.drop(columns=['surface_net_solar_radiation', 'surface_solar_radiation_downwards'], inplace=True)
+    c.columns = [vr]
 
     # ERA5
     fn1 = 'thaao_era5_surface_net_solar_radiation_'

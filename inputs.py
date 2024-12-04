@@ -32,9 +32,9 @@ import pandas as pd
 basefol_c = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'carra', 'thaao')
 basefol_e = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'era5', 'thaao')
 basefol_l = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'era5-land', 'thaao')
-basefol_t = os.path.join('H:\\Shared drives', 'Dati')
+basefol_t = os.path.join('H:\\Shared drives', 'Dati_THAAO')
 basefol_t_elab = os.path.join('H:\\Shared drives', 'Dati_elab_docs')
-basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_comparisons')
+basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_reanalysis')
 
 ##
 tres = '3h'
