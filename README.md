@@ -117,7 +117,7 @@ The reference values are always from THAAO measurements, except for IWV (ref: VE
 
 ## Scatterplots
 
-> [!WARNING] 
+> [!WARNING]
 > The scatterplots containing all season data is a 2D density histogram, meaning that not all data are
 > plotted (there are too many, and they would result overlaid), therefore the colorbar towards the warm color indicates
 > higher density of values in that bin. For scatterplots with a limited number of data the result is a few number of
@@ -194,6 +194,12 @@ Excluding nan values. x(t): reference value; y(t): reanalysis or other
 - THAAO (aws_ECAPAC):
 
 ## RADIATION
+
+> [!WARNING]
+> For CARRA radiation values. These forecast variables are released t different leadtimes, with 1-hour frequency. 
+> Therefore, we consider only leadtime 1, obtaining every three hours, hourly forecast valued for the following hour 
+> w.r.t the chose timeframe. For example, we choose April 1, 2023 at 6:00 UTC, we analyze forecast values on April 1, 2023 
+> at 7:00 UTC.
 
 ### Downward shortwave irradiance - DSI (``sw_down``)
 

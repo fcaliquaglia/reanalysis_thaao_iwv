@@ -1073,7 +1073,7 @@ def read_lw_down():
             print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2] = c.values / 10800.
+    c[2] = c.values / 3600.
     c.drop(columns=[4], inplace=True)
     c.columns = [vr]
 
@@ -1144,7 +1144,7 @@ def read_lw_up():
             print(f'NOT FOUND: {fn1}{year}.txt')
     c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
     c_n.drop(columns=[0, 1], inplace=True)
-    c_n[2] = c_n.values / 10800.
+    c_n[2] = c_n.values / 3600.
     c_n.drop(columns=[4], inplace=True)
     c_n.columns = ['surface_net_thermal_radiation']
 
@@ -1160,7 +1160,7 @@ def read_lw_up():
             print(f'NOT FOUND: {fn2}{year}.txt')
     c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
     c_d.drop(columns=[0, 1], inplace=True)
-    c_d[2] = c_d.values / 10800.
+    c_d[2] = c_d.values / 3600.
     c_d.drop(columns=[4], inplace=True)
     c_d.columns = ['surface_thermal_radiation_downwards']
 
@@ -1245,7 +1245,6 @@ def read_sw_down():
 
     # CARRA
     fn = 'thaao_carra_surface_solar_radiation_downwards_'
-
     for yy, year in enumerate(years):
         # fn = extract_values(fn, year)
         try:
@@ -1258,7 +1257,7 @@ def read_sw_down():
             print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2] = c.values / 10800.
+    c[2] = c.values / 3600.
     c.drop(columns=[4], inplace=True)
     c.columns = [vr]
 
@@ -1333,7 +1332,7 @@ def read_sw_up():
             print(f'NOT FOUND: {fn1}{year}.txt')
     c_n.index = pd.to_datetime(c_n[0] + ' ' + c_n[1], format='%Y-%m-%d %H:%M:%S')
     c_n.drop(columns=[0, 1], inplace=True)
-    c_n[2] = c_n.values / 10800.
+    c_n[2] = c_n.values / 3600.
     c_n.drop(columns=[4], inplace=True)
     c_n.columns = ['surface_net_solar_radiation']
 
@@ -1349,13 +1348,13 @@ def read_sw_up():
             print(f'NOT FOUND: {fn2}{year}.txt')
     c_d.index = pd.to_datetime(c_d[0] + ' ' + c_d[1], format='%Y-%m-%d %H:%M:%S')
     c_d.drop(columns=[0, 1], inplace=True)
-    c_d[2] = c_d.values / 10800.
+    c_d[2] = c_d.values / 3600.
     c_d.drop(columns=[4], inplace=True)
     c_d.columns = ['surface_solar_radiation_downwards']
 
     c = pd.concat([c_n, c_d], axis=1)
 
-    c['surface_solar_radiation_upwards'] = c['surface_solar_radiation_downwards_'] - c['surface_net_solar_radiation']
+    c['surface_solar_radiation_upwards'] = c['surface_solar_radiation_downwards'] - c['surface_net_solar_radiation']
     c.drop(columns=['surface_net_solar_radiation', 'surface_solar_radiation_downwards'], inplace=True)
     c.columns = [vr]
 
