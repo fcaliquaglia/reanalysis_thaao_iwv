@@ -43,7 +43,7 @@ def read_temp():
     fn = 'thaao_carra_2m_temperature_'
     for yy, year in enumerate(years):
         try:
-            fn = extract_values(fn, year)
+            # fn = extract_values(fn, year)
             c_tmp = pd.read_table(
                     os.path.join(basefol_c, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
                     engine='python')
@@ -1059,7 +1059,7 @@ def read_lw_down():
     vr = 'lw_down'
 
     # CARRA
-    fn = 'thaao_carra_surface_thermal_radiation_downwards_'
+    fn = 'thaao_carra_thermal_surface_radiation_downwards_'
 
     for yy, year in enumerate(years):
         # fn = extract_values(fn, year)
@@ -1130,10 +1130,10 @@ def read_lw_up():
 
     # CARRA
     fn1 = 'thaao_carra_surface_net_thermal_radiation_'
-    fn2 = 'thaao_carra_surface_thermal_radiation_downwards_'
+    fn2 = 'thaao_carra_thermal_surface_radiation_downwards_'
 
     for yy, year in enumerate(years):
-        # fn = extract_values(fn, year)
+
         try:
             c_tmp = pd.read_table(
                     os.path.join(basefol_c, f'{fn1}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,
@@ -1149,7 +1149,7 @@ def read_lw_up():
     c_n.columns = ['surface_net_thermal_radiation']
 
     for yy, year in enumerate(years):
-        # fn = extract_values(fn, year)
+
         try:
             c_tmp = pd.read_table(
                     os.path.join(basefol_c, f'{fn2}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=2,

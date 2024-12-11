@@ -43,7 +43,7 @@ if __name__ == "__main__":
         else:
             [var_c, var_e, var_l, var_t] = read(var)
 
-        # time RESAMPLING (specific for windd-->using wind components, and precip--> cumulative)
+        # time RESAMPLING (specific for windd --> using wind components, and precip--> cumulative)
         var_c_res, var_e_res, var_l_res, var_t_res, var_t1_res, var_t2_res = data_resampling(
                 var, tres, var_c, var_e, var_l, var_t, var_t1, var_t2)
 
