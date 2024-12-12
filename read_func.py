@@ -1076,6 +1076,7 @@ def read_lw_down():
     c[2] = c.values / 3600.
     c.drop(columns=[4], inplace=True)
     c.columns = [vr]
+    c[c < 0.] = np.nan
 
     # ERA5
     fn = 'thaao_era5_surface_thermal_radiation_downwards_'
@@ -1093,6 +1094,8 @@ def read_lw_down():
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 3600.  # originele in J*m-2
     e.columns = [vr]
+    # cleaning data
+    e[e < 0.] = np.nan
 
     # THAAO
     fn = 'MERGED_SW_LW_UP_DW_METEO_'
@@ -1115,6 +1118,8 @@ def read_lw_down():
         except FileNotFoundError:
             print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
+    # cleaning data
+    t[t < 0.] = np.nan
 
     return [c, e, l, t]
 
@@ -1170,6 +1175,8 @@ def read_lw_up():
         'surface_net_thermal_radiation']
     c.drop(columns=['surface_net_thermal_radiation', 'surface_thermal_radiation_downwards'], inplace=True)
     c.columns = [vr]
+    # cleaning data
+    c[c < 0.] = np.nan
 
     # ERA5
     fn1 = 'thaao_era5_surface_net_thermal_radiation_'
@@ -1210,6 +1217,8 @@ def read_lw_up():
         'surface_net_thermal_radiation']
     e.drop(columns=['surface_net_thermal_radiation', 'surface_thermal_radiation_downwards'], inplace=True)
     e.columns = [vr]
+    # cleaning data
+    e[e < 0.] = np.nan
 
     # THAAO
     fn = 'MERGED_SW_LW_UP_DW_METEO_'
@@ -1232,6 +1241,8 @@ def read_lw_up():
         except FileNotFoundError:
             print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
+    # cleaning data
+    t[t < 0.] = np.nan
 
     return [c, e, l, t]
 
@@ -1260,6 +1271,8 @@ def read_sw_down():
     c[2] = c.values / 3600.
     c.drop(columns=[4], inplace=True)
     c.columns = [vr]
+    # cleaning data
+    c[c < 0.] = np.nan
 
     # ERA5
     fn = 'thaao_era5_surface_solar_radiation_downwards_'
@@ -1277,6 +1290,8 @@ def read_sw_down():
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 3600.  # originale in J*m-2
     e.columns = [vr]
+    # cleaning data
+    e[e < 0.] = np.nan
 
     # THAAO
     fn = 'MERGED_SW_LW_UP_DW_METEO_'
@@ -1303,6 +1318,8 @@ def read_sw_down():
                      'ALBEDO_SW', 'ALBEDO_LW', 'ALBEDO_PAR', 'P', 'T', 'RH', 'PE', 'RR2'], axis=1, inplace=True)
             t = pd.concat([t, t_tmp], axis=0)
     t.columns = [vr]
+    # cleaning data
+    t[t < 0.] = np.nan
 
     return [c, e, l, t]
 
@@ -1357,6 +1374,8 @@ def read_sw_up():
     c['surface_solar_radiation_upwards'] = c['surface_solar_radiation_downwards'] - c['surface_net_solar_radiation']
     c.drop(columns=['surface_net_solar_radiation', 'surface_solar_radiation_downwards'], inplace=True)
     c.columns = [vr]
+    # cleaning data
+    c[c < 0.] = np.nan
 
     # ERA5
     fn1 = 'thaao_era5_surface_net_solar_radiation_'
@@ -1396,6 +1415,8 @@ def read_sw_up():
     e['surface_solar_radiation_upwards'] = e['surface_solar_radiation_downwards'] - e['surface_net_solar_radiation']
     e.drop(columns=['surface_net_solar_radiation', 'surface_solar_radiation_downwards'], inplace=True)
     e.columns = [vr]
+    # cleaning data
+    e[e < 0.] = np.nan
 
     # THAAO
     fn = 'MERGED_SW_LW_UP_DW_METEO_'
@@ -1419,6 +1440,8 @@ def read_sw_up():
         except FileNotFoundError:
             print(f'NOT FOUND: {fn}{year}.txt')
     t.columns = [vr]
+    # cleaning data
+    t[t < 0.] = np.nan
 
     return [c, e, l, t]
 

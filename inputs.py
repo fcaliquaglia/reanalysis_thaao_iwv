@@ -37,18 +37,18 @@ basefol_t_elab = os.path.join('H:\\Shared drives', 'Dati_elab_docs')
 basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_reanalysis')
 
 ##
-tres = '24h'
+tres = '3h'
 tres_rs = tres  # only for radiosoundings
-var_list = ['lw_up', 'lw_down', 'sw_down', 'sw_up']  ## 'tcc', 'temp', 'rh', 'iwv', 'alb', 'lwp', 'cbh', 'precip', 'windd', 'winds', 'surf_pres', 'sw_down', 'sw_up',
+var_list = ['sw_up', 'lw_down', 'sw_down', 'sw_up']  ## 'tcc', 'temp', 'rh', 'iwv', 'alb', 'lwp', 'cbh', 'precip', 'windd', 'winds', 'surf_pres', 'sw_down', 'sw_up',
 # 'lw_up', 'lw_down', 'tcc']
 
 years = np.arange(2016, 2025, 1)
 
 seass = {'all': {'name': 'all', 'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'col': 'pink'},
-         'DJF': {'name': 'DJF', 'months': [12, 1, 2], 'col': 'blue'},
-         'MAM': {'name': 'MAM', 'months': [3, 4, 5], 'col': 'green'},
-         'JJA': {'name': 'JJA', 'months': [6, 7, 8], 'col': 'orange'},
-         'SON': {'name': 'SON', 'months': [9, 10, 11], 'col': 'brown'},
+         # 'DJF': {'name': 'DJF', 'months': [12, 1, 2], 'col': 'blue'},
+         # 'MAM': {'name': 'MAM', 'months': [3, 4, 5], 'col': 'green'},
+         # 'JJA': {'name': 'JJA', 'months': [6, 7, 8], 'col': 'orange'},
+         # 'SON': {'name': 'SON', 'months': [9, 10, 11], 'col': 'brown'},
          # 'MA' : {'name': 'MA', 'months': [3, 4], 'col': 'yellow'},
          # 'MJ' : {'name': 'MJ', 'months': [5, 6], 'col': 'cyan'},
          # 'JA': {'name': 'JA', 'months': [7, 8], 'col': 'grey'},
