@@ -331,11 +331,11 @@ def plot_scatter(vr, avar, period_label):
                     axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
                 else:
                     h = axs[i].hist2d(x_s[idx], y_s[idx], bins=(250, 250), cmap=plt.cm.jet, cmin=1, cmax=50)
-                    fig.colorbar(h[3], ax=axs[i])
+                    fig.colorbar(h[3], ax=axs[i], extend='both')
 
             b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
             xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
-            axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--', alfa=0.5)
+            axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--', alpha=0.5)
             axs[i].plot(
                     [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,
                     ls='-')
