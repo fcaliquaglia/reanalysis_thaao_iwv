@@ -324,8 +324,8 @@ def read_surf_pres():
     t.drop(columns=['Air_K', 'RH_%'], inplace=True)
     t.columns = [vr]
     t[t <= 900] = np.nan
-    t[t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00']] = np.nan
-    t[t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00']] = np.nan
+    t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'] = np.nan
+    t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'] = np.nan
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
