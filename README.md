@@ -8,10 +8,10 @@
 - [ ] extract better pixel
 - [ ] revise strategy for pixel extraction
 - [ ] download ``mean_sea_level_pressure``
-- [ ] extract CARRA radiation
+- [ ] riportare valori di pressione al livello del mare?
+- [X] extract CARRA radiation
 - [ ] download more ERA-L products
 - [ ] focus on weather variables
-- [ ] riportare valori di pressione al livello del mare?
 - [ ] recuperare da Giovanni i rs che io non ho e devo aggiungere in archivio per l'analisi
 
 ## Reanalysis considered
@@ -279,7 +279,7 @@ Excluding nan values. x(t): reference value; y(t): reanalysis or other
 
 > [!CAUTION]  
 > LWP values have issues, at least for CARRA which has been divided by 10E-06 instead of 10e-03 as expected from the
-> declared uom. All LWP values have been masked to nan for LWP<0.0, and to 0 for LWP<15.
+> declared uom. All LWP values have been masked to nan for LWP<0.0.
 
 - CARRA: ``total_column_cloud_liquid_water``
 - ERA-5: ``total_column_cloud_liquid_water`` (also ``total_column_water``?)

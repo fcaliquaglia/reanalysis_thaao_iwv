@@ -330,8 +330,8 @@ def plot_scatter(vr, avar, period_label):
                 if label == 'RS':
                     axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
                 else:
-                    if tres == '1M':
-                        axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
+                    if tres == '1ME':
+                        axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col' + '_' + label])
                     else:
                         h = axs[i].hist2d(x_s[idx], y_s[idx], bins=(250, 250), cmap=plt.cm.jet, cmin=1, cmax=50)
                         fig.colorbar(h[3], ax=axs[i], extend='both')
