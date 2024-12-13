@@ -1022,7 +1022,7 @@ def read_lwp():
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c.values * 1000000
     c.columns = [vr]
-    c[c < 0] = np.nan
+    c[c < 0.01] = np.nan
     # c[c < 15] = 0
 
     # ERA5
@@ -1041,7 +1041,7 @@ def read_lwp():
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values * 1000
     e.columns = [vr]
-    e[e < 0] = np.nan
+    e[e < 0.01] = np.nan
     # e[e < 15] = 0
 
     # THAAO (hatpro)
@@ -1067,7 +1067,7 @@ def read_lwp():
             print(f'NOT FOUND: {fn}{year}.dat')
     t1.columns = [vr]
     # cleaning HATPRO DATA
-    t1[t1 < 0] = np.nan
+    t1[t1 < 0.01] = np.nan
     # t1[t1 < 15] = 0
 
     return [c, e, l, t, t1]

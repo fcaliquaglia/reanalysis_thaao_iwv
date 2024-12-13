@@ -9,10 +9,10 @@
 - [ ] revise strategy for pixel extraction
 - [ ] download ``mean_sea_level_pressure``
 - [ ] riportare valori di pressione al livello del mare?
-- [X] extract CARRA radiation
 - [ ] download more ERA-L products
 - [ ] focus on weather variables
 - [ ] recuperare da Giovanni i rs che io non ho e devo aggiungere in archivio per l'analisi
+- [X] extract CARRA radiation
 
 ## Reanalysis considered
 
