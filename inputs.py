@@ -39,7 +39,7 @@ basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_reanaly
 ##
 tres = '3h'
 tres_rs = tres  # only for radiosoundings
-var_list = ['sw_down', 'sw_up', 'lw_up', 'lw_down']  # ['lwp', 'precip', 'temp', 'rh', 'iwv', 'alb', 'cbh', 'precip', 'windd', 'winds', 'surf_pres', 'sw_down', 'sw_up',
+var_list = ['sw_down']#, 'sw_up', 'lw_up', 'lw_down']  # ['lwp', 'precip', 'temp', 'rh', 'iwv', 'alb', 'cbh', 'precip', 'windd', 'winds', 'surf_pres', 'sw_down', 'sw_up',
             #'lw_up', 'lw_down']
 # 'tcc'
 years = np.arange(2016, 2025, 1)
@@ -86,7 +86,7 @@ extr = {'temp'     : {'min': -40, 'max': 20, 'res_min': -10, 'res_max': 10},
         'lw_up'    : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'lw_down'  : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'sw_up'    : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
-        'sw_down'  : {'min': 0, 'max': 700, 'res_min': -20, 'res_max': 20},
+        'sw_down'  : {'min': 0, 'max': 500, 'res_min': -20, 'res_max': 20},
         'cbh'      : {'min': 0, 'max': 10000, 'res_min': -500, 'res_max': 500},
         'tcc'      : {'min': 0, 'max': 1, 'res_min': -50, 'res_max': 50}}
 
