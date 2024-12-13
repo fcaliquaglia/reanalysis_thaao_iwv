@@ -324,7 +324,7 @@ def read_surf_pres():
     t.drop(columns=['Air_K', 'RH_%'], inplace=True)
     t.columns = [vr]
     t[t <= 900] = np.nan
-    t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'] = np.nan
+    t.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'] = np.nan
     t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'] = np.nan
 
     # AWS ECAPAC
@@ -350,7 +350,7 @@ def read_surf_pres():
     # import matplotlib.pyplot as plt
     # plt.plot(c.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'])
     # plt.plot(e.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'])
-    # plt.plot(t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'])
+    # plt.plot(t.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'])
     # plt.plot(t2.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'])
     # plt.show()
     # plt.close('all')
