@@ -128,7 +128,7 @@ The reference values are always from THAAO measurements, except for IWV (ref: VE
 A reference for this type of plots used for atmospheric analysis can be found
 here: [Validation of the Cloud_CCI (Cloud Climate Change Initiative) cloud products in the Arctic](https://amt.copernicus.org/articles/16/2903/2023/).
 
-## N
+### N
 
 Total number of points analysed.
 

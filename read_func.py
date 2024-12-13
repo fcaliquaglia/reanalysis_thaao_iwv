@@ -1020,7 +1020,7 @@ def read_lwp():
             print(f'NOT FOUND: {fn}{year}.txt')
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
-    c[2] = c.values * 1000000
+    c[2] = c.values * 10000000
     c.columns = [vr]
     c[c < 0.01] = np.nan
     # c[c < 15] = 0

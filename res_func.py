@@ -114,31 +114,31 @@ def data_resampling(vr, tres, var_c, var_e, var_l, var_t, var_t1, var_t2):
             var_t2_res = precip_res(var_t2, tres)
         except (TypeError, NameError, ValueError):
             var_t2_res = pd.DataFrame()
-    elif vr == 'lwp':
-        try:
-            var_c_res = lwp_res(var_c, tres)
-        except (TypeError, NameError, ValueError):
-            var_c_res = pd.DataFrame()
-        try:
-            var_e_res = var_c.resample(tres).mean()
-        except (TypeError, NameError, ValueError):
-            var_e_res = pd.DataFrame()
-        try:
-            var_l_res = var_c.resample(tres).mean()
-        except:
-            var_l_res = pd.DataFrame()
-        try:
-            var_t_res = var_c.resample(tres).mean()
-        except (TypeError, NameError, ValueError):
-            var_t_res = pd.DataFrame()
-        try:
-            var_t1_res = var_c.resample(tres).mean()
-        except (TypeError, NameError, ValueError):
-            var_t1_res = pd.DataFrame()
-        try:
-            var_t2_res = var_c.resample(tres).mean()
-        except (TypeError, NameError, ValueError):
-            var_t2_res = pd.DataFrame()
+    # elif vr == 'lwp':
+    #     try:
+    #         var_c_res = lwp_res(var_c, tres)
+    #     except (TypeError, NameError, ValueError):
+    #         var_c_res = pd.DataFrame()
+    #     try:
+    #         var_e_res = var_e.resample(tres).mean()
+    #     except (TypeError, NameError, ValueError):
+    #         var_e_res = pd.DataFrame()
+    #     try:
+    #         var_l_res = var_l.resample(tres).mean()
+    #     except:
+    #         var_l_res = pd.DataFrame()
+    #     try:
+    #         var_t_res = var_t.resample(tres).mean()
+    #     except (TypeError, NameError, ValueError):
+    #         var_t_res = pd.DataFrame()
+    #     try:
+    #         var_t1_res = var_t1.resample(tres).mean()
+    #     except (TypeError, NameError, ValueError):
+    #         var_t1_res = pd.DataFrame()
+    #     try:
+    #         var_t2_res = var_t2.resample(tres).mean()
+    #     except (TypeError, NameError, ValueError):
+    #         var_t2_res = pd.DataFrame()
     else:
         try:
             var_c_res = var_c.resample(tres).mean()
