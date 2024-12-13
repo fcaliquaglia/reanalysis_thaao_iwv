@@ -154,10 +154,13 @@ Excluding nan values. x(t): reference value; y(t): reanalysis or other
 
 ### Surface Pressure (``surf_pres``)
 
+> [!WARNING]
+> Values masked to nan for surf_pres<900, since they are unrealistic. 
+
 - CARRA: ``surface_pressure``
 - ERA-5: ``surface_pressure``
 - ERA5-L: /
-- THAAO (vespa):
+- THAAO (vespa): values in these periods have been excluded: 2021-10-11 --> 2021-10-19 and 2024-4-28 --> 2024-5-4
 - THAAO (aws_ECAPAC):
 
 ### Surface temperature (``temp``)
