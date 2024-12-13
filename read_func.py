@@ -294,6 +294,7 @@ def read_surf_pres():
     c.drop(columns=[0, 1], inplace=True)
     c[2] = c[2].values / 100.
     c.columns = [vr]
+    c[c <= 900] = np.nan
 
     # ERA5
     fn = 'thaao_era5_surface_pressure_'
@@ -311,6 +312,7 @@ def read_surf_pres():
     e.drop(columns=[0, 1], inplace=True)
     e[2] = e.values / 100.
     e.columns = [vr]
+    e[e <= 900] = np.nan
 
     # THAAO
     fn = 'Meteo_weekly_all'
@@ -321,6 +323,9 @@ def read_surf_pres():
         print(f'NOT FOUND: {fn}.nc')
     t.drop(columns=['Air_K', 'RH_%'], inplace=True)
     t.columns = [vr]
+    t[t <= 900] = np.nan
+    t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'] = np.nan
+    t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'] = np.nan
 
     # AWS ECAPAC
     fn = 'AWS_THAAO_'
@@ -340,6 +345,23 @@ def read_surf_pres():
     t2.index.name = 'datetime'
     t2 = t2.iloc[:, :].filter(["BP_mbar"]).astype(float)
     t2.columns = [vr]
+    t2[t2 <= 900] = np.nan
+
+    # import matplotlib.pyplot as plt
+    # plt.plot(c.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'])
+    # plt.plot(e.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'])
+    # plt.plot(t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'])
+    # plt.plot(t2.loc['2021-10-11 00:00:00':'2021-10-19 00:00:00'])
+    # plt.show()
+    # plt.close('all')
+    #
+    # import matplotlib.pyplot as plt
+    # plt.plot(c.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'])
+    # plt.plot(e.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'])
+    # plt.plot(t.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'])
+    # plt.plot(t2.loc['2024-4-26 00:00:00':'2024-5-4 00:00:00'])
+    # plt.show()
+    # plt.close('all')
 
     return [c, e, l, t, t1, t2]
 
