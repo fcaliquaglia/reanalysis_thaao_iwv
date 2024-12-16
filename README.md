@@ -202,8 +202,7 @@ Excluding nan values. x(t): reference value; y(t): reanalysis or other
 > For CARRA radiation values. These forecast variables are released t different leadtimes, with 1-hour frequency. 
 > Therefore, we consider only leadtime 1, obtaining every three hours, hourly forecast valued for the following hour 
 > w.r.t the chose timeframe. For example, we choose April 1, 2023 at 6:00 UTC, we analyze forecast values on April 1, 2023 
-> at 7:00 UTC. 
-> All the radiation dataset have been cleaned for values <0.
+> at 7:00 UTC. All the radiation dataset have been cleaned for values <0.
 
 ### Downward shortwave irradiance - DSI (``sw_down``)
 
