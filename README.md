@@ -20,7 +20,8 @@
 
 - 3h resolution at 2.5 km
 - 10.24381/cds.713858f6
-- Ridal, Martin, et al. "CERRA, the Copernicus European Regional Reanalysis system." Quarterly Journal of the Royal Meteorological Society (2024).
+- Ridal, Martin, et al. "CERRA, the Copernicus European Regional Reanalysis system." Quarterly Journal of the Royal
+  Meteorological Society (2024).
 - [cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels](https://cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels?tab=overview)
 
 > [!NOTE]
@@ -96,11 +97,36 @@
 > and use more accurate information on land states.
 
 # Useful bibliography
-Value of the Copernicus Arctic Regional Reanalysis (CARRA) in representing near-surface temperature and wind speed in the north-east European Arctic, 10.33265/polar.v41.8002
 
-- Batrak, Yurii, Bin Cheng, and Viivi Kallio-Myers. "Sea ice cover in the Copernicus Arctic Regional Reanalysis." The Cryosphere 18.3 (2024): 1157-1183.
-- Køltzow, Morten, et al. "Value of the Copernicus Arctic Regional Reanalysis (CARRA) in representing near-surface temperature and wind speed in the north-east European Arctic." Polar Research 41 (2022).
-- [OCEANO, no CARRA] Xie, Jiping, et al. "Quality assessment of the TOPAZ4 reanalysis in the Arctic over the period 1991–2013." Ocean Science 13.1 (2017): 123-144.
+- [] Batrak, Yurii, Bin Cheng, and Viivi Kallio-Myers. "Sea ice cover in the Copernicus Arctic Regional Reanalysis." The
+  Cryosphere 18.3 (2024): 1157-1183.
+- [] Køltzow, Morten, et al. "Value of the Copernicus Arctic Regional Reanalysis (CARRA) in representing near-surface
+  temperature and wind speed in the north-east European Arctic." Polar Research 41 (2022).
+- [thesis, polar mesoscale cyclones, polar lows, ERA5, CARRA ] Cheng, Zhaohui. Polar Mesoscale Cyclones in ERA5 and
+  CARRA. 2023. Department of Earth Sciences, Uppsala
+  University. https://www.diva-portal.org/smash/record.jsf?pid=diva2%3A1765122&dswid=-2975
+- [OCEANO, no CARRA] Xie, Jiping, et al. "Quality assessment of the TOPAZ4 reanalysis in the Arctic over the period
+  1991–2013." Ocean Science 13.1 (2017): 123-144.
+- https://climate.copernicus.eu/sites/default/files/2023-10/CARRA_user_workshop_Koeltzow.pdf
+- [CARRA wind] Lundesgaard, Øyvind, et al. ‘Import of Atlantic Water and Sea Ice Controls the Ocean Environment in the
+  Northern Barents Sea’. Ocean Science, vol. 18, no. 5, Sept. 2022, pp.
+  1389–418, https://doi.org/10.5194/os-18-1389-2022.
+- [CARRA, atmospheric rivers, dropsondes] Dorff, Henning, et al. ‘Observability of Moisture Transport Divergence in
+  Arctic Atmospheric Rivers by Dropsondes’. Atmospheric Chemistry and Physics, vol. 24, no. 15, Aug. 2024, pp.
+  8771–95, https://doi.org/10.5194/acp-24-8771-2024.
+- [CARRA precipitation Greenland] Box, Jason E., et al. ‘Greenland Ice Sheet Rainfall Climatology, Extremes and
+  Atmospheric River Rapids’. Meteorological Applications, vol. 30, no. 4, July 2023, p.
+  e2134, https://doi.org/10.1002/met.2134.
+- [CARRA, ERA5, ERA5-L Greenland, zenith tropospheric delay] Jiang, Chunhua, et al. ‘Comparison of ZTD Derived from
+  CARRA, ERA5 and ERA5-Land over the Greenland Based on GNSS’. Advances in Space Research, vol. 72, no. 11, Dec. 2023,
+  pp. 4692–706, https://doi.org/10.1016/j.asr.2023.09.002.
+- [] Kirbus, Benjamin, et al. ‘Thermodynamic and Cloud Evolution in a Cold-Air Outbreak during HALO-(AC)3:
+  Quasi-Lagrangian Observations Compared to the ERA5 and CARRA Reanalyses’. Atmospheric Chemistry and Physics, vol. 24,
+  no. 6, Apr. 2024, pp. 3883–904. , https://doi.org/10.5194/acp-24-3883-2024.
+- [] Isaksen, Ketil, et al. ‘Exceptional Warming over the Barents Area’. Scientific Reports, vol. 12, no. 1, June 2022,
+  p. 9371, https://doi.org/10.1038/s41598-022-13568-5.
+- [preprint] 'Fram Strait Marine Cold Air Outbreaks in CARRA and ERA5: Effects on Surface Turbulent Heat Fluxes and the
+  Vertical Structure of the Troposphere', https://doi.org/10.22541/essoar.167898508.82732727/v1.
 
 # THAAO reference instruments
 
@@ -163,7 +189,7 @@ Excluding nan values. x(t): reference value; y(t): reanalysis or other
 ### Surface Pressure (``surf_pres``)
 
 > [!WARNING]
-> Values masked to nan for surf_pres<900, since they are unrealistic. 
+> Values masked to nan for surf_pres<900, since they are unrealistic.
 
 - CARRA: ``surface_pressure``
 - ERA-5: ``surface_pressure``
@@ -207,9 +233,10 @@ Excluding nan values. x(t): reference value; y(t): reanalysis or other
 ## RADIATION
 
 > [!WARNING]
-> For CARRA radiation values. These forecast variables are released t different leadtimes, with 1-hour frequency. 
-> Therefore, we consider only leadtime 1, obtaining every three hours, hourly forecast valued for the following hour 
-> w.r.t the chose timeframe. For example, we choose April 1, 2023 at 6:00 UTC, we analyze forecast values on April 1, 2023 
+> For CARRA radiation values. These forecast variables are released t different leadtimes, with 1-hour frequency.
+> Therefore, we consider only leadtime 1, obtaining every three hours, hourly forecast valued for the following hour
+> w.r.t the chose timeframe. For example, we choose April 1, 2023 at 6:00 UTC, we analyze forecast values on April 1,
+> 2023
 > at 7:00 UTC. All the radiation dataset have been cleaned for values <0.
 
 ### Downward shortwave irradiance - DSI (``sw_down``)
