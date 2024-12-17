@@ -20,6 +20,7 @@
 
 - 3h resolution at 2.5 km
 - 10.24381/cds.713858f6
+- Ridal, Martin, et al. "CERRA, the Copernicus European Regional Reanalysis system." Quarterly Journal of the Royal Meteorological Society (2024).
 - [cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels](https://cds.climate.copernicus.eu/datasets/reanalysis-carra-single-levels?tab=overview)
 
 > [!NOTE]
@@ -93,6 +94,13 @@
 > drought forecasting. The temporal and spatial resolution of this dataset, the period covered in time, as well as the
 > fixed grid used for the data distribution at any period enables decisions makers, businesses and individuals to access
 > and use more accurate information on land states.
+
+# Useful bibliography
+Value of the Copernicus Arctic Regional Reanalysis (CARRA) in representing near-surface temperature and wind speed in the north-east European Arctic, 10.33265/polar.v41.8002
+
+- Batrak, Yurii, Bin Cheng, and Viivi Kallio-Myers. "Sea ice cover in the Copernicus Arctic Regional Reanalysis." The Cryosphere 18.3 (2024): 1157-1183.
+- Køltzow, Morten, et al. "Value of the Copernicus Arctic Regional Reanalysis (CARRA) in representing near-surface temperature and wind speed in the north-east European Arctic." Polar Research 41 (2022).
+- [OCEANO, no CARRA] Xie, Jiping, et al. "Quality assessment of the TOPAZ4 reanalysis in the Arctic over the period 1991–2013." Ocean Science 13.1 (2017): 123-144.
 
 # THAAO reference instruments
 
