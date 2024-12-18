@@ -128,6 +128,8 @@
 - [preprint] 'Fram Strait Marine Cold Air Outbreaks in CARRA and ERA5: Effects on Surface Turbulent Heat Fluxes and the
   Vertical Structure of the Troposphere', https://doi.org/10.22541/essoar.167898508.82732727/v1.
 
+- [other] Unlike CARRA, ERA5 lacks a parameterization of a snow layer on top of the sea-ice (Batrak & Muller, 2019).  
+
 # THAAO reference instruments
 
 Instrument involved are HATPRO (IWV, LWP), aws_ECAPAC (temp, press, rh, windd, winds), aws_vespa (temp, press, rh,
