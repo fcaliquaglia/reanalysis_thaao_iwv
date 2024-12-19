@@ -10,6 +10,16 @@
 - [ ] download ``mean_sea_level_pressure``
 - [ ] riportare valori di pressione al livello del mare?
 - [ ] download more ERA-L products
+    - ``2m dewpoint temperature``
+    - ``2m temperature``
+    - ``snow albedo``
+    - ``forecast albedo``
+    - ``surface pressure``
+    - ``total precipitation``
+    - ``10m_u_component_of_wind``
+    - ``10m_v_component_of_wind``
+    - ``surface_solar_radiation_downwards`` (forecast)
+    - ``surface_net_solar_radiation`` (forecast)
 - [ ] focus on weather variables
 - [ ] recuperare da Giovanni i rs che io non ho e devo aggiungere in archivio per l'analisi
 - [X] extract CARRA radiation
@@ -74,11 +84,10 @@
 
 > [!NOTE]
 > (from the official website) ERA5-Land is a reanalysis dataset providing a consistent view of the evolution of land
-> variables over several decades
-> at an enhanced resolution compared to ERA5. ERA5-Land has been produced by replaying the land component of the ECMWF
-> ERA5 climate reanalysis. Reanalysis combines model data with observations from across the world into a globally
-> complete and consistent dataset using the laws of physics. Reanalysis produces data that goes several decades back in
-> time, providing an accurate description of the climate of the past.
+> variables over several decades at an enhanced resolution compared to ERA5. ERA5-Land has been produced by replaying
+> the land component of the ECMWF ERA5 climate reanalysis. Reanalysis combines model data with observations from across
+> the world into a globally complete and consistent dataset using the laws of physics. Reanalysis produces data that
+> goes several decades back in time, providing an accurate description of the climate of the past.
 > ERA5-Land uses as input to control the simulated land fields ERA5 atmospheric variables, such as air temperature and
 > air humidity. This is called the atmospheric forcing. Without the constraint of the atmospheric forcing, the
 > model-based estimates can rapidly deviate from reality. Therefore, while observations are not directly used in the
@@ -128,7 +137,7 @@
 - [preprint] 'Fram Strait Marine Cold Air Outbreaks in CARRA and ERA5: Effects on Surface Turbulent Heat Fluxes and the
   Vertical Structure of the Troposphere', https://doi.org/10.22541/essoar.167898508.82732727/v1.
 
-- [other] Unlike CARRA, ERA5 lacks a parameterization of a snow layer on top of the sea-ice (Batrak & Muller, 2019).  
+- [other] Unlike CARRA, ERA5 lacks a parameterization of a snow layer on top of the sea-ice (Batrak & Muller, 2019).
 
 # THAAO reference instruments
 
