@@ -21,11 +21,15 @@ __email__ = "filippo.caliquaglia@ingv.it"
 __status__ = "Research"
 __lastupdate__ = ""
 
+import string
+
 import matplotlib.pyplot as plt
 import numpy.ma as ma
 from pyCompare import blandAltman
 
 from inputs import *
+
+letters = list(string.ascii_lowercase)
 
 
 def plot_ts(vr, avar, period_label):
@@ -129,6 +133,7 @@ def plot_ts(vr, avar, period_label):
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
         ax[yy].xaxis.set_major_formatter(myFmt)
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
+        ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
     plt.xlabel('Time')
     plt.legend(ncol=2)
     plt.tight_layout()
@@ -210,6 +215,8 @@ def plot_residuals(vr, avar, period_label):
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
         ax[yy].xaxis.set_major_formatter(myFmt)
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
+        # panel letters
+        ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
     plt.xlabel('Time')
     plt.legend()
     plt.tight_layout()
@@ -352,8 +359,11 @@ def plot_scatter(vr, avar, period_label):
                     transform=axs[i].transAxes)
             axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
             axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
+            axs[i].text(0.1, 0.8, letters[i] + ')', transform=axs[i].transAxes)
         except:
             print(f'error with {label}')
+
+
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{vr}.png'))
     plt.close('all')
 
@@ -452,6 +462,7 @@ def plot_ba(vr, avar, period_label):
 
             fig.suptitle(f'{vr.upper()} {seas_name} {tres}', fontweight='bold')
             axs[i].set_title(label)
+            axs[i].text(0.1, 0.8, letters[i] + ')', transform=axs[i].transAxes)
 
             time_list = pd.date_range(start=dt.datetime(2016, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
             if x.empty | y.empty:
@@ -471,5 +482,6 @@ def plot_ba(vr, avar, period_label):
             # b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)  # xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)  # axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')  # axs[i].plot(  #         [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,  #         ls='-')  # corcoef = ma.corrcoef(x_s[idx], y_s[idx])  #  # N = x_s[idx].shape[0]  # rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))  # mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))  # axs[i].text(  #         0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,  #         transform=axs[i].transAxes)  # axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])  # axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
         except:
             print(f'error with {label}')
+
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_ba_{seas_name}_{vr}.png'))
     plt.close('all')
