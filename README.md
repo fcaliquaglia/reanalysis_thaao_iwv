@@ -6,8 +6,7 @@
 ### TODO
 
 - [ ] extract better pixel
-- [ ] revise strategy for pixel extraction
-- [ ] download ``mean_sea_level_pressure``
+- [ ] revise strategy for pixel extraction using read_func.extract_values()
 - [ ] riportare valori di pressione al livello del mare?
 - [ ] download more ERA-L products
     - ``2m dewpoint temperature``
@@ -21,8 +20,9 @@
     - ``surface_solar_radiation_downwards`` (forecast)
     - ``surface_net_solar_radiation`` (forecast)
 - [ ] focus on weather variables
-- [ ] recuperare da Giovanni i rs che io non ho e devo aggiungere in archivio per l'analisi
+- [ ] recuperare da Giovanni gli rs che io non ho e devo aggiungere in archivio per l'analisi
 - [X] extract CARRA radiation
+- [x] download ``mean_sea_level_pressure``
 
 ## Reanalysis considered
 
