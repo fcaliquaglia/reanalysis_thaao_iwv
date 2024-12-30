@@ -9,16 +9,16 @@
 - [ ] revise strategy for pixel extraction using read_func.extract_values()
 - [ ] riportare valori di pressione al livello del mare?
 - [ ] download more ERA-L products
-    - ``2m dewpoint temperature``
-    - ``2m temperature``
-    - ``snow albedo``
-    - ``forecast albedo``
-    - ``surface pressure``
-    - ``total precipitation``
-    - ``10m_u_component_of_wind``
-    - ``10m_v_component_of_wind``
-    - ``surface_solar_radiation_downwards`` (forecast)
-    - ``surface_net_solar_radiation`` (forecast)
+    - [x] ``2m dewpoint temperature``
+    - [x] ``2m temperature``
+    - [] ``snow albedo``
+    - [] ``forecast albedo``
+    - [] ``surface pressure``
+    - [] ``total precipitation``
+    - [] ``10m_u_component_of_wind``
+    - [] ``10m_v_component_of_wind``
+    - [] ``surface_solar_radiation_downwards`` (forecast)
+    - [] ``surface_net_solar_radiation`` (forecast)
 - [ ] focus on weather variables
 - [ ] recuperare da Giovanni gli rs che io non ho e devo aggiungere in archivio per l'analisi
 - [X] extract CARRA radiation
