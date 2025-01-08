@@ -133,7 +133,7 @@ def plot_ts(vr, avar, period_label):
             pass
         ax[yy].set_ylim(extr[vr]['min'], extr[vr]['max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
-        ax[yy].xaxis_set_xlabel(None)
+        ax[yy].set_xticklabels([])
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
         ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
     ax[0].xaxis.set_major_formatter(myFmt)
@@ -210,6 +210,7 @@ def plot_residuals(vr, avar, period_label):
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
         # panel letters
+        ax[yy].set_xticklabels([])
         ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
     ax[0].xaxis.set_major_formatter(myFmt)
     ax[0].set_xlabel('Time')
