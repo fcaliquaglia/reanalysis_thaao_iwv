@@ -21,6 +21,7 @@ __email__ = "filippo.caliquaglia@ingv.it"
 __status__ = "Research"
 __lastupdate__ = ""
 
+import julian
 import xarray as xr
 from metpy.calc import dewpoint_from_relative_humidity, precipitable_water
 from metpy.units import units
@@ -78,21 +79,21 @@ def read_iwv():
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [vr]
 
-    # ERA5-LAND
-    fn = 'thaao_era5-land_total_column_water_vapour_'
-    for yy, year in enumerate(years):
-        try:
-            e_tmp = pd.read_table(
-                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-                    engine='python')
-            e_tmp[e_tmp == -32767.0] = np.nan
-            e = pd.concat([e, e_tmp], axis=0)
-            print(f'OK: {fn}{year}.txt')
-        except FileNotFoundError:
-            print(f'NOT FOUND: {fn}{year}.txt')
-    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
-    e.drop(columns=[0, 1], inplace=True)
-    e.columns = [vr]
+    # # ERA5-LAND
+    # fn = 'thaao_era5-land_total_column_water_vapour_'
+    # for yy, year in enumerate(years):
+    #     try:
+    #         e_tmp = pd.read_table(
+    #                 os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+    #                 engine='python')
+    #         e_tmp[e_tmp == -32767.0] = np.nan
+    #         e = pd.concat([e, e_tmp], axis=0)
+    #         print(f'OK: {fn}{year}.txt')
+    #     except FileNotFoundError:
+    #         print(f'NOT FOUND: {fn}{year}.txt')
+    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    # e.drop(columns=[0, 1], inplace=True)
+    # e.columns = [vr]
 
     # THAAO (vespa)
     fn = 'vespaPWVClearSky'
@@ -145,8 +146,8 @@ def read_iwv():
                     file_date = dt.datetime.strptime(i[9:22], '%Y%m%d_%H%M')
                     kw = dict(
                             skiprows=17, skipfooter=1, header=None, delimiter=" ", na_values="nan", na_filter=True,
-                            skipinitialspace=False, decimal=".", names=['height', 'pres', 'temp', 'rh'], engine='python',
-                            usecols=[0, 1, 2, 3])
+                            skipinitialspace=False, decimal=".", names=['height', 'pres', 'temp', 'rh'],
+                            engine='python', usecols=[0, 1, 2, 3])
                     dfs = pd.read_table(os.path.join(fol_input, i), **kw)
                     # unphysical values checks
                     dfs.loc[(dfs['pres'] > 1013) | (dfs['pres'] < 0), 'pres'] = np.nan
@@ -197,9 +198,7 @@ def extract_values(fn, year):
             filen = os.path.join(basefol_r, 'carra', '_'.join(fn.split('_')[1:]) + str(year) + '.nc')
             NC = xr.open_dataset(str(filen), decode_cf=True, decode_times=True)
 
-            # import cfgrib
-            # ds = cfgrib.open_dataset('era5-levels-members.grib')
-            # ds
+            # import cfgrib  # ds = cfgrib.open_dataset('era5-levels-members.grib')  # ds
 
             # tmp = NC.sel(x=y, y=x, method='nearest')
         except FileNotFoundError:

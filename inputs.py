@@ -21,12 +21,10 @@ __email__ = "filippo.caliquaglia@ingv.it"
 __status__ = "Research"
 __lastupdate__ = ""
 
-import datetime as dt
 import os
 
 import matplotlib.dates as mdates
 import numpy as np
-import pandas as pd
 
 ## FOLDERS
 basefol_c = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'carra', 'thaao')

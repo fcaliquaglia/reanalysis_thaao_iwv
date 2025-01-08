@@ -21,10 +21,12 @@ __email__ = "filippo.caliquaglia@ingv.it"
 __status__ = "Research"
 __lastupdate__ = ""
 
+import datetime as dt
 import string
 
 import matplotlib.pyplot as plt
 import numpy.ma as ma
+import pandas as pd
 from pyCompare import blandAltman
 
 from inputs import *
@@ -321,7 +323,7 @@ def plot_scatter(vr, avar, period_label):
             fig.suptitle(f'{vr.upper()} {seas_name} {tres}', fontweight='bold')
             axs[i].set_title(label)
 
-            time_list = pd.date_range(start=dt.datetime(2016, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
+            time_list = pd.date_range(start=dt.datetime(2000, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
             if x.empty | y.empty:
                 continue
             x_all = x.reindex(time_list)
@@ -362,7 +364,6 @@ def plot_scatter(vr, avar, period_label):
             axs[i].text(0.1, 0.8, letters[i] + ')', transform=axs[i].transAxes)
         except:
             print(f'error with {label}')
-
 
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{vr}.png'))
     plt.close('all')
