@@ -62,60 +62,76 @@ def read_iwv():
     c[c <= 0] = np.nan
     c.columns = [vr]
 
-    # # ERA5
-    # fn = 'thaao_era5_total_column_water_vapour_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e_tmp[e_tmp == -32767.0] = np.nan
-    #         e = pd.concat([e, e_tmp], axis=0)
-    #         print(f'OK: {fn}{year}.txt')
-    #     except FileNotFoundError:
-    #         print(f'NOT FOUND: {fn}{year}.txt')
-    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
-    # e.drop(columns=[0, 1], inplace=True)
-    # e.columns = [vr]
+    # ERA5
+    fn = 'thaao_era5_total_column_water_vapour_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+            print(f'OK: {fn}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn}{year}.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e.columns = [vr]
 
-    # # THAAO (vespa)
-    # fn = 'vespaPWVClearSky'
-    # try:
-    #     t = pd.read_table(
-    #             os.path.join(basefol_t, 'thaao_vespa', f'{fn}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #             engine='python')
-    #     print(f'OK: {fn}.txt')
-    # except FileNotFoundError:
-    #     print(f'NOT FOUND: {fn}{year}.txt')
-    # t.index = pd.to_datetime(t[0] + ' ' + t[1], format='%Y-%m-%d %H:%M:%S')
-    # t.drop(columns=[0, 1, 3, 4, 5], inplace=True)
-    # t.columns = [vr]
+    # ERA5-LAND
+    fn = 'thaao_era5-land_total_column_water_vapour_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+            print(f'OK: {fn}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn}{year}.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e.columns = [vr]
 
-    # # THAAO (hatpro)
-    # fn = 'QC_IWV_15_min_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         t1_tmp = pd.read_table(
-    #                 os.path.join(
-    #                         basefol_t, 'thaao_hatpro', 'definitivi_da_giando', f'{fn}{year}', f'{fn}{year}.DAT'),
-    #                 sep='\s+', engine='python', header=None, skiprows=1)
-    #         t1_tmp.columns = ['JD_rif', 'IWV', 'STD_IWV', 'RF', 'N']
-    #         tmp = np.empty(t1_tmp['JD_rif'].shape, dtype=dt.datetime)
-    #         for ii, el in enumerate(t1_tmp['JD_rif']):
-    #             new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
-    #             tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
-    #             tmp[ii] = tmp[ii].replace(microsecond=0)
-    #         t1_tmp.index = pd.DatetimeIndex(tmp)
-    #         t1_tmp.drop(columns=['JD_rif', 'STD_IWV', 'RF', 'N'], axis=1, inplace=True)
-    #         t1 = pd.concat([t1, t1_tmp], axis=0)
-    #         print(f'OK: {fn}{year}.DAT')
-    #     except FileNotFoundError:
-    #         print(f'NOT FOUND: {fn}{year}.DAT')
-    # t1['IWV'] = t1['IWV'].values
-    # t1.columns = [vr]
-    # # cleaning HATPRO DATA
-    # t1[t1 < 0] = np.nan
-    # t1[t1 > 30] = np.nan
+    # THAAO (vespa)
+    fn = 'vespaPWVClearSky'
+    try:
+        t = pd.read_table(
+                os.path.join(basefol_t, 'thaao_vespa', f'{fn}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                engine='python')
+        print(f'OK: {fn}.txt')
+    except FileNotFoundError:
+        print(f'NOT FOUND: {fn}{year}.txt')
+    t.index = pd.to_datetime(t[0] + ' ' + t[1], format='%Y-%m-%d %H:%M:%S')
+    t.drop(columns=[0, 1, 3, 4, 5], inplace=True)
+    t.columns = [vr]
+
+    # THAAO (hatpro)
+    fn = 'QC_IWV_15_min_'
+    for yy, year in enumerate(years):
+        try:
+            t1_tmp = pd.read_table(
+                    os.path.join(
+                            basefol_t, 'thaao_hatpro', 'definitivi_da_giando', f'{fn}{year}', f'{fn}{year}.DAT'),
+                    sep='\s+', engine='python', header=None, skiprows=1)
+            t1_tmp.columns = ['JD_rif', 'IWV', 'STD_IWV', 'RF', 'N']
+            tmp = np.empty(t1_tmp['JD_rif'].shape, dtype=dt.datetime)
+            for ii, el in enumerate(t1_tmp['JD_rif']):
+                new_jd_ass = el + julian.to_jd(dt.datetime(year - 1, 12, 31, 0, 0), fmt='jd')
+                tmp[ii] = julian.from_jd(new_jd_ass, fmt='jd')
+                tmp[ii] = tmp[ii].replace(microsecond=0)
+            t1_tmp.index = pd.DatetimeIndex(tmp)
+            t1_tmp.drop(columns=['JD_rif', 'STD_IWV', 'RF', 'N'], axis=1, inplace=True)
+            t1 = pd.concat([t1, t1_tmp], axis=0)
+            print(f'OK: {fn}{year}.DAT')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn}{year}.DAT')
+    t1['IWV'] = t1['IWV'].values
+    t1.columns = [vr]
+    # cleaning HATPRO DATA
+    t1[t1 < 0] = np.nan
+    t1[t1 > 30] = np.nan
 
     # RS (sondes)
     for yy, year in enumerate(years):
