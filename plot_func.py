@@ -133,9 +133,10 @@ def plot_ts(vr, avar, period_label):
             pass
         ax[yy].set_ylim(extr[vr]['min'], extr[vr]['max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
-        ax[yy].xaxis.set_major_formatter(myFmt)
+        ax[yy].xaxis_set_xlabel(None)
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
         ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
+    ax[0].xaxis.set_major_formatter(myFmt)
     plt.xlabel('Time')
     plt.legend(ncol=2)
     plt.tight_layout()
@@ -205,21 +206,13 @@ def plot_residuals(vr, avar, period_label):
         except AttributeError:
             pass
 
-        if vr == 'alb':
-            range1 = pd.date_range(dt.datetime(year, 1, 1), dt.datetime(year, 2, 15), freq=tres)
-            range2 = pd.date_range(dt.datetime(year, 11, 1), dt.datetime(year, 12, 31), freq=tres)
-            ax[yy].vlines(range1.values, -0.5, 0.5, color='grey', alpha=0.3)
-            ax[yy].vlines(range2.values, -0.5, 0.5, color='grey', alpha=0.3)
-        else:
-            pass
-
         ax[yy].set_ylim(extr[vr]['res_min'], extr[vr]['res_max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
-        ax[yy].xaxis.set_major_formatter(myFmt)
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
         # panel letters
         ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
-    plt.xlabel('Time')
+    ax[0].xaxis.set_major_formatter(myFmt)
+    ax[0].set_xlabel('Time')
     plt.legend()
     plt.tight_layout()
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_residuals_{vr}.png'))

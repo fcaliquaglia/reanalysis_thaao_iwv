@@ -70,6 +70,6 @@ t_col_ori = 'grey'
 t1_col_ori = 'lightgreen'
 t2_col_ori = 'violet'
 
-myFmt = mdates.DateFormatter('%d-%b')
+myFmt = mdates.DateFormatter('%b')
 
 extr = {'iwv': {'min': 0, 'max': 20, 'res_min': -5, 'res_max': 5}}

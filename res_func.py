@@ -21,11 +21,8 @@ __email__ = "filippo.caliquaglia@ingv.it"
 __status__ = "Research"
 __lastupdate__ = ""
 
-from metpy.calc import wind_components, wind_direction
-from metpy.units import units
-
 from inputs import *
-from read_func import read
+import pandas as pd
 
 
 def data_resampling(vr, tres, var_c, var_e, var_l, var_t, var_t1, var_t2):
