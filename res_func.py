@@ -21,8 +21,9 @@ __email__ = "filippo.caliquaglia@ingv.it"
 __status__ = "Research"
 __lastupdate__ = ""
 
-from inputs import *
 import pandas as pd
+
+from inputs import *
 
 
 def data_resampling(vr, tres, var_c, var_e, var_l, var_t, var_t1, var_t2):
@@ -38,10 +39,19 @@ def data_resampling(vr, tres, var_c, var_e, var_l, var_t, var_t1, var_t2):
         var_l_res = var_l.resample(tres).mean()
     except (TypeError, NameError):
         var_l_res = pd.DataFrame()
+
     try:
-        var_t_res = var_t.resample(tres).mean()
+        if vr != 'iwv':
+            var_t_res = var_t.resample(tres).mean()
+        else:
+            var_t_res = var_t.resample(tres_rs).mean()
     except (TypeError, NameError):
         var_t_res = pd.DataFrame()
+
+    # try:
+    #     var_t_res = var_t.resample(tres_rs).mean()
+    # except (TypeError, NameError):
+    #     var_t_res = pd.DataFrame()
     try:
         var_t1_res = var_t1.resample(tres).mean()
     except (TypeError, NameError):

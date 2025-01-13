@@ -21,8 +21,6 @@ __email__ = "filippo.caliquaglia@ingv.it"
 __status__ = "Research"
 __lastupdate__ = ""
 
-import pandas as pd
-
 from plot_func import plot_residuals, plot_scatter, plot_ts
 from read_func import *
 from res_func import data_resampling

@@ -37,10 +37,10 @@ basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_reanaly
 
 ##
 tres = '3h'
-tres_rs = tres  # only for radiosoundings
+tres_rs = '1h'  # only for radiosoundings
 var_list = ['iwv']
 # 'tcc'
-years = np.arange(2000, 2025, 1)
+years = np.arange(2002, 2025, 1)
 
 seass = {'all': {'name'      : 'all', 'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'col': 'pink',
                  'col_CARRA' : 'red', 'col_ERA5': 'blue', 'col_ERA5-L': 'purple', 'col_THAAO': 'grey',

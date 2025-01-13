@@ -123,14 +123,6 @@ def plot_ts(vr, avar, period_label):
         except AttributeError:
             pass
 
-        if vr == 'alb':
-            range1 = pd.date_range(dt.datetime(year, 1, 1), dt.datetime(year, 2, 15), freq=tres)
-            range2 = pd.date_range(dt.datetime(year, 11, 1), dt.datetime(year, 12, 31), freq=tres)
-            ax[yy].vlines(range1.values, 0, 1, color='grey', alpha=0.3)
-            ax[yy].vlines(range2.values, 0, 1, color='grey', alpha=0.3)
-            ax[yy].set_ylim(extr[vr]['min'], extr[vr]['max'])
-        else:
-            pass
         ax[yy].set_ylim(extr[vr]['min'], extr[vr]['max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
         ax[yy].set_xticklabels([])
@@ -139,8 +131,8 @@ def plot_ts(vr, avar, period_label):
     ax[-1].xaxis.set_major_formatter(myFmt)
     ax[-1].set_xlabel('Time')
     plt.legend(ncol=2)
-    plt.tight_layout()
-    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{vr}.png'))
+    # plt.tight_layout()
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{vr}_only.png'))
     plt.close('all')
 
 
@@ -214,9 +206,9 @@ def plot_residuals(vr, avar, period_label):
         ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
     ax[-1].xaxis.set_major_formatter(myFmt)
     ax[-1].set_xlabel('Time')
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_residuals_{vr}.png'))
+    plt.legend(ncol=2)
+    # plt.tight_layout()
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_residuals_{vr}_only.png'))
     plt.close('all')
 
 
@@ -359,7 +351,7 @@ def plot_scatter(vr, avar, period_label):
         except:
             print(f'error with {label}')
 
-    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{vr}.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{vr}_only.png'))
     plt.close('all')
 
 
@@ -478,5 +470,5 @@ def plot_ba(vr, avar, period_label):
         except:
             print(f'error with {label}')
 
-    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_ba_{seas_name}_{vr}.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_ba_{seas_name}_{vr}_only.png'))
     plt.close('all')
