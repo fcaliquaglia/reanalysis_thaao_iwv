@@ -33,7 +33,7 @@ basefol_t_elab = os.path.join('H:\\Shared drives', 'Dati_elab_docs')
 
 basefol_c = os.path.join(basefol_r, 'carra', 'thaao', 'v1')
 basefol_e = os.path.join(basefol_r, 'era5', 'thaao', 'v1')
-basefol_l = os.path.join(basefol_r, 'era5-land', 'thaao-land', 'v1')
+basefol_l = os.path.join(basefol_r, 'era5-land', 'thaao', 'v1')
 
 basefol_out = os.path.join(basefol_t_elab, 'thaao_reanalysis')
 

@@ -51,4 +51,5 @@ if __name__ == "__main__":
         plot_ts(var, all_var, 'all')
         plot_residuals(var, all_var, 'all')
         for seas in seass:
-            plot_scatter(var, all_var, seas)  # plot_ba(var, all_var, seas)
+            plot_scatter(var, all_var, seas)
+            # plot_ba(var, all_var, seas)
