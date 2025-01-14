@@ -27,13 +27,15 @@ import matplotlib.dates as mdates
 import numpy as np
 
 ## FOLDERS
-basefol_c = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'carra', 'thaao')
-basefol_e = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'era5', 'thaao')
-basefol_l = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'reanalysis', 'era5-land', 'thaao')
+basefol_r = os.path.join('H:\\Shared drives', 'Reanalysis')
 basefol_t = os.path.join('H:\\Shared drives', 'Dati_THAAO')
 basefol_t_elab = os.path.join('H:\\Shared drives', 'Dati_elab_docs')
-basefol_r = os.path.join('H:\\Shared drives', 'Reanalysis')
-basefol_out = os.path.join('H:\\Shared drives', 'Dati_elab_docs', 'thaao_reanalysis')
+
+basefol_c = os.path.join(basefol_r, 'carra', 'thaao', 'v1')
+basefol_e = os.path.join(basefol_r, 'era5', 'thaao', 'v1')
+basefol_l = os.path.join(basefol_r, 'era5-land', 'thaao-land', 'v1')
+
+basefol_out = os.path.join(basefol_t_elab, 'thaao_reanalysis')
 
 ##
 tres = '3h'

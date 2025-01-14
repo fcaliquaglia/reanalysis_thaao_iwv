@@ -82,21 +82,21 @@ def read_iwv():
     e.drop(columns=[0, 1], inplace=True)
     e.columns = [vr]
 
-    # # ERA5-LAND
-    # fn = 'thaao_era5-land_total_column_water_vapour_'
-    # for yy, year in enumerate(years):
-    #     try:
-    #         e_tmp = pd.read_table(
-    #                 os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
-    #                 engine='python')
-    #         e_tmp[e_tmp == -32767.0] = np.nan
-    #         e = pd.concat([e, e_tmp], axis=0)
-    #         print(f'OK: {fn}{year}.txt')
-    #     except FileNotFoundError:
-    #         print(f'NOT FOUND: {fn}{year}.txt')
-    # e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
-    # e.drop(columns=[0, 1], inplace=True)
-    # e.columns = [vr]
+    # ERA5-LAND
+    fn = 'thaao_era5-land_total_column_water_vapour_'
+    for yy, year in enumerate(years):
+        try:
+            e_tmp = pd.read_table(
+                    os.path.join(basefol_e, f'{fn}{year}.txt'), skipfooter=1, sep='\s+', header=None, skiprows=1,
+                    engine='python')
+            e_tmp[e_tmp == -32767.0] = np.nan
+            e = pd.concat([e, e_tmp], axis=0)
+            print(f'OK: {fn}{year}.txt')
+        except FileNotFoundError:
+            print(f'NOT FOUND: {fn}{year}.txt')
+    e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
+    e.drop(columns=[0, 1], inplace=True)
+    e.columns = [vr]
 
     # THAAO (vespa)
     fn = 'vespaPWVClearSky'
