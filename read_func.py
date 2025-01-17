@@ -202,12 +202,3 @@ def extract_values(fn, year):
 
     return f'thaao_{fn}'
 
-
-def read(var):
-    """
-
-    :param var:
-    :return:
-    """
-    if var == 'iwv':
-        return read_iwv()

@@ -27,7 +27,6 @@ import string
 import matplotlib.pyplot as plt
 import numpy.ma as ma
 import pandas as pd
-from pyCompare import blandAltman
 
 from inputs import *
 
@@ -46,12 +45,9 @@ def plot_ts(vr, avar, period_label):
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
     fig.suptitle(f'{vr.upper()} all {tres}', fontweight='bold')
-    if vr != 'iwv':
-        label_t2_ori = 'AWS ECAPAC 1 min'
-        label_t2 = 'AWS ECAPAC'
-    else:
-        label_t2_ori = 'RS'
-        label_t2 = 'RS'
+
+    label_t2_ori = 'RS'
+    label_t2 = 'RS'
 
     for [yy, year] in enumerate(years):
         print(f'plotting {year}')
@@ -131,7 +127,6 @@ def plot_ts(vr, avar, period_label):
     ax[-1].xaxis.set_major_formatter(myFmt)
     ax[-1].set_xlabel('Time')
     plt.legend(ncol=2)
-    # plt.tight_layout()
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{vr}_only.png'))
     plt.close('all')
 
@@ -152,16 +147,16 @@ def plot_residuals(vr, avar, period_label):
         print(f'plotting {year}')
 
         if vr != 'iwv':
-            label_t2_ori = 'AWS ECAPAC 1 min'
             label_t2 = 'AWS ECAPAC'
         else:
-            label_t2_ori = 'RS'
             label_t2 = 'RS'
 
         if vr == 'lwp':
             vr_ref = vr_t1_res
         elif vr in ['precip', 'windd', 'winds']:
             vr_ref = vr_t2_res
+        elif vr in ['iwv']:
+            vr_ref = vr_t_res.resample(tres).mean()
         else:
             vr_ref = vr_t_res
         # resampled resolution
@@ -226,27 +221,11 @@ def plot_scatter(vr, avar, period_label):
     fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
     axs = ax.ravel()
 
-    # define which is the reference measurement for each variable
-    if vr == 'lwp':
-        comps = ['c', 'e', 't', 't1']
-        x = vr_t1_res[vr]
-        xlabel = 'HATPRO'
-    elif vr in ['windd', 'winds', 'precip']:
-        comps = ['c', 'e', 't', 't1']
-        x = vr_t2_res[vr]
-        xlabel = 'AWS_ECAPAC'
-    elif vr == 'iwv':
-        comps = ['c', 'e', 't1', 't2']
-        x = vr_t_res[vr]
-        xlabel = 'VESPA'
-    elif vr == 'temp':
-        comps = ['c', 'e', 'l', 't2']
-        x = vr_t_res[vr]
-        xlabel = 'THAAO'
-    else:
-        comps = ['c', 'e', 't1', 't2']
-        x = vr_t_res[vr]
-        xlabel = 'THAAO'
+
+
+    comps = ['c', 'e', 't1', 't2']
+    x = vr_t_res[vr]
+    xlabel = 'VESPA'
 
     for i, comp in enumerate(comps):
         axs[i].set_xlabel(xlabel)
@@ -291,12 +270,7 @@ def plot_scatter(vr, avar, period_label):
                 print(f'error with {label}')
                 continue
         if comp == 't2':
-            if vr == 'alb':
-                label = 'ERA5 snow alb'
-            elif vr == 'iwv':
-                label = 'RS'
-            else:
-                label = 'AWS ECAPAC'
+            label = 'RS'
             axs[i].set_ylabel(label)
             try:
                 y = vr_t2_res[vr]
@@ -309,27 +283,29 @@ def plot_scatter(vr, avar, period_label):
             fig.suptitle(f'{vr.upper()} {seas_name} {tres}', fontweight='bold')
             axs[i].set_title(label)
 
-            time_list = pd.date_range(start=dt.datetime(2000, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
-            if x.empty | y.empty:
-                continue
+            time_list = pd.date_range(start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres)
+            time_list_rs = pd.date_range(
+                start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres_rs)
+
             x_all = x.reindex(time_list)
             x_s = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
             y_all = y.reindex(time_list)
             y_s = y_all.loc[(y_all.index.month.isin(seass[period_label]['months']))]
-
-            idx = np.isfinite(x_s) & np.isfinite(y_s)
+            idx = ~(np.isnan(x_s) | np.isnan(y_s))
 
             if seas_name != 'all':
                 axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
             else:
                 if label == 'RS':
-                    axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
+                    x_all_rs = x.reindex(time_list_rs)
+                    x_s = x_all_rs.loc[(x_all_rs.index.month.isin(seass[period_label]['months']))]
+                    y_all_rs = y.reindex(time_list_rs)
+                    y_s = y_all_rs.loc[(y_all_rs.index.month.isin(seass[period_label]['months']))]
+                    idx_rs = ~(np.isnan(x_s) | np.isnan(y_s))
+                    axs[i].scatter(x_s[idx_rs], y_s[idx_rs], color=seass[period_label]['col'])
                 else:
-                    if tres == '1ME':
-                        axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col' + '_' + label])
-                    else:
-                        h = axs[i].hist2d(x_s[idx], y_s[idx], bins=(250, 250), cmap=plt.cm.jet, cmin=1, cmax=50)
-                        fig.colorbar(h[3], ax=axs[i], extend='both')
+                    h = axs[i].hist2d(x_s[idx], y_s[idx], bins=(250, 250), cmap=plt.cm.jet, cmin=1, vmin=1)
+                    fig.colorbar(h[3], ax=axs[i], extend='both')
 
             b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
             xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
@@ -352,123 +328,4 @@ def plot_scatter(vr, avar, period_label):
             print(f'error with {label}')
 
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{vr}_only.png'))
-    plt.close('all')
-
-
-def plot_ba(vr, avar, period_label):
-    """
-
-    :param vr:
-    :param avar:
-    :param period_label:
-    :return:
-    """
-    print('BLAND-ALTMAN')
-    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
-    seas_name = seass[period_label]['name']
-    fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
-    axs = ax.ravel()
-
-    # define which is the reference measurement for each variable
-    if vr == 'lwp':
-        comps = ['c', 'e', 't', 't1']
-        x = vr_t1_res[vr]
-        xlabel = 'HATPRO'
-    elif vr in ['windd', 'winds', 'precip']:
-        comps = ['c', 'e', 't', 't1']
-        x = vr_t2_res[vr]
-        xlabel = 'AWS_ECAPAC'
-    elif vr == 'iwv':
-        comps = ['c', 'e', 't1', 't2']
-        x = vr_t_res[vr]
-        xlabel = 'VESPA'
-    elif vr == 'temp':
-        comps = ['c', 'e', 'l', 't2']
-        x = vr_t_res[vr]
-        xlabel = 'THAAO'
-    else:
-        comps = ['c', 'e', 't1', 't2']
-        x = vr_t_res[vr]
-        xlabel = 'THAAO'
-
-    for i, comp in enumerate(comps):
-        axs[i].set_xlabel(xlabel)
-        if comp == 'c':
-            label = 'CARRA'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_c_res[vr]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 'e':
-            label = 'ERA5'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_e_res[vr]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 'l':
-            label = 'ERA5-L'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_l_res[vr]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 't':
-            label = 'THAAO'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_t_res[vr]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 't1':
-            label = 'HATPRO'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_t1_res[vr]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 't2':
-            if vr == 'alb':
-                label = 'ERA5 snow alb'
-            else:
-                label = 'AWS ECAPAC'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_t2_res[vr]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        try:
-            print(f'plotting ba THAAO-{label}')
-
-            fig.suptitle(f'{vr.upper()} {seas_name} {tres}', fontweight='bold')
-            axs[i].set_title(label)
-            axs[i].text(0.1, 0.8, letters[i] + ')', transform=axs[i].transAxes)
-
-            time_list = pd.date_range(start=dt.datetime(2016, 1, 1), end=dt.datetime(2024, 12, 31), freq=tres)
-            if x.empty | y.empty:
-                continue
-            x_all = x.reindex(time_list)
-            x_s = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
-            y_all = y.reindex(time_list)
-            y_s = y_all.loc[(y_all.index.month.isin(seass[period_label]['months']))]
-
-            idx = np.isfinite(x_s) & np.isfinite(y_s)
-
-            blandAltman(
-                    x_s[idx], y_s[idx], ax=axs[i], limitOfAgreement=1.96, confidenceInterval=95,
-                    confidenceIntervalMethod='approximate', detrend=None,
-                    percentage=False)  # confidenceIntervalMethod='exact paired' or 'approximate'  # detrend='Linear' or 'None'
-
-            # b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)  # xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)  # axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--')  # axs[i].plot(  #         [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,  #         ls='-')  # corcoef = ma.corrcoef(x_s[idx], y_s[idx])  #  # N = x_s[idx].shape[0]  # rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))  # mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))  # axs[i].text(  #         0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,  #         transform=axs[i].transAxes)  # axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])  # axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
-        except:
-            print(f'error with {label}')
-
-    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_ba_{seas_name}_{vr}_only.png'))
     plt.close('all')
