@@ -224,7 +224,7 @@ def plot_scatter(vr, avar, period_label):
 
 
     comps = ['c', 'e', 't1', 't2']
-    x = vr_t_res[vr]
+    x = vr_t_res[vr].resample(tres).mean()
     xlabel = 'VESPA'
 
     for i, comp in enumerate(comps):
@@ -273,7 +273,7 @@ def plot_scatter(vr, avar, period_label):
             label = 'RS'
             axs[i].set_ylabel(label)
             try:
-                y = vr_t2_res[vr]
+                y = vr_t2_res[vr].dropna()
             except KeyError:
                 print(f'error with {label}')
                 continue
@@ -284,12 +284,10 @@ def plot_scatter(vr, avar, period_label):
             axs[i].set_title(label)
 
             time_list = pd.date_range(start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres)
-            time_list_rs = pd.date_range(
-                start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres_rs)
 
-            x_all = x.reindex(time_list)
+            x_all = x.reindex(time_list).fillna(np.nan)
             x_s = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
-            y_all = y.reindex(time_list)
+            y_all = y.reindex(time_list).fillna(np.nan)
             y_s = y_all.loc[(y_all.index.month.isin(seass[period_label]['months']))]
             idx = ~(np.isnan(x_s) | np.isnan(y_s))
 
@@ -297,12 +295,11 @@ def plot_scatter(vr, avar, period_label):
                 axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
             else:
                 if label == 'RS':
-                    x_all_rs = x.reindex(time_list_rs)
-                    x_s = x_all_rs.loc[(x_all_rs.index.month.isin(seass[period_label]['months']))]
-                    y_all_rs = y.reindex(time_list_rs)
-                    y_s = y_all_rs.loc[(y_all_rs.index.month.isin(seass[period_label]['months']))]
-                    idx_rs = ~(np.isnan(x_s) | np.isnan(y_s))
-                    axs[i].scatter(x_s[idx_rs], y_s[idx_rs], color=seass[period_label]['col'])
+                    y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
+                    x_s = pd.Series(vr_t_res.reindex(y_s.index)['iwv'])
+
+                    idx = ~(np.isnan(x_s) | np.isnan(y_s))
+                    axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
                 else:
                     h = axs[i].hist2d(x_s[idx], y_s[idx], bins=(250, 250), cmap=plt.cm.jet, cmin=1, vmin=1)
                     fig.colorbar(h[3], ax=axs[i], extend='both')
