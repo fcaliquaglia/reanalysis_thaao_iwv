@@ -185,22 +185,7 @@ def plot_scatter(avar, period_label):
             if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
                 print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')
             else:
-                b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
-                xseq = np.linspace(extr[var_name]['min'], extr[var_name]['max'], num=1000)
-                axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--', alpha=0.5)
-                axs[i].plot(
-                        [extr[var_name]['min'], extr[var_name]['max']], [extr[var_name]['min'], extr[var_name]['max']],
-                        color='black', lw=1.5, ls='-')
-
-                corcoef = ma.corrcoef(x_s[idx], y_s[idx])
-                N = len(y_s[idx])
-                rmse = np.sqrt(np.nanmean((y_s[idx] - x_s[idx]) ** 2))
-                mbe = np.nanmean(y_s[idx] - x_s[idx])
-                axs[i].text(
-                        0.50, 0.30,
-                        f'R={corcoef[0, 1]:.2f} N={N} \n y={b:+.2f}x{a:+.2f} \n MBE={mbe:.2f} RMSE={rmse:.2f}',
-                        transform=axs[i].transAxes, fontsize=14, color='black', ha='left', va='center',
-                        bbox=dict(facecolor='white', edgecolor='white'))
+                cal_draw_fit(axs, i, idx, x_s, y_s)
 
                 axs[i].set_xlim(extr[var_name]['min'], extr[var_name]['max'])
                 axs[i].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
@@ -268,12 +253,7 @@ def plot_scatter_cum(avar):
                 if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
                     print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')
                 else:
-                    b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
-                    xseq = np.linspace(extr[var_name]['min'], extr[var_name]['max'], num=1000)
-                    axs[i].plot(xseq, a + b * xseq, color=seass[period_label]['col'], lw=2.5, ls='--', alpha=0.5)
-                    axs[i].plot(
-                            [extr[var_name]['min'], extr[var_name]['max']],
-                            [extr[var_name]['min'], extr[var_name]['max']], color='black', lw=1.5, ls='-')
+                    cal_draw_fit(axs, i, idx, x_s, y_s, print_stats=False)
 
                     axs[i].set_xlim(extr[var_name]['min'], extr[var_name]['max'])
                     axs[i].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
@@ -323,3 +303,31 @@ def var_selection(avar, comp):
             print(f'error with {var_dict[comp]['label']}')
 
     return x, y, vr_t_res
+
+
+def cal_draw_fit(axs, i, idx, x_s, y_s, print_stats=True):
+    """
+    
+    :param print_stats:
+    :param axs:
+    :param i: 
+    :param idx: 
+    :param x_s: 
+    :param y_s: 
+    :return: 
+    """
+    b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
+    xseq = np.linspace(extr[var_name]['min'], extr[var_name]['max'], num=1000)
+    axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--', alpha=0.5)
+    axs[i].plot(
+            [extr[var_name]['min'], extr[var_name]['max']], [extr[var_name]['min'], extr[var_name]['max']],
+            color='black', lw=1.5, ls='-')
+    if print_stats:
+        corcoef = ma.corrcoef(x_s[idx], y_s[idx])
+        N = len(y_s[idx])
+        rmse = np.sqrt(np.nanmean((y_s[idx] - x_s[idx]) ** 2))
+        mbe = np.nanmean(y_s[idx] - x_s[idx])
+        axs[i].text(
+                0.50, 0.30, f'R={corcoef[0, 1]:.2f} N={N} \n y={b:+.2f}x{a:+.2f} \n MBE={mbe:.2f} RMSE={rmse:.2f}',
+                transform=axs[i].transAxes, fontsize=14, color='black', ha='left', va='center',
+                bbox=dict(facecolor='white', edgecolor='white'))
