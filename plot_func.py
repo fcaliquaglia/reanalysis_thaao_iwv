@@ -135,7 +135,7 @@ def plot_scatter(avar, period_label):
 
     for i, comp in enumerate(comps):
         x, y, vr_t_res = var_selection(avar, comp=comp)
-        axs[i].set_xlabel(var_dict['vr_t2']['label_uom'])
+
         axs[i].set_ylabel(var_dict[comp]['label_uom'])
         try:
             print(f'plotting scatter VESPA-{var_dict[comp]['label']}')
@@ -160,10 +160,12 @@ def plot_scatter(avar, period_label):
                     axs[i].scatter(
                             x_s[idx].values, y_s[idx].values, s=50, facecolor='none', color=seass[period_label]['col'],
                             label=period_label)
+                    axs[i].set_xlabel(var_dict[comp]['label_uom'])
                 else:
                     axs[i].scatter(
                             x_s[idx], y_s[idx], s=5, color=seass[period_label]['col'], facecolor='none', alpha=0.5,
                             label=period_label)
+                    axs[i].set_xlabel(var_dict['vr_t']['label_uom'])
             else:
                 if var_dict[comp]['label'] == 'RS':
                     y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
@@ -171,13 +173,14 @@ def plot_scatter(avar, period_label):
 
                     idx = ~(np.isnan(x_s) | np.isnan(y_s))
                     axs[i].scatter(x_s[idx], y_s[idx], facecolor='none', s=50, color=seass[period_label]['col'])
+                    axs[i].set_xlabel(var_dict[comp]['label_uom'])
                 else:
-                    bin_nr = 200
                     bin_size = extr[var_name]['max'] / bin_nr
                     h = axs[i].hist2d(x_s[idx], y_s[idx], bins=bin_nr, cmap=plt.cm.jet, cmin=1, vmin=1)
                     axs[i].text(
                             0.10, 0.80, f'bin_size={bin_size} kg/m3',
                             transform=axs[i].transAxes)  # fig.colorbar(h[3], ax=axs[i], extend='both')
+                    axs[i].set_xlabel(var_dict['vr_t']['label_uom'])
 
             if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
                 print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')
@@ -258,13 +261,11 @@ def plot_scatter_cum(avar):
     seass_new.pop('all')
     for period_label in seass_new:
         print('SCATTERPLOTS')
-        [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
         seas_name = seass[period_label]['name']
         axs = ax.ravel()
 
         for i, comp in enumerate(comps):
 
-            axs[i].set_xlabel(var_dict['vr_t2']['label_uom'])
             axs[i].set_ylabel(var_dict[comp]['label_uom'])
             x, y, vr_t_res = var_selection(avar, comp=comp)
 
@@ -292,11 +293,13 @@ def plot_scatter_cum(avar):
                         axs[i].scatter(
                                 x_s[idx].values, y_s[idx].values, s=50, facecolor='none',
                                 color=seass[period_label]['col'], label=period_label)
+                        axs[i].set_xlabel(var_dict[comp]['label_uom'])
 
                     else:
                         axs[i].scatter(
                                 x_s[idx], y_s[idx], s=5, color=seass[period_label]['col'], edgecolors='none', alpha=0.5,
                                 label=period_label)
+                        axs[i].set_xlabel(var_dict['vr_t']['label_uom'])
 
                 if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
                     print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')

@@ -44,8 +44,10 @@ tres = '3h'
 tres_rs = '1h'  # only for radiosoundings
 var_name = 'iwv'
 var_name_u = var_name.upper()
-# 'tcc'
+
 years = np.arange(2016, 2024, 1)
+
+bin_nr=20
 
 SMALL_SIZE = 12
 
