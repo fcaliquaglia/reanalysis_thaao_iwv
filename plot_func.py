@@ -253,7 +253,7 @@ def plot_scatter_cum(avar):
                 if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
                     print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')
                 else:
-                    cal_draw_fit(axs, i, idx, x_s, y_s, print_stats=False)
+                    calc_draw_fit(axs, i, idx, x_s, y_s, print_stats=False)
 
                     axs[i].set_xlim(extr[var_name]['min'], extr[var_name]['max'])
                     axs[i].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
@@ -305,7 +305,7 @@ def var_selection(avar, comp):
     return x, y, vr_t_res
 
 
-def cal_draw_fit(axs, i, idx, x_s, y_s, print_stats=True):
+def calc_draw_fit(axs, i, idx, x_s, y_s, print_stats=True):
     """
     
     :param print_stats:
@@ -318,7 +318,7 @@ def cal_draw_fit(axs, i, idx, x_s, y_s, print_stats=True):
     """
     b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
     xseq = np.linspace(extr[var_name]['min'], extr[var_name]['max'], num=1000)
-    axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--', alpha=0.5)
+    axs[i].plot(xseq, a + b * xseq, color=var_dict[var_name]['col'], lw=2.5, ls='--', alpha=0.5)
     axs[i].plot(
             [extr[var_name]['min'], extr[var_name]['max']], [extr[var_name]['min'], extr[var_name]['max']],
             color='black', lw=1.5, ls='-')
