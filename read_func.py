@@ -39,7 +39,6 @@ def read_iwv():
     t = pd.DataFrame()
     t1 = pd.DataFrame()
     t2 = pd.DataFrame()
-    vr = 'iwv'
 
     # CARRA
     fn = 'thaao_carra_total_column_integrated_water_vapour_'
@@ -64,7 +63,7 @@ def read_iwv():
     c.index = pd.to_datetime(c[0] + ' ' + c[1], format='%Y-%m-%d %H:%M:%S')
     c.drop(columns=[0, 1], inplace=True)
     c[c <= 0] = np.nan
-    c.columns = [vr]
+    c.columns = [var_name]
 
     # ERA5
     fn = 'thaao_era5_total_column_water_vapour_'
@@ -89,7 +88,7 @@ def read_iwv():
             print(f'NOT FOUND: {fn}{year}.txt')
     e.index = pd.to_datetime(e[0] + ' ' + e[1], format='%Y-%m-%d %H:%M:%S')
     e.drop(columns=[0, 1], inplace=True)
-    e.columns = [vr]
+    e.columns = [var_name]
 
     # THAAO (vespa)
     fn = 'vespaPWVClearSky'
@@ -102,7 +101,7 @@ def read_iwv():
         print(f'NOT FOUND: {fn}{year}.txt')
     t.index = pd.to_datetime(t[0] + ' ' + t[1], format='%Y-%m-%d %H:%M:%S')
     t.drop(columns=[0, 1, 3, 4, 5], inplace=True)
-    t.columns = [vr]
+    t.columns = [var_name]
 
     # THAAO (hatpro)
     fn = 'QC_IWV_15_min_'
@@ -125,7 +124,7 @@ def read_iwv():
         except FileNotFoundError:
             print(f'NOT FOUND: {fn}{year}.DAT')
     t1['IWV'] = t1['IWV'].values
-    t1.columns = [vr]
+    t1.columns = [var_name]
     # cleaning HATPRO DATA
     t1[t1 < 0] = np.nan
     t1[t1 > 30] = np.nan
@@ -165,7 +164,7 @@ def read_iwv():
             print(f'OK: year {year}')
         except FileNotFoundError:
             print(f'NOT FOUND: year {year}')
-    t2.columns = [vr]
+    t2.columns = [var_name]
     # np.savetxt(os.path.join(basefol_t, 'rs_pwv.txt'), t2, fmt='%s')
     t2.to_csv(os.path.join(basefol_t, 'rs_pwv.txt'), index=True)
 

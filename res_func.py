@@ -26,7 +26,7 @@ import pandas as pd
 from inputs import *
 
 
-def data_resampling(vr, var_c, var_e, var_l, var_t, var_t1, var_t2):
+def data_resampling(var_c, var_e, var_l, var_t, var_t1, var_t2):
     try:
         var_c_res = var_c.resample(tres).mean()
     except (TypeError, NameError):
