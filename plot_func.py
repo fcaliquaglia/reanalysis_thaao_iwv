@@ -197,9 +197,9 @@ def plot_scatter(avar, period_label):
                 rmse = np.sqrt(np.nanmean((y_s[idx] - x_s[idx]) ** 2))
                 mbe = np.nanmean(y_s[idx] - x_s[idx])
                 axs[i].text(
-                        0.70, 0.80,
-                        '$LWP_{WH}$: R=' + f'{corcoef[0, 1]:.2f}' + f' N={N:}' + f'\n y={b:+.2f}x{a:+.2f}' + f'\n MBE={mbe:.2f}' + f' RMSE={rmse:.2f}',
-                        transform=ax.transAxes, fontsize=14, color='black', ha='left', va='center',
+                        0.50, 0.30,
+                        f'R={corcoef[0, 1]:.2f} N={N} \n y={b:+.2f}x{a:+.2f} \n MBE={mbe:.2f} RMSE={rmse:.2f}',
+                        transform=axs[i].transAxes, fontsize=14, color='black', ha='left', va='center',
                         bbox=dict(facecolor='white', edgecolor='white'))
 
                 axs[i].set_xlim(extr[var_name]['min'], extr[var_name]['max'])
