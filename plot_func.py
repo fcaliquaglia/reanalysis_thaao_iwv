@@ -221,8 +221,6 @@ def plot_scatter(vr, avar, period_label):
     fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
     axs = ax.ravel()
 
-
-
     comps = ['c', 'e', 't1', 't2']
     x = vr_t_res[vr].resample(tres).mean()
     xlabel = 'VESPA'
@@ -294,6 +292,7 @@ def plot_scatter(vr, avar, period_label):
             if seas_name != 'all':
                 axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
             else:
+
                 if label == 'RS':
                     y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
                     x_s = pd.Series(vr_t_res.reindex(y_s.index)['iwv'])
@@ -304,25 +303,150 @@ def plot_scatter(vr, avar, period_label):
                     h = axs[i].hist2d(x_s[idx], y_s[idx], bins=(250, 250), cmap=plt.cm.jet, cmin=1, vmin=1)
                     fig.colorbar(h[3], ax=axs[i], extend='both')
 
-            b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
-            xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
-            axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--', alpha=0.5)
-            axs[i].plot(
-                    [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,
-                    ls='-')
-            corcoef = ma.corrcoef(x_s[idx], y_s[idx])
+            if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
+                print('EEEEEEEEEEEEEEEEEEE')
+            else:
+                b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
+                xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
+                axs[i].plot(xseq, a + b * xseq, color='red', lw=2.5, ls='--', alpha=0.5)
+                axs[i].plot(
+                        [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black', lw=1.5,
+                        ls='-')
+                corcoef = ma.corrcoef(x_s[idx], y_s[idx])
 
-            N = x_s[idx].shape[0]
-            rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))
-            mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))
-            axs[i].text(
-                    0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,
-                    transform=axs[i].transAxes)
-            axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
-            axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
-            axs[i].text(0.1, 0.8, letters[i] + ')', transform=axs[i].transAxes)
+                N = len(y_s[idx])
+                rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))
+                mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))
+                axs[i].text(
+                        0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,
+                        transform=axs[i].transAxes)
+                axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
+                axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
+                axs[i].text(0.05, 0.95, letters[i] + ')', transform=axs[i].transAxes)
+
         except:
             print(f'error with {label}')
 
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{vr}_only.png'))
+    plt.close('all')
+
+
+def plot_scatter_cum(vr, avar):
+    """
+
+    :param vr:
+    :param avar:
+    :return:
+    """
+    fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
+    seass_new = seass
+    seass_new.pop('all')
+    for period_label in seass_new:
+        print('SCATTERPLOTS')
+        [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+        seas_name = seass[period_label]['name']
+        axs = ax.ravel()
+
+        comps = ['c', 'e', 't1', 't2']
+        x = vr_t_res[vr].resample(tres).mean()
+        xlabel = 'VESPA'
+
+        for i, comp in enumerate(comps):
+            axs[i].set_xlabel(xlabel)
+            if comp == 'c':
+                label = 'CARRA'
+                axs[i].set_ylabel(label)
+                try:
+                    y = vr_c_res[vr]
+                except KeyError:
+                    print(f'error with {label}')
+                    continue
+            if comp == 'e':
+                label = 'ERA5'
+                axs[i].set_ylabel(label)
+                try:
+                    y = vr_e_res[vr]
+                except KeyError:
+                    print(f'error with {label}')
+                    continue
+            if comp == 'l':
+                label = 'ERA5-L'
+                axs[i].set_ylabel(label)
+                try:
+                    y = vr_l_res[vr]
+                except KeyError:
+                    print(f'error with {label}')
+                    continue
+            if comp == 't':
+                label = 'THAAO'
+                axs[i].set_ylabel(label)
+                try:
+                    y = vr_t_res[vr]
+                except KeyError:
+                    print(f'error with {label}')
+                    continue
+            if comp == 't1':
+                label = 'HATPRO'
+                axs[i].set_ylabel(label)
+                try:
+                    y = vr_t1_res[vr]
+                except KeyError:
+                    print(f'error with {label}')
+                    continue
+            if comp == 't2':
+                label = 'RS'
+                axs[i].set_ylabel(label)
+                try:
+                    y = vr_t2_res[vr].dropna()
+                except KeyError:
+                    print(f'error with {label}')
+                    continue
+            try:
+                print(f'plotting scatter THAAO-{label}')
+
+                fig.suptitle(f'{vr.upper()} cumulative plot', fontweight='bold')
+                axs[i].set_title(label)
+
+                time_list = pd.date_range(
+                        start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres)
+
+                x_all = x.reindex(time_list).fillna(np.nan)
+                x_s = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
+                y_all = y.reindex(time_list).fillna(np.nan)
+                y_s = y_all.loc[(y_all.index.month.isin(seass[period_label]['months']))]
+                idx = ~(np.isnan(x_s) | np.isnan(y_s))
+
+                if seas_name != 'all':
+                    if label == 'RS':
+                        y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
+                        x_s = pd.Series(vr_t_res.reindex(y_s.index)['iwv'])
+
+                        idx = ~(np.isnan(x_s) | np.isnan(y_s))
+                        axs[i].scatter(
+                                x_s[idx].values, y_s[idx].values, s=50, facecolor='none', color=seass[period_label]['col'],
+                                label=period_label)
+
+                    else:
+                        axs[i].scatter(
+                                x_s[idx], y_s[idx], s=5, color=seass[period_label]['col'], edgecolors='none', alpha=0.5,
+                                label=period_label)
+
+                if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
+                    print('EEEEEEEEEEEEEEEEEEE')
+                else:
+                    b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
+                    xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
+                    axs[i].plot(xseq, a + b * xseq, color=seass[period_label]['col'], lw=2.5, ls='--', alpha=0.5)
+                    axs[i].plot(
+                            [extr[vr]['min'], extr[vr]['max']], [extr[vr]['min'], extr[vr]['max']], color='black',
+                            lw=1.5, ls='-')
+
+                    axs[i].set_xlim(extr[vr]['min'], extr[vr]['max'])
+                    axs[i].set_ylim(extr[vr]['min'], extr[vr]['max'])
+                    axs[i].text(0.05, 0.95, letters[i] + ')', transform=axs[i].transAxes)
+                    axs[i].legend()
+            except:
+                print(f'error with {label}')
+
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_cum_{vr}_only.png'))
     plt.close('all')
