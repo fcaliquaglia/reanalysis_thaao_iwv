@@ -45,9 +45,9 @@ tres_rs = '1h'  # only for radiosoundings
 var_name = 'iwv'
 var_name_u = var_name.upper()
 
-years = np.arange(2016, 2024, 1)
+years = np.arange(2016, 2025, 1)
 
-bin_nr=20
+bin_nr = 100
 
 SMALL_SIZE = 12
 
@@ -69,15 +69,16 @@ var_names = ['vr_c', 'vr_e', 'vr_l', 'vr_t', 'vr_t1', 'vr_t2']
 
 var_dict = {'vr_c': {'name'     : 'vr_c', 'col': 'red', 'col_ori': 'orange', 'label': 'CARRA',
                      'label_uom': f'{var_name} CARRA {uom}'},
-    'vr_e': {'name': 'vr_e', 'col': 'blue', 'col_ori': 'cyan', 'label': 'ERA5', 'label_uom': f'{var_name} ERA5 {uom}'},
-    'vr_l': {'name'     : 'vr_l', 'col': 'darkgreen', 'col_ori': 'lightgreen', 'label': 'ERA5-L',
-             'label_uom': f'{var_name} ERA5-L {uom}'},
-    'vr_t': {'name'     : 'vr_t', 'col': 'black', 'col_ori': 'grey', 'label': 'VESPA',
-             'label_uom': f'{var_name} VESPA {uom}'},
-    'vr_t1': {'name'     : 'vr_t1', 'col': 'green', 'col_ori': 'lightgreen', 'label': 'HATPRO',
-              'label_uom': f'{var_name} HATPRO {uom}'},
-    'vr_t2': {'name'     : 'vr_t2', 'col': 'purple', 'col_ori': 'violet', 'label': 'RS',
-              'label_uom': f'{var_name} RS {uom}'}}
+            'vr_e': {'name'     : 'vr_e', 'col': 'blue', 'col_ori': 'cyan', 'label': 'ERA5',
+                     'label_uom': f'{var_name} ERA5 {uom}'},
+            'vr_l': {'name'     : 'vr_l', 'col': 'darkgreen', 'col_ori': 'lightgreen', 'label': 'ERA5-L',
+                     'label_uom': f'{var_name} ERA5-L {uom}'},
+            'vr_t': {'name'     : 'vr_t', 'col': 'black', 'col_ori': 'grey', 'label': 'VESPA',
+                     'label_uom': f'{var_name} VESPA {uom}'},
+            'vr_t1': {'name'     : 'vr_t1', 'col': 'green', 'col_ori': 'lightgreen', 'label': 'HATPRO',
+                      'label_uom': f'{var_name} HATPRO {uom}'},
+            'vr_t2': {'name'     : 'vr_t2', 'col': 'purple', 'col_ori': 'violet', 'label': 'RS',
+                      'label_uom': f'{var_name} RS {uom}'}}
 
 myFmt = mdates.DateFormatter('%b')
 

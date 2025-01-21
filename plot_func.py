@@ -191,14 +191,17 @@ def plot_scatter(avar, period_label):
                 axs[i].plot(
                         [extr[var_name]['min'], extr[var_name]['max']], [extr[var_name]['min'], extr[var_name]['max']],
                         color='black', lw=1.5, ls='-')
-                corcoef = ma.corrcoef(x_s[idx], y_s[idx])
 
+                corcoef = ma.corrcoef(x_s[idx], y_s[idx])
                 N = len(y_s[idx])
-                rmse = np.sqrt(np.nanmean((x_s[idx] - y_s[idx]) ** 2))
-                mae = np.nanmean(np.abs(x_s[idx] - y_s[idx]))
+                rmse = np.sqrt(np.nanmean((y_s[idx] - x_s[idx]) ** 2))
+                mbe = np.nanmean(y_s[idx] - x_s[idx])
                 axs[i].text(
-                        0.60, 0.15, f'R={corcoef[0, 1]:1.3}\nrmse={rmse:1.3}\nN={N}\nmae={mae:1.3}', fontsize=14,
-                        transform=axs[i].transAxes)
+                        0.70, 0.80,
+                        '$LWP_{WH}$: R=' + f'{corcoef[0, 1]:.2f}' + f' N={N:}' + f'\n y={b:+.2f}x{a:+.2f}' + f'\n MBE={mbe:.2f}' + f' RMSE={rmse:.2f}',
+                        transform=ax.transAxes, fontsize=14, color='black', ha='left', va='center',
+                        bbox=dict(facecolor='white', edgecolor='white'))
+
                 axs[i].set_xlim(extr[var_name]['min'], extr[var_name]['max'])
                 axs[i].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
                 axs[i].text(0.05, 0.95, letters[i] + ')', transform=axs[i].transAxes)
@@ -208,45 +211,6 @@ def plot_scatter(avar, period_label):
 
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{var_name}_only.png'))
     plt.close('all')
-
-
-def var_selection(avar, comp):
-    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
-
-    x = vr_t_res[var_name].resample(tres).mean()
-
-    if comp == 'vr_c':
-        try:
-            y = vr_c_res[var_name]
-        except KeyError:
-            print(f'error with {var_dict[comp]['label']}')
-    if comp == 'vr_e':
-        try:
-            y = vr_e_res[var_name]
-        except KeyError:
-            print(f'error with {var_dict[comp]['label']}')
-    if comp == 'vr_l':
-        try:
-            y = vr_l_res[var_name]
-        except KeyError:
-            print(f'error with {var_dict[comp]['label']}')
-    if comp == 'vr_t':
-        try:
-            y = vr_t_res[var_name]
-        except KeyError:
-            print(f'error with {var_dict[comp]['label']}')
-    if comp == 'vr_t1':
-        try:
-            y = vr_t1_res[var_name]
-        except KeyError:
-            print(f'error with {var_dict[comp]['label']}')
-    if comp == 'vr_t2':
-        try:
-            y = vr_t2_res[var_name].dropna()
-        except KeyError:
-            print(f'error with {var_dict[comp]['label']}')
-
-    return x, y, vr_t_res
 
 
 def plot_scatter_cum(avar):
@@ -320,3 +284,42 @@ def plot_scatter_cum(avar):
 
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_cum_{var_name}_only.png'))
     plt.close('all')
+
+
+def var_selection(avar, comp):
+    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+
+    x = vr_t_res[var_name].resample(tres).mean()
+
+    if comp == 'vr_c':
+        try:
+            y = vr_c_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_e':
+        try:
+            y = vr_e_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_l':
+        try:
+            y = vr_l_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_t':
+        try:
+            y = vr_t_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_t1':
+        try:
+            y = vr_t1_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_t2':
+        try:
+            y = vr_t2_res[var_name].dropna()
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+
+    return x, y, vr_t_res
