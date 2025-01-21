@@ -123,7 +123,7 @@ def plot_ts(vr, avar, period_label):
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
         ax[yy].set_xticklabels([])
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
-        ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
+        ax[yy].text(0.01, 0.90, letters[yy] + ')', transform=ax[yy].transAxes)
     ax[-1].xaxis.set_major_formatter(myFmt)
     ax[-1].set_xlabel('Time')
     plt.legend(ncol=2)
@@ -198,7 +198,7 @@ def plot_residuals(vr, avar, period_label):
         ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
         # panel letters
         ax[yy].set_xticklabels([])
-        ax[yy].text(0.1, 0.8, letters[yy] + ')', transform=ax[yy].transAxes)
+        ax[yy].text(0.01, 0.90, letters[yy] + ')', transform=ax[yy].transAxes)
     ax[-1].xaxis.set_major_formatter(myFmt)
     ax[-1].set_xlabel('Time')
     plt.legend(ncol=2)
@@ -290,18 +290,28 @@ def plot_scatter(vr, avar, period_label):
             idx = ~(np.isnan(x_s) | np.isnan(y_s))
 
             if seas_name != 'all':
-                axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
-            else:
-
                 if label == 'RS':
                     y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
                     x_s = pd.Series(vr_t_res.reindex(y_s.index)['iwv'])
 
                     idx = ~(np.isnan(x_s) | np.isnan(y_s))
-                    axs[i].scatter(x_s[idx], y_s[idx], color=seass[period_label]['col'])
+                    axs[i].scatter(
+                            x_s[idx].values, y_s[idx].values, s=50, facecolor='none', color=seass[period_label]['col'],
+                            label=period_label)
+                else:
+                    axs[i].scatter(
+                            x_s[idx], y_s[idx], s=5, color=seass[period_label]['col'], facecolor='none', alpha=0.5,
+                            label=period_label)
+            else:
+                if label == 'RS':
+                    y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
+                    x_s = pd.Series(vr_t_res.reindex(y_s.index)['iwv'])
+
+                    idx = ~(np.isnan(x_s) | np.isnan(y_s))
+                    axs[i].scatter(x_s[idx], y_s[idx], facecolor='none', s=50, color=seass[period_label]['col'])
                 else:
                     h = axs[i].hist2d(x_s[idx], y_s[idx], bins=(250, 250), cmap=plt.cm.jet, cmin=1, vmin=1)
-                    fig.colorbar(h[3], ax=axs[i], extend='both')
+                    #fig.colorbar(h[3], ax=axs[i], extend='both')
 
             if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
                 print('EEEEEEEEEEEEEEEEEEE')
@@ -338,8 +348,9 @@ def plot_scatter_cum(vr, avar):
     :param avar:
     :return:
     """
+    import copy as cp
     fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
-    seass_new = seass
+    seass_new = cp.copy(seass)
     seass_new.pop('all')
     for period_label in seass_new:
         print('SCATTERPLOTS')
@@ -423,8 +434,8 @@ def plot_scatter_cum(vr, avar):
 
                         idx = ~(np.isnan(x_s) | np.isnan(y_s))
                         axs[i].scatter(
-                                x_s[idx].values, y_s[idx].values, s=50, facecolor='none', color=seass[period_label]['col'],
-                                label=period_label)
+                                x_s[idx].values, y_s[idx].values, s=50, facecolor='none',
+                                color=seass[period_label]['col'], label=period_label)
 
                     else:
                         axs[i].scatter(
@@ -432,7 +443,7 @@ def plot_scatter_cum(vr, avar):
                                 label=period_label)
 
                 if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
-                    print('EEEEEEEEEEEEEEEEEEE')
+                    print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')
                 else:
                     b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
                     xseq = np.linspace(extr[vr]['min'], extr[vr]['max'], num=1000)
