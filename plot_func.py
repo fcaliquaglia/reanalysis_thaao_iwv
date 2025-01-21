@@ -135,7 +135,7 @@ def plot_scatter(avar, period_label):
 
     for i, comp in enumerate(comps):
         x, y, vr_t_res = var_selection(avar, comp=comp)
-        axs[i].set_xlabel(var_dict[comp]['label_uom'])
+        axs[i].set_xlabel(var_dict['vr_t2']['label_uom'])
         axs[i].set_ylabel(var_dict[comp]['label_uom'])
         try:
             print(f'plotting scatter VESPA-{var_dict[comp]['label']}')
@@ -264,7 +264,7 @@ def plot_scatter_cum(avar):
 
         for i, comp in enumerate(comps):
 
-            axs[i].set_xlabel(var_dict[comp]['label_uom'])
+            axs[i].set_xlabel(var_dict['vr_t2']['label_uom'])
             axs[i].set_ylabel(var_dict[comp]['label_uom'])
             x, y, vr_t_res = var_selection(avar, comp=comp)
 
