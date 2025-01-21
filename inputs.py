@@ -26,6 +26,8 @@ import os
 import matplotlib.dates as mdates
 import numpy as np
 
+uom = ' [kg/m2]'
+
 ## FOLDERS
 basefol_r = os.path.join('H:\\Shared drives', 'Reanalysis')
 basefol_t = os.path.join('H:\\Shared drives', 'Dati_THAAO')
@@ -43,7 +45,9 @@ tres_rs = '1h'  # only for radiosoundings
 var_name = 'iwv'
 var_name_u = var_name.upper()
 # 'tcc'
-years = np.arange(2016, 2025, 1)
+years = np.arange(2016, 2024, 1)
+
+SMALL_SIZE = 12
 
 seass = {'all': {'name'      : 'all', 'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'col': 'pink',
                  'col_CARRA' : 'red', 'col_ERA5': 'blue', 'col_ERA5-L': 'purple', 'col_THAAO': 'grey',
@@ -58,20 +62,20 @@ seass = {'all': {'name'      : 'all', 'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
          # 'SO' : {'name': 'SO', 'months': [9, 10], 'col': 'purple'}
          }
 
-SMALL_SIZE = 12
-c_col = 'red'
-e_col = 'blue'
-l_col = 'darkgreen'
-t_col = 'black'
-t1_col = 'green'
-t2_col = 'purple'
+comps = ['vr_c', 'vr_e', 'vr_t1', 'vr_t2']
+var_names = ['vr_c', 'vr_e', 'vr_l', 'vr_t', 'vr_t1', 'vr_t2']
 
-c_col_ori = 'orange'
-e_col_ori = 'cyan'
-l_col_ori = 'lightgreen'
-t_col_ori = 'grey'
-t1_col_ori = 'lightgreen'
-t2_col_ori = 'violet'
+var_dict = {'vr_c': {'name'     : 'vr_c', 'col': 'red', 'col_ori': 'orange', 'label': 'CARRA',
+                     'label_uom': f'{var_name} CARRA {uom}'},
+    'vr_e': {'name': 'vr_e', 'col': 'blue', 'col_ori': 'cyan', 'label': 'ERA5', 'label_uom': f'{var_name} ERA5 {uom}'},
+    'vr_l': {'name'     : 'vr_l', 'col': 'darkgreen', 'col_ori': 'lightgreen', 'label': 'ERA5-L',
+             'label_uom': f'{var_name} ERA5-L {uom}'},
+    'vr_t': {'name'     : 'vr_t', 'col': 'black', 'col_ori': 'grey', 'label': 'VESPA',
+             'label_uom': f'{var_name} VESPA {uom}'},
+    'vr_t1': {'name'     : 'vr_t1', 'col': 'green', 'col_ori': 'lightgreen', 'label': 'HATPRO',
+              'label_uom': f'{var_name} HATPRO {uom}'},
+    'vr_t2': {'name'     : 'vr_t2', 'col': 'purple', 'col_ori': 'violet', 'label': 'RS',
+              'label_uom': f'{var_name} RS {uom}'}}
 
 myFmt = mdates.DateFormatter('%b')
 

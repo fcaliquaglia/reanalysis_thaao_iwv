@@ -31,7 +31,6 @@ import pandas as pd
 from inputs import *
 
 letters = list(string.ascii_lowercase)
-uom = ' [kg/m2]'
 
 
 def plot_ts(avar, period_label):
@@ -45,85 +44,27 @@ def plot_ts(avar, period_label):
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
     fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
+    kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
+    kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
 
     for [yy, year] in enumerate(years):
         print(f'plotting {year}')
 
         # original resolution
-        try:
-            ax[yy].plot(
-                    vr_c[vr_c.index.year == year], color=c_col_ori, label=f'{var_name} CARRA 3h', alpha=0.2, lw=0,
-                    marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_e[vr_e.index.year == year], color=e_col_ori, label=f'{var_name} ERA5 1h', alpha=0.2, lw=0,
-                    marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_l[vr_l.index.year == year], color=l_col_ori, label=f'{var_name} ERA5 1h', alpha=0.2, lw=0,
-                    marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_t[vr_t.index.year == year], color=t_col_ori, label=f'{var_name} THAAO ori', alpha=0.2, lw=0,
-                    marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_t1[vr_t1.index.year == year], color=t1_col_ori, label=f'{var_name} HATPRO ori', alpha=0.2,
-                    lw=0, marker='.', ms=1)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_t2[vr_t2.index.year == year], color=t2_col_ori, label=f'{var_name} RS {uom}', alpha=0.02, lw=0,
-                    marker='.', ms=1)
-        except AttributeError:
-            pass
+        for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+            try:
+                data = vr[vr.index.year == year]
+                ax[yy].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+            except AttributeError:
+                pass
 
         # resampled resolution
-        try:
-            ax[yy].plot(
-                    vr_c_res[vr_c_res.index.year == year], color=c_col, label=f'{var_name} CARRA {uom}', lw=0, marker='.',
-                    ms=2)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_e_res[vr_e_res.index.year == year], color=e_col, label=f'{var_name} ERA5 {uom}', lw=0, marker='.',
-                    ms=2)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_l_res[vr_l_res.index.year == year], color=l_col, label=f'{var_name} ERA5-L {uom}', lw=0, marker='.',
-                    ms=2)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_t_res[vr_t_res.index.year == year], color=t_col, label=f'{var_name} THAAO {uom}', lw=0, marker='.',
-                    ms=2)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_t1_res[vr_t1_res.index.year == year], color=t1_col, label=f'{var_name} HATPRO {uom}', lw=0,
-                    marker='.', ms=2)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    vr_t2_res[vr_t2_res.index.year == year], color=t2_col, label=f'{var_name} RS {uom}', lw=0, marker='.',
-                    ms=2)
-        except AttributeError:
-            pass
+        for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+            try:
+                data = vr[vr.index.year == year]
+                ax[yy].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+            except AttributeError:
+                pass
 
         ax[yy].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
@@ -148,43 +89,24 @@ def plot_residuals(avar, period_label):
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
     fig.suptitle(f'residuals {var_name_u} all {tres}', fontweight='bold')
+    kwargs = {'lw': 1, 'marker': '.', 'ms': 0}
+
     for [yy, year] in enumerate(years):
         print(f'plotting {year}')
 
-        vr_ref = vr_t_res.resample(tres).mean()
-        # resampled resolution
         daterange = pd.date_range(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
         ax[yy].plot(daterange, np.repeat(0, len(daterange)), color='black', lw=2, ls='--')
-        try:
-            ax[yy].plot(
-                    (vr_c_res[vr_c_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=c_col,
-                    label=f'{var_name} CARRA {uom}', lw=1, marker='.', ms=0)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    (vr_e_res[vr_e_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=e_col,
-                    label=f'{var_name} ERA5 {uom}', lw=1, marker='.', ms=0)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    (vr_l_res[vr_l_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=l_col,
-                    label=f'{var_name} ERA5-L {uom}', lw=1, marker='.', ms=0)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    (vr_t1_res[vr_t1_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=t1_col,
-                    label=f'{var_name} HATPRO {uom}', lw=1, marker='.', ms=0)
-        except AttributeError:
-            pass
-        try:
-            ax[yy].plot(
-                    (vr_t2_res[vr_t2_res.index.year == year] - vr_ref[vr_ref.index.year == year]), color=t2_col,
-                    label=f'{var_name} RS {uom}', lw=1, marker='.', ms=0)
-        except AttributeError:
-            pass
+
+        # resampled resolution
+        vr_ref = vr_t_res.resample(tres).mean()
+        for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+            try:
+                data = vr[vr.index.year == year]
+                ax[yy].plot(
+                        (data - vr_ref[vr_ref.index.year == year]), color=var_dict[vr_n]['col'],
+                        label=var_dict[vr_n]['label_uom'], **kwargs)
+            except AttributeError:
+                pass
 
         ax[yy].set_ylim(extr[var_name]['res_min'], extr[var_name]['res_max'])
         ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
@@ -195,7 +117,6 @@ def plot_residuals(avar, period_label):
     ax[-1].xaxis.set_major_formatter(myFmt)
     ax[-1].set_xlabel('Time')
     plt.legend(ncol=2)
-    # plt.tight_layout()
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_residuals_{var_name}_only.png'))
     plt.close('all')
 
@@ -208,70 +129,19 @@ def plot_scatter(avar, period_label):
     :return:
     """
     print('SCATTERPLOTS')
-    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     seas_name = seass[period_label]['name']
     fig, ax = plt.subplots(2, 2, figsize=(12, 12), dpi=300)
     axs = ax.ravel()
 
-    comps = ['c', 'e', 't1', 't2']
-    x = vr_t_res[var_name].resample(tres).mean()
-    xlabel = 'VESPA'
-
     for i, comp in enumerate(comps):
-        axs[i].set_xlabel(xlabel)
-        if comp == 'c':
-            label = 'CARRA'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_c_res[var_name]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 'e':
-            label = 'ERA5'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_e_res[var_name]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 'l':
-            label = 'ERA5-L'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_l_res[var_name]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 't':
-            label = 'THAAO'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_t_res[var_name]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 't1':
-            label = 'HATPRO'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_t1_res[var_name]
-            except KeyError:
-                print(f'error with {label}')
-                continue
-        if comp == 't2':
-            label = 'RS'
-            axs[i].set_ylabel(label)
-            try:
-                y = vr_t2_res[var_name].dropna()
-            except KeyError:
-                print(f'error with {label}')
-                continue
+        x, y, vr_t_res = var_selection(avar, comp=comp)
+        axs[i].set_xlabel(var_dict[comp]['label_uom'])
+        axs[i].set_ylabel(var_dict[comp]['label_uom'])
         try:
-            print(f'plotting scatter THAAO-{label}')
+            print(f'plotting scatter VESPA-{var_dict[comp]['label']}')
 
             fig.suptitle(f'{var_name_u} {seas_name} {tres}', fontweight='bold')
-            axs[i].set_title(label)
+            axs[i].set_title(var_dict[comp]['label'])
 
             time_list = pd.date_range(start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres)
 
@@ -282,7 +152,7 @@ def plot_scatter(avar, period_label):
             idx = ~(np.isnan(x_s) | np.isnan(y_s))
 
             if seas_name != 'all':
-                if label == 'RS':
+                if var_dict[comp]['label'] == 'RS':
                     y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
                     x_s = pd.Series(vr_t_res.reindex(y_s.index)[var_name])
 
@@ -295,7 +165,7 @@ def plot_scatter(avar, period_label):
                             x_s[idx], y_s[idx], s=5, color=seass[period_label]['col'], facecolor='none', alpha=0.5,
                             label=period_label)
             else:
-                if label == 'RS':
+                if var_dict[comp]['label'] == 'RS':
                     y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
                     x_s = pd.Series(vr_t_res.reindex(y_s.index)[var_name])
 
@@ -306,10 +176,11 @@ def plot_scatter(avar, period_label):
                     bin_size = extr[var_name]['max'] / bin_nr
                     h = axs[i].hist2d(x_s[idx], y_s[idx], bins=bin_nr, cmap=plt.cm.jet, cmin=1, vmin=1)
                     axs[i].text(
-                        0.30, 0.60, f'bin_size={bin_size} kg/m3')  # fig.colorbar(h[3], ax=axs[i], extend='both')
+                            0.10, 0.80, f'bin_size={bin_size} kg/m3',
+                            transform=axs[i].transAxes)  # fig.colorbar(h[3], ax=axs[i], extend='both')
 
             if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
-                print('EEEEEEEEEEEEEEEEEEE')
+                print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')
             else:
                 b, a = np.polyfit(x_s[idx], y_s[idx], deg=1)
                 xseq = np.linspace(extr[var_name]['min'], extr[var_name]['max'], num=1000)
@@ -330,10 +201,49 @@ def plot_scatter(avar, period_label):
                 axs[i].text(0.05, 0.95, letters[i] + ')', transform=axs[i].transAxes)
 
         except:
-            print(f'error with {label}')
+            print(f'error with {var_dict[comp]['label']}')
 
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_{seas_name}_{var_name}_only.png'))
     plt.close('all')
+
+
+def var_selection(avar, comp):
+    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+
+    x = vr_t_res[var_name].resample(tres).mean()
+
+    if comp == 'vr_c':
+        try:
+            y = vr_c_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_e':
+        try:
+            y = vr_e_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_l':
+        try:
+            y = vr_l_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_t':
+        try:
+            y = vr_t_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_t1':
+        try:
+            y = vr_t1_res[var_name]
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+    if comp == 'vr_t2':
+        try:
+            y = vr_t2_res[var_name].dropna()
+        except KeyError:
+            print(f'error with {var_dict[comp]['label']}')
+
+    return x, y, vr_t_res
 
 
 def plot_scatter_cum(avar):
@@ -352,65 +262,17 @@ def plot_scatter_cum(avar):
         seas_name = seass[period_label]['name']
         axs = ax.ravel()
 
-        comps = ['c', 'e', 't1', 't2']
-        x = vr_t_res[var_name].resample(tres).mean()
-        xlabel = 'VESPA'
-
         for i, comp in enumerate(comps):
-            axs[i].set_xlabel(xlabel)
-            if comp == 'c':
-                label = f'{var_name} CARRA {uom}'
-                axs[i].set_ylabel(label)
-                try:
-                    y = vr_c_res[var_name]
-                except KeyError:
-                    print(f'error with {label}')
-                    continue
-            if comp == 'e':
-                label =  f'{var_name} ERA5 {uom}'
-                axs[i].set_ylabel(label)
-                try:
-                    y = vr_e_res[var_name]
-                except KeyError:
-                    print(f'error with {label}')
-                    continue
-            if comp == 'l':
-                label =  f'{var_name} ERA5-L {uom}'
-                axs[i].set_ylabel(label)
-                try:
-                    y = vr_l_res[var_name]
-                except KeyError:
-                    print(f'error with {label}')
-                    continue
-            if comp == 't':
-                label =  f'{var_name} THAAO {uom}'
-                axs[i].set_ylabel(label)
-                try:
-                    y = vr_t_res[var_name]
-                except KeyError:
-                    print(f'error with {label}')
-                    continue
-            if comp == 't1':
-                label =  f'{var_name} HATPRO {uom}'
-                axs[i].set_ylabel(label)
-                try:
-                    y = vr_t1_res[var_name]
-                except KeyError:
-                    print(f'error with {label}')
-                    continue
-            if comp == 't2':
-                label =  f'{var_name} RS {uom}'
-                axs[i].set_ylabel(label)
-                try:
-                    y = vr_t2_res[var_name].dropna()
-                except KeyError:
-                    print(f'error with {label}')
-                    continue
+
+            axs[i].set_xlabel(var_dict[comp]['label_uom'])
+            axs[i].set_ylabel(var_dict[comp]['label_uom'])
+            x, y, vr_t_res = var_selection(avar, comp=comp)
+
             try:
-                print(f'plotting scatter THAAO-{label}')
+                print(f'plotting scatter VESPA-{var_dict[comp]['label']}')
 
                 fig.suptitle(f'{var_name_u} cumulative plot', fontweight='bold')
-                axs[i].set_title(label)
+                axs[i].set_title(var_dict[comp]['label'])
 
                 time_list = pd.date_range(
                         start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres)
@@ -422,7 +284,7 @@ def plot_scatter_cum(avar):
                 idx = ~(np.isnan(x_s) | np.isnan(y_s))
 
                 if seas_name != 'all':
-                    if label == 'RS':
+                    if var_dict[comp]['label'] == 'RS':
                         y_s = y.loc[(y.index.month.isin(seass[period_label]['months']))]
                         x_s = pd.Series(vr_t_res.reindex(y_s.index)[var_name])
 
@@ -451,7 +313,7 @@ def plot_scatter_cum(avar):
                     axs[i].text(0.05, 0.95, letters[i] + ')', transform=axs[i].transAxes)
                     axs[i].legend()
             except:
-                print(f'error with {label}')
+                print(f'error with {var_dict[comp]['label']}')
 
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_scatter_cum_{var_name}_only.png'))
     plt.close('all')
