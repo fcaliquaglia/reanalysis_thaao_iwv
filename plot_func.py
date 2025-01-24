@@ -185,7 +185,7 @@ def plot_scatter(avar, period_label):
             if len(x_s[idx]) < 2 | len(y_s[idx]) < 2:
                 print('ERROR, ERROR, NO DATA ENOUGH FOR PROPER FIT (i.e. only 1 point available)')
             else:
-                cal_draw_fit(axs, i, idx, x_s, y_s)
+                calc_draw_fit(axs, i, idx, x_s, y_s)
 
                 axs[i].set_xlim(extr[var_name]['min'], extr[var_name]['max'])
                 axs[i].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
