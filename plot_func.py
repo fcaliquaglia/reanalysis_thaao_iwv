@@ -33,48 +33,107 @@ from inputs import *
 letters = list(string.ascii_lowercase)
 
 
-def plot_ts_giovanni(avar, period_label):
+def plot_ts_giovanni1(avar, period_label):
     """
 
     :param avar:
     :param period_label:
     :return:
     """
-    print('TIMESERIES')
+    print('TIMESERIES GIOVANNI1')
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
-    fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
+    fig, ax = plt.subplots(1, 1, figsize=(17, 6), dpi=300)
     fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
     kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
     kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
 
-    for [yy, year] in enumerate(years):
-        print(f'plotting {year}')
+    # original resolution
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+        try:
+            data = vr
+            plt.plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+        except AttributeError:
+            pass
 
-        # original resolution
-        for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
-            try:
-                data = vr[vr.index.year == year]
-                ax[yy].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
-            except AttributeError:
-                pass
+    # resampled resolution
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+        try:
+            data = vr
+            plt.plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+        except AttributeError:
+            pass
 
-        # resampled resolution
-        for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
-            try:
-                data = vr[vr.index.year == year]
-                ax[yy].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
-            except AttributeError:
-                pass
+    ax.set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+    ax.set_xticklabels([])
+    ax.set_xlim(dt.datetime(2016, 1, 1), dt.datetime(2024, 12, 31))
+    ax.xaxis.set_major_formatter(myFmt)
+    ax.set_xlabel('Time')
+    plt.legend(ncol=2)
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni1.png'))
+    plt.close('all')
 
-        ax[yy].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
-        ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
-        ax[yy].set_xticklabels([])
-        ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
-        ax[yy].text(0.01, 0.90, letters[yy] + ')', transform=ax[yy].transAxes)
+
+def plot_ts_giovanni2(avar, period_label):
+    """
+
+    :param avar:
+    :param period_label:
+    :return:
+    """
+    print('TIMESERIES GIOVANNI2')
+    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+    fig, ax = plt.subplots(2, 1, figsize=(17, 6), dpi=300)
+    fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
+    kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
+    kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
+    # original resolution
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+        try:
+            data = vr[vr.index.year <= 2020]
+            ax[0].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+        except AttributeError:
+            pass
+
+    # resampled resolution
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+        try:
+            data = vr[vr.index.year <= 2020]
+            ax[0].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+        except AttributeError:
+            pass
+
+    ax[0].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+    ax[0].text(0.45, 0.85, '2016-2020', transform=ax[0].transAxes)
+    ax[0].set_xticklabels([])
+    ax[0].set_xlim(dt.datetime(2016, 1, 1), dt.datetime(2020, 12, 31))
+    ax[0].text(0.01, 0.90, letters[0] + ')', transform=ax[0].transAxes)
+
+    # original resolution
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+        try:
+            data =vr[vr.index.year > 2020]
+            ax[1].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+        except AttributeError:
+            pass
+
+    # resampled resolution
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+        try:
+            data =vr[vr.index.year > 2020]
+            ax[1].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+        except AttributeError:
+            pass
+
+    ax[1].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+    ax[1].text(0.45, 0.85, '2020-2024', transform=ax[1].transAxes)
+    ax[1].set_xticklabels([])
+    ax[1].set_xlim(dt.datetime(2020, 1, 1), dt.datetime(2024, 12, 31))
+    ax[1].text(0.01, 0.90, letters[1] + ')', transform=ax[1].transAxes)
+
     ax[-1].xaxis.set_major_formatter(myFmt)
     ax[-1].set_xlabel('Time')
     plt.legend(ncol=2)
-    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_only.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni2.png'))
     plt.close('all')
 
 
