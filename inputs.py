@@ -40,7 +40,7 @@ basefol_l = os.path.join(basefol_r, 'era5-land', 'thaao', 'v1')
 basefol_out = os.path.join(basefol_t_elab, 'thaao_reanalysis')
 
 ##
-tres = '3h'
+tres = '24h'
 tres_rs = '1h'  # only for radiosoundings
 var_name = 'iwv'
 var_name_u = var_name.upper()
@@ -81,5 +81,6 @@ var_dict = {'vr_c': {'name'     : 'vr_c', 'col': 'red', 'col_ori': 'orange', 'la
                       'label_uom': f'{var_name} RS {uom}'}}
 
 myFmt = mdates.DateFormatter('%b')
+myFmt1 = mdates.DateFormatter('%b-%y')
 
 extr = {'iwv': {'min': 0, 'max': 20, 'res_min': -5, 'res_max': 5}}

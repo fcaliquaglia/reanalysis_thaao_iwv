@@ -41,14 +41,14 @@ def plot_ts_giovanni1(avar, period_label):
     :return:
     """
     print('TIMESERIES GIOVANNI1')
-    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+    [vr_c, vr_e, vr_t, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
     fig, ax = plt.subplots(1, 1, figsize=(17, 6), dpi=300)
     fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
     kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
     kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
 
     # original resolution
-    for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e','vr_t']):
         try:
             data = vr
             plt.plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
@@ -56,7 +56,7 @@ def plot_ts_giovanni1(avar, period_label):
             pass
 
     # resampled resolution
-    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c_res', 'vr_e_res','vr_t_res']):
         try:
             data = vr
             plt.plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
@@ -66,7 +66,7 @@ def plot_ts_giovanni1(avar, period_label):
     ax.set_ylim(extr[var_name]['min'], extr[var_name]['max'])
     ax.set_xticklabels([])
     ax.set_xlim(dt.datetime(2016, 1, 1), dt.datetime(2024, 12, 31))
-    ax.xaxis.set_major_formatter(myFmt)
+    ax.xaxis.set_major_formatter(myFmt1)
     ax.set_xlabel('Time')
     plt.legend(ncol=2)
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni1.png'))
@@ -87,7 +87,7 @@ def plot_ts_giovanni2(avar, period_label):
     kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
     kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
     # original resolution
-    for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e','vr_t']):
         try:
             data = vr[vr.index.year <= 2020]
             ax[0].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
@@ -95,7 +95,7 @@ def plot_ts_giovanni2(avar, period_label):
             pass
 
     # resampled resolution
-    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c_res', 'vr_e_res','vr_t_res']):
         try:
             data = vr[vr.index.year <= 2020]
             ax[0].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
@@ -109,7 +109,7 @@ def plot_ts_giovanni2(avar, period_label):
     ax[0].text(0.01, 0.90, letters[0] + ')', transform=ax[0].transAxes)
 
     # original resolution
-    for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e','vr_t']):
         try:
             data =vr[vr.index.year > 2020]
             ax[1].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
@@ -117,7 +117,7 @@ def plot_ts_giovanni2(avar, period_label):
             pass
 
     # resampled resolution
-    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c_res', 'vr_e_res','vr_t_res']):
         try:
             data =vr[vr.index.year > 2020]
             ax[1].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
@@ -130,8 +130,8 @@ def plot_ts_giovanni2(avar, period_label):
     ax[1].set_xlim(dt.datetime(2020, 1, 1), dt.datetime(2024, 12, 31))
     ax[1].text(0.01, 0.90, letters[1] + ')', transform=ax[1].transAxes)
 
-    ax[-1].xaxis.set_major_formatter(myFmt)
-    ax[-1].set_xlabel('Time')
+    ax[1].xaxis.set_major_formatter(myFmt1)
+    ax[1].set_xlabel('Time')
     plt.legend(ncol=2)
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni2.png'))
     plt.close('all')
