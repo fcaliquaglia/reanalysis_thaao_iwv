@@ -33,6 +33,52 @@ from inputs import *
 letters = list(string.ascii_lowercase)
 
 
+def plot_ts_giovanni(avar, period_label):
+    """
+
+    :param avar:
+    :param period_label:
+    :return:
+    """
+    print('TIMESERIES')
+    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+    fig, ax = plt.subplots(len(years), 1, figsize=(12, 17), dpi=300)
+    fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
+    kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
+    kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
+
+    for [yy, year] in enumerate(years):
+        print(f'plotting {year}')
+
+        # original resolution
+        for (vr, vr_n) in zip([vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2], var_names):
+            try:
+                data = vr[vr.index.year == year]
+                ax[yy].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+            except AttributeError:
+                pass
+
+        # resampled resolution
+        for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res], var_names):
+            try:
+                data = vr[vr.index.year == year]
+                ax[yy].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+            except AttributeError:
+                pass
+
+        ax[yy].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+        ax[yy].text(0.45, 0.85, year, transform=ax[yy].transAxes)
+        ax[yy].set_xticklabels([])
+        ax[yy].set_xlim(dt.datetime(year, 1, 1), dt.datetime(year, 12, 31))
+        ax[yy].text(0.01, 0.90, letters[yy] + ')', transform=ax[yy].transAxes)
+    ax[-1].xaxis.set_major_formatter(myFmt)
+    ax[-1].set_xlabel('Time')
+    plt.legend(ncol=2)
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_only.png'))
+    plt.close('all')
+
+
+
 def plot_ts(avar, period_label):
     """
 
@@ -225,7 +271,7 @@ def plot_scatter_cum(avar):
                 axs[i].set_title(var_dict[comp]['label'])
 
                 time_list = pd.date_range(
-                        start=dt.datetime(years[0], 1, 1), end=dt.datetime(years[-1], 12, 31), freq=tres)
+                        start=dt.datetime(years[0], 1, 1, 0,0), end=dt.datetime(years[-1], 12, 31, 23, 59), freq=tres)
 
                 x_all = x.reindex(time_list).fillna(np.nan)
                 x_s = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
