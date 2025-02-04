@@ -48,7 +48,7 @@ def plot_ts_giovanni1(avar, period_label):
     kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
 
     # original resolution
-    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e','vr_t']):
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
         try:
             data = vr
             plt.plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
@@ -56,7 +56,7 @@ def plot_ts_giovanni1(avar, period_label):
             pass
 
     # resampled resolution
-    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c_res', 'vr_e_res','vr_t_res']):
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
         try:
             data = vr
             plt.plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
@@ -87,7 +87,7 @@ def plot_ts_giovanni2(avar, period_label):
     kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
     kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
     # original resolution
-    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e','vr_t']):
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
         try:
             data = vr[vr.index.year <= 2020]
             ax[0].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
@@ -95,7 +95,7 @@ def plot_ts_giovanni2(avar, period_label):
             pass
 
     # resampled resolution
-    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c_res', 'vr_e_res','vr_t_res']):
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
         try:
             data = vr[vr.index.year <= 2020]
             ax[0].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
@@ -109,17 +109,17 @@ def plot_ts_giovanni2(avar, period_label):
     ax[0].text(0.01, 0.90, letters[0] + ')', transform=ax[0].transAxes)
 
     # original resolution
-    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e','vr_t']):
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
         try:
-            data =vr[vr.index.year > 2020]
+            data = vr[vr.index.year > 2020]
             ax[1].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
         except AttributeError:
             pass
 
     # resampled resolution
-    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c_res', 'vr_e_res','vr_t_res']):
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
         try:
-            data =vr[vr.index.year > 2020]
+            data = vr[vr.index.year > 2020]
             ax[1].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
         except AttributeError:
             pass
@@ -135,7 +135,6 @@ def plot_ts_giovanni2(avar, period_label):
     plt.legend(ncol=2)
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni2.png'))
     plt.close('all')
-
 
 
 def plot_ts(avar, period_label):
@@ -330,7 +329,7 @@ def plot_scatter_cum(avar):
                 axs[i].set_title(var_dict[comp]['label'])
 
                 time_list = pd.date_range(
-                        start=dt.datetime(years[0], 1, 1, 0,0), end=dt.datetime(years[-1], 12, 31, 23, 59), freq=tres)
+                        start=dt.datetime(years[0], 1, 1, 0, 0), end=dt.datetime(years[-1], 12, 31, 23, 59), freq=tres)
 
                 x_all = x.reindex(time_list).fillna(np.nan)
                 x_s = x_all.loc[(x_all.index.month.isin(seass[period_label]['months']))]
