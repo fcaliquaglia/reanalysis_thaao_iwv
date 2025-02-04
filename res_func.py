@@ -40,7 +40,7 @@ def data_resampling(var_c, var_e, var_l, var_t, var_t1, var_t2):
     except (TypeError, NameError):
         var_l_res = pd.DataFrame()
     try:
-        var_t_res = var_t.resample('1h').mean()
+        var_t_res = var_t.resample(tres).mean()
     except (TypeError, NameError):
         var_t_res = pd.DataFrame()
     try:

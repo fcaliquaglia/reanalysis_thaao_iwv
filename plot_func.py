@@ -125,9 +125,9 @@ def plot_ts_giovanni2(avar, period_label):
             pass
 
     ax[1].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
-    ax[1].text(0.45, 0.85, '2020-2024', transform=ax[1].transAxes)
+    ax[1].text(0.45, 0.85, '2021-2025', transform=ax[1].transAxes)
     ax[1].set_xticklabels([])
-    ax[1].set_xlim(dt.datetime(2020, 1, 1), dt.datetime(2024, 12, 31))
+    ax[1].set_xlim(dt.datetime(2021, 1, 1), dt.datetime(2025, 12, 31))
     ax[1].text(0.01, 0.90, letters[1] + ')', transform=ax[1].transAxes)
 
     ax[1].xaxis.set_major_formatter(myFmt1)
