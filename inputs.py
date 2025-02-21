@@ -45,7 +45,7 @@ tres_rs = '1h'  # only for radiosoundings
 var_name = 'iwv'
 var_name_u = var_name.upper()
 
-years = np.arange(2016, 2024, 1)
+years = np.arange(2000, 2024, 1)
 
 bin_nr = 100
 

@@ -65,13 +65,76 @@ def plot_ts_giovanni1(avar, period_label):
 
     ax.set_ylim(extr[var_name]['min'], extr[var_name]['max'])
     ax.set_xticklabels([])
-    ax.set_xlim(dt.datetime(2016, 1, 1), dt.datetime(2024, 12, 31))
+    ax.set_xlim(dt.datetime(2018, 1, 1), dt.datetime(2024, 12, 31))
     ax.xaxis.set_major_formatter(myFmt1)
     ax.set_xlabel('Time')
     plt.legend(ncol=2)
-    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni1.png'))
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni1_2018-2024.png'))
     plt.close('all')
 
+
+# def plot_ts_giovanni2(avar, period_label):
+#     """
+
+#     :param avar:
+#     :param period_label:
+#     :return:
+#     """
+#     print('TIMESERIES GIOVANNI2')
+#     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+#     fig, ax = plt.subplots(2, 1, figsize=(17, 6), dpi=300)
+#     fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
+#     kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
+#     kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
+#     # original resolution
+#     for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
+#         try:
+#             data = vr[vr.index.year <= 2020]
+#             ax[0].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+#         except AttributeError:
+#             pass
+
+#     # resampled resolution
+#     for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
+#         try:
+#             data = vr[vr.index.year <= 2020]
+#             ax[0].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+#         except AttributeError:
+#             pass
+
+#     ax[0].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+#     ax[0].text(0.45, 0.85, '2016-2020', transform=ax[0].transAxes)
+#     ax[0].set_xticklabels([])
+#     ax[0].set_xlim(dt.datetime(2016, 1, 1), dt.datetime(2020, 12, 31))
+#     ax[0].text(0.01, 0.90, letters[0] + ')', transform=ax[0].transAxes)
+
+#     # original resolution
+#     for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
+#         try:
+#             data = vr[vr.index.year > 2020]
+#             ax[1].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+#         except AttributeError:
+#             pass
+
+#     # resampled resolution
+#     for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
+#         try:
+#             data = vr[vr.index.year > 2020]
+#             ax[1].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+#         except AttributeError:
+#             pass
+
+#     ax[1].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+#     ax[1].text(0.45, 0.85, '2021-2025', transform=ax[1].transAxes)
+#     ax[1].set_xticklabels([])
+#     ax[1].set_xlim(dt.datetime(2021, 1, 1), dt.datetime(2025, 12, 31))
+#     ax[1].text(0.01, 0.90, letters[1] + ')', transform=ax[1].transAxes)
+
+#     ax[1].xaxis.set_major_formatter(myFmt1)
+#     ax[1].set_xlabel('Time')
+#     plt.legend(ncol=2)
+#     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni2.png'))
+#     plt.close('all')
 
 def plot_ts_giovanni2(avar, period_label):
     """
@@ -82,14 +145,14 @@ def plot_ts_giovanni2(avar, period_label):
     """
     print('TIMESERIES GIOVANNI2')
     [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
-    fig, ax = plt.subplots(2, 1, figsize=(17, 6), dpi=300)
+    fig, ax = plt.subplots(5, 1, figsize=(17, 12), dpi=300)
     fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
     kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
     kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
     # original resolution
     for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
         try:
-            data = vr[vr.index.year <= 2020]
+            data = vr[(vr.index.year >= 2000) & (vr.index.year <= 2004)]
             ax[0].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
         except AttributeError:
             pass
@@ -97,21 +160,21 @@ def plot_ts_giovanni2(avar, period_label):
     # resampled resolution
     for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
         try:
-            data = vr[vr.index.year <= 2020]
+            data = vr[(vr.index.year >= 2000) & (vr.index.year <= 2004)]
             ax[0].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
         except AttributeError:
             pass
 
     ax[0].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
-    ax[0].text(0.45, 0.85, '2016-2020', transform=ax[0].transAxes)
+    ax[0].text(0.45, 0.85, '2000-2004', transform=ax[0].transAxes)
     ax[0].set_xticklabels([])
-    ax[0].set_xlim(dt.datetime(2016, 1, 1), dt.datetime(2020, 12, 31))
+    ax[0].set_xlim(dt.datetime(2000, 1, 1), dt.datetime(2004, 12, 31))
     ax[0].text(0.01, 0.90, letters[0] + ')', transform=ax[0].transAxes)
 
     # original resolution
     for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
         try:
-            data = vr[vr.index.year > 2020]
+            data = vr[(vr.index.year >= 2005) & (vr.index.year <= 2009)]
             ax[1].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
         except AttributeError:
             pass
@@ -119,23 +182,164 @@ def plot_ts_giovanni2(avar, period_label):
     # resampled resolution
     for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
         try:
-            data = vr[vr.index.year > 2020]
+            data = vr[(vr.index.year >= 2005) & (vr.index.year <= 2009)]
             ax[1].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
         except AttributeError:
             pass
 
     ax[1].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
-    ax[1].text(0.45, 0.85, '2021-2025', transform=ax[1].transAxes)
+    ax[1].text(0.45, 0.85, '2005-2009', transform=ax[1].transAxes)
     ax[1].set_xticklabels([])
-    ax[1].set_xlim(dt.datetime(2021, 1, 1), dt.datetime(2025, 12, 31))
+    ax[1].set_xlim(dt.datetime(2005, 1, 1), dt.datetime(2009, 12, 31))
     ax[1].text(0.01, 0.90, letters[1] + ')', transform=ax[1].transAxes)
 
-    ax[1].xaxis.set_major_formatter(myFmt1)
-    ax[1].set_xlabel('Time')
+
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
+        try:
+            data = vr[(vr.index.year >= 2010) & (vr.index.year <= 2014)]
+            ax[2].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+        except AttributeError:
+            pass
+
+    # resampled resolution
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
+        try:
+            data = vr[(vr.index.year >= 2010) & (vr.index.year <= 2014)]
+            ax[2].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+        except AttributeError:
+            pass
+            
+    ax[2].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+    ax[2].text(0.45, 0.85, '2010-2014', transform=ax[2].transAxes)
+    ax[2].set_xticklabels([])
+    ax[2].set_xlim(dt.datetime(2010, 1, 1), dt.datetime(2014, 12, 31))
+    ax[2].text(0.01, 0.90, letters[2] + ')', transform=ax[2].transAxes)
+    
+
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
+        try:
+            data = vr[(vr.index.year >= 2015) & (vr.index.year <= 2019)]
+            ax[3].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+        except AttributeError:
+            pass
+
+    # resampled resolution
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
+        try:
+            data = vr[(vr.index.year >= 2015) & (vr.index.year <= 2019)]
+            ax[3].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+        except AttributeError:
+            pass
+            
+    ax[3].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+    ax[3].text(0.45, 0.85, '2015-2019', transform=ax[3].transAxes)
+    ax[3].set_xticklabels([])
+    ax[3].set_xlim(dt.datetime(2015, 1, 1), dt.datetime(2019, 12, 31))
+    ax[3].text(0.01, 0.90, letters[3] + ')', transform=ax[3].transAxes)
+
+
+    for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
+        try:
+            data = vr[(vr.index.year >= 2020) & (vr.index.year <= 2024)]
+            ax[4].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+        except AttributeError:
+            pass
+
+    # resampled resolution
+    for (vr, vr_n) in zip([vr_c_res, vr_e_res, vr_t_res], ['vr_c', 'vr_e', 'vr_t']):
+        try:
+            data = vr[(vr.index.year >= 2020) & (vr.index.year <= 2024)]
+            ax[4].plot(data, color=var_dict[vr_n]['col'], label=var_dict[vr_n]['label_uom'], **kwargs)
+        except AttributeError:
+            pass
+            
+    ax[4].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+    ax[4].text(0.45, 0.85, '2020-2024', transform=ax[4].transAxes)
+    ax[4].set_xticklabels([])
+    ax[4].set_xlim(dt.datetime(2020, 1, 1), dt.datetime(2024, 12, 31))
+    ax[4].text(0.01, 0.90, letters[4] + ')', transform=ax[4].transAxes)
+    
     plt.legend(ncol=2)
+
+    # Formatta asse X e aggiungi etichetta "Time" su tutti i pannelli
+    for i in range(len(ax)):  
+        ax[i].xaxis.set_major_formatter(myFmt1)  
+  
+    ax[-1].set_xlabel('Time')  # Solo l'ultimo pannello avrà l'etichetta "Time"
+    ax[-1].legend(ncol=2)
+    plt.subplots_adjust(left=0.07, right=0.93, top=0.95, bottom=0.08)  
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_giovanni2.png'))
     plt.close('all')
 
+
+
+def plot_ts_climatologia(avar, period_label):
+    """
+
+    :param avar:
+    :param period_label:
+    :return:
+    """
+    print('TIMESERIES CLIMATOLOGIA')
+
+    [vr_c, vr_e, vr_l, vr_t, vr_t1, vr_t2, vr_c_res, vr_e_res, vr_l_res, vr_t_res, vr_t1_res, vr_t2_res] = avar
+
+    fig, ax = plt.subplots(5, 1, figsize=(17, 12), dpi=300)
+    fig.suptitle(f'{var_name_u} all {tres}', fontweight='bold')
+
+    kwargs_ori = {'alpha': 0.02, 'lw': 0, 'marker': '.', 'ms': 1}
+    kwargs = {'lw': 0, 'marker': '.', 'ms': 2}
+
+    #  Calcolo della climatologia mensile (media 2000-2024 per ogni mese)
+    climatologia_mensile = vr_c.groupby(vr_c.index.month).mean()
+
+    #  Definiamo i range di anni per ciascun sottopannello
+    year_ranges = [(2000, 2004), (2005, 2009), (2010, 2014), (2015, 2019), (2020, 2024)]
+
+    for i, (start_year, end_year) in enumerate(year_ranges):
+        for (vr, vr_n) in zip([vr_c, vr_e, vr_t], ['vr_c', 'vr_e', 'vr_t']):
+            try:
+                #  Seleziona dati nel range specifico
+                data = vr[(vr.index.year >= start_year) & (vr.index.year <= end_year)]
+                
+                #  Calcola anomalie mensili
+                anomalie = data.groupby(data.index.month).transform(lambda x: x - climatologia_mensile)
+
+                #  Plotta dati originali
+                ax[i].plot(data, color=var_dict[vr_n]['col_ori'], **kwargs_ori)
+
+                # Plotta anomalie (linea rossa per evidenziare eventi estremi)
+                ax[i].plot(anomalie, color='red', alpha=0.5, label='Anomalia' if i == 4 else None)
+            
+            except AttributeError:
+                pass
+
+        #  Configurazione asse Y e X
+        ax[i].set_ylim(extr[var_name]['min'], extr[var_name]['max'])
+        ax[i].set_xlim(dt.datetime(start_year, 1, 1), dt.datetime(end_year, 12, 31))
+        ax[i].text(0.45, 0.85, f'{start_year}-{end_year}', transform=ax[i].transAxes)
+        ax[i].text(0.01, 0.90, letters[i] + ')', transform=ax[i].transAxes)
+
+    #  Mostra la legenda solo nell'ultimo pannello (in alto a destra dentro il grafico)
+    ax[-1].legend(ncol=1, loc='upper right')
+
+    #  Formatta asse X su tutti i pannelli
+    for i in range(len(ax)):  
+        ax[i].xaxis.set_major_formatter(myFmt1)  
+
+
+    ax[-1].set_xlabel('Time')  # Solo l'ultimo pannello avrà l'etichetta "Time"
+    ax[-1].legend(ncol=2)
+    plt.subplots_adjust(left=0.07, right=0.93, top=0.95, bottom=0.08)  
+    plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_{var_name}_climatologia.png'))
+    plt.close('all')
+
+    
+    
+    
+    
+    
+    
 
 def plot_ts(avar, period_label):
     """
@@ -223,6 +427,11 @@ def plot_residuals(avar, period_label):
     plt.legend(ncol=2)
     plt.savefig(os.path.join(basefol_out, tres, f'{tres}_{period_label}_residuals_{var_name}_only.png'))
     plt.close('all')
+
+
+
+
+
 
 
 def plot_scatter(avar, period_label):
